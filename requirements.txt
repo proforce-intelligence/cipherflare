@@ -1,0 +1,44 @@
+# Web Framework
+fastapi
+uvicorn
+aiofiles
+
+# Database
+aiosqlite
+sqlalchemy
+sqlalchemy-utils
+
+# API
+pydantic
+pydantic-settings
+
+# Search/Storage
+elasticsearch
+
+# Messaging
+aiokafka
+
+# Web Scraping
+playwright
+requests
+beautifulsoup4
+lxml
+
+# Tor Control
+stem
+
+# Utilities
+python-dotenv
+aiohttp
+certifi
+urllib3
+langdetect
+
+# Security
+cryptography
+
+# Development (optional)
+pytest
+pytest-asyncio
+black
+flake8

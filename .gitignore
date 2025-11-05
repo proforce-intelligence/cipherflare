@@ -1,0 +1,69 @@
+# Python virtualenvs (matches venv directories anywhere)
+venv/
+
+# Dark web results directory
+dark_web_results/
+
+# Node modules (matches node_modules directories anywhere)
+node_modules/
+
+# Next.js build directory
+.next/
+
+# Python bytecode cache directories (matches __pycache__ anywhere)
+__pycache__/
+
+# Git metadata — note below about .git
+.git
+
+.env
+.env.local
+# === Python ===
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.sqlite3
+venv/
+.env/
+.venv/
+*.db
+
+# === Node / Next.js ===
+node_modules/
+.next/
+dist/
+build/
+
+# === Dark Web results ===
+dark_web_results/
+
+# === Logs, caches, temp files ===
+*.log
+*.tmp
+*.cache
+.cache/
+*.swp
+
+# === Docker / Compose ===
+*.pid
+*.sock
+
+# === System / IDE ===
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# === Large third-party software ===
+# Exclude entire Elasticsearch & Kafka packages
+elasticsearch-*/
+kafka_*/
+*.tar.gz
+*.tgz
+*.zip
+*.jar
+*.so
+
