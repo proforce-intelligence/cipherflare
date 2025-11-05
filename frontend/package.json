@@ -1,9 +1,9 @@
 {
-  "name": "cipherflare",
+  "name": "CIPHERFLARE",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 4000",
+    "dev": "next dev --port 4000 --hostname 192.168.1.248",
     "build": "next build",
     "start": "next start",
     "lint": "eslint ."
