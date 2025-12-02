@@ -1,9 +1,0 @@
-fastapi==0.115.0
-uvicorn[standard]==0.32.0
-aiokafka==0.10.0
-elasticsearch[async]==8.15.0
-sqlalchemy==2.0.36
-pydantic==2.9.2
-python-dotenv==1.0.1
-alembic==1.16.2
-psycopg2-binary==2.9.9  # For PostgreSQL

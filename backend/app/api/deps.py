@@ -1,34 +1,32 @@
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.orm import Session
-from app.database.database import SessionLocal
-from app.models.user import User
-from jose import JWTError, jwt  # Assuming JWT auth
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.database.database import get_db
 import os
+import logging
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+logger = logging.getLogger(__name__)
 
-def get_db():
-    db = SessionLocal()
+async def get_current_user(
+    authorization: str = None,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Get current user from Authorization header (optional for MVP)
+    Returns None for unauthenticated requests
+    """
+    if not authorization:
+        return None
+    
     try:
-        yield db
-    finally:
-        db.close()
-
-async def get_current_active_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, os.getenv("SECRET_KEY"), algorithms=["HS256"])
-        user_id: str = payload.get("sub")
-        if user_id is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-    user = db.query(User).filter(User.id == user_id).first()
-    if user is None or not user.is_active:
-        raise credentials_exception
-    return user
+        scheme, token = authorization.split()
+        if scheme.lower() != "bearer":
+            return None
+        
+        # For MVP: Simple token validation (replace with JWT in production)
+        if token == os.getenv("API_KEY", "demo-key"):
+            return {"sub": "authenticated_user", "is_authenticated": True}
+        
+        return None
+    except Exception as e:
+        logger.error(f"Auth error: {e}")
+        return None

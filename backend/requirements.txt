@@ -4,7 +4,7 @@ uvicorn
 aiofiles
 
 # Database
-aiosqlite
+aiosqlite==0.21.0
 sqlalchemy
 sqlalchemy-utils
 
@@ -13,7 +13,7 @@ pydantic
 pydantic-settings
 
 # Search/Storage
-elasticsearch
+elasticsearch==8.14.0
 
 # Messaging
 aiokafka
@@ -26,13 +26,14 @@ lxml
 
 # Tor Control
 stem
-
+nest-asyncio
 # Utilities
 python-dotenv
 aiohttp
 certifi
 urllib3
 langdetect
+pysocks
 
 # Security
 cryptography
