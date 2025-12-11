@@ -38,12 +38,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger("DarkWebOSINT")
 
-import asyncio
-import random
-
-async def random_delay(min_sec: float = 1.0, max_sec: float = 4.0) -> None:
-    """Async sleep with random delay to avoid detection"""
-    await asyncio.sleep(random.uniform(min_sec, max_sec))
 # ================================
 # 2025 WORKING DARK WEB SEARCH ENGINES
 # ================================
@@ -267,7 +261,7 @@ async def fetch_and_analyze(client: httpx.AsyncClient, result: Dict, keyword: st
 # ================================
 # MAIN SEARCH + CRAWL PIPELINE
 # ================================
-async def darkweb_search_pro(
+async def search_ahmia(
     keyword: str,
     max_results: int = 400,
     rotate_identity: bool = True,
@@ -376,6 +370,12 @@ async def darkweb_search_pro(
     logger.info(f"COMPLETE → {base_dir}")
     return base_dir
 
+import asyncio
+import random
+
+async def random_delay(min_sec: float = 1.0, max_sec: float = 4.0) -> None:
+    """Async sleep with random delay to avoid detection"""
+    await asyncio.sleep(random.uniform(min_sec, max_sec))
 # ================================
 # CLI ENTRYPOINT
 # ================================
@@ -392,13 +392,9 @@ if __name__ == "__main__":
     print(f" DARK WEB OSINT PRO — SEARCHING: {args.keyword.upper()}")
     print("="*80 + "\n")
 
-    asyncio.run(darkweb_search_pro(
+    asyncio.run(search_ahmia(
         keyword=args.keyword,
         max_results=args.max,
         rotate_identity=not args.no_rotate,
         deep_analyze=not args.no_analyze
     ))
-
-
-# TEMPORARY — Remove in Q1 2026
-search_ahmia = darkweb_search_pro

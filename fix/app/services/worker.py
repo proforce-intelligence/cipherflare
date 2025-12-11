@@ -14,6 +14,7 @@ from datetime import datetime
 import uuid
 
 from playwright.async_api import async_playwright
+from sqlalchemy import select
 
 from app.services.kafka_consumer import KafkaConsumer, KafkaProducerConsumer
 from app.services.es_client import ESClient
@@ -26,9 +27,14 @@ from app.services.scraper_utils import (
     sha1_short,
     random_delay,
     validate_onion_url,
-    search_ahmia,  # ← Works thanks to alias in scraper_utils.py
+    search_ahmia,
 )
 from app.services.tor_manager import TorManager
+from app.services.deduplication import DeduplicationService
+from app.services.alert_sender import AlertSender
+from app.database.database import AsyncSessionLocal
+from app.models.alert import Alert
+from app.models.monitoring_result import MonitoringResult
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -37,6 +43,19 @@ TOR_SOCKS = os.getenv("TOR_SOCKS", "127.0.0.1:9050")
 OUTPUT_BASE = Path(os.getenv("OUTPUT_BASE", "./dark_web_results"))
 ES_URL = os.getenv("ES_URL", "http://localhost:9200")
 KAFKA_BOOTSTRAP = os.getenv("KAFKA_BOOTSTRAP", "localhost:9092")
+RISK_LEVEL_ORDER = {"low": 1, "medium": 2, "high": 3, "critical": 4}
+
+
+def _get_user_uuid(user_id_str: str) -> uuid.UUID:
+    """Convert user_id string to UUID, handling both UUID and string formats"""
+    try:
+        if isinstance(user_id_str, uuid.UUID):
+            return user_id_str
+        # Try parsing as UUID
+        return uuid.UUID(user_id_str)
+    except (ValueError, AttributeError, TypeError):
+        # Fallback for string identifiers
+        return uuid.uuid5(uuid.NAMESPACE_DNS, str(user_id_str))
 
 
 class DarkWebWorker:
@@ -48,8 +67,148 @@ class DarkWebWorker:
             bootstrap_servers=KAFKA_BOOTSTRAP
         )
         self.status_producer = KafkaProducerConsumer(KAFKA_BOOTSTRAP)
+        self.alert_sender = AlertSender()
         self.output_base = OUTPUT_BASE
         self.output_base.mkdir(parents=True, exist_ok=True)
+    
+    async def check_duplicate_and_get_alert_triggers(
+        self,
+        url: str,
+        content: str,
+        user_id: str
+    ) -> tuple:
+        """
+        Check if content is duplicate and get matching alerts
+        Returns: (is_duplicate, duplicate_of_id, matching_alerts)
+        """
+        try:
+            content_hash = DeduplicationService.generate_content_hash(content, url)
+            user_uuid = _get_user_uuid(user_id)
+            
+            async with AsyncSessionLocal() as db:
+                # Check for exact hash match (duplicate)
+                result = await db.execute(
+                    select(MonitoringResult).where(
+                        MonitoringResult.content_hash == content_hash,
+                        MonitoringResult.user_id == user_uuid,
+                        MonitoringResult.target_url == url
+                    ).order_by(MonitoringResult.created_at.desc())
+                )
+                existing = result.scalars().first()
+                
+                is_duplicate = existing is not None
+                duplicate_of_id = existing.id if existing else None
+                
+                # Get active alerts for user
+                alert_result = await db.execute(
+                    select(Alert).where(
+                        Alert.user_id == user_uuid,
+                        Alert.is_active == True
+                    )
+                )
+                alerts = alert_result.scalars().all()
+                
+                return is_duplicate, duplicate_of_id, alerts
+        
+        except Exception as e:
+            logger.error(f"[!] Error checking duplicates: {e}")
+            return False, None, []
+    
+    async def trigger_alerts_for_finding(
+        self,
+        finding: dict,
+        alerts: list,
+        user_id: str
+    ) -> dict:
+        """
+        Check all active alerts and trigger if conditions met
+        Returns alert triggering details
+        """
+        risk_level = finding.get("risk_level", "low")
+        risk_score = finding.get("risk_score", 0)
+        text_content = (finding.get("text_excerpt") or "") + " " + (finding.get("title") or "")
+        url = finding.get("url", "")
+        
+        triggered_alerts = []
+        
+        for alert in alerts:
+            keyword = alert.keyword.lower()
+            risk_threshold = alert.risk_level_threshold
+            
+            # Check if keyword is found in content
+            if keyword in text_content.lower():
+                # Check if risk level meets threshold
+                threshold_level = RISK_LEVEL_ORDER.get(risk_threshold, 2)
+                current_level = RISK_LEVEL_ORDER.get(risk_level, 1)
+                
+                if current_level >= threshold_level:
+                    logger.info(f"[Alert] Keyword '{keyword}' found in {url} with risk {risk_level}")
+                    triggered_alerts.append({
+                        "id": str(alert.id),
+                        "keyword": keyword,
+                        "risk_level_threshold": risk_threshold,
+                        "notification_type": alert.notification_type,
+                        "notification_endpoint": alert.notification_endpoint
+                    })
+        
+        # Send alerts asynchronously
+        triggered_alert_ids = []
+        if triggered_alerts:
+            triggered_alert_ids = await self.alert_sender.send_alerts(
+                triggered_alerts,
+                finding
+            )
+            logger.info(f"[Alert] Triggered {len(triggered_alert_ids)} alerts for {url}")
+        
+        return {
+            "alerts_triggered": triggered_alert_ids,
+            "alert_count": len(triggered_alert_ids)
+        }
+    
+    async def save_monitoring_result(
+        self,
+        finding: dict,
+        is_duplicate: bool,
+        duplicate_of_id: str,
+        alerts_triggered: list,
+        user_id: str,
+        job_id: str,
+        monitor_job_id: str = None
+    ) -> MonitoringResult:
+        """Save monitoring result to database"""
+        try:
+            content_hash = DeduplicationService.generate_content_hash(
+                finding.get("text_excerpt", ""),
+                finding.get("url", "")
+            )
+            user_uuid = _get_user_uuid(user_id)
+            
+            async with AsyncSessionLocal() as db:
+                result = MonitoringResult(
+                    job_id=job_id,
+                    user_id=user_uuid,
+                    target_url=finding.get("url"),
+                    title=finding.get("title"),
+                    text_excerpt=finding.get("text_excerpt"),
+                    risk_level=finding.get("risk_level"),
+                    risk_score=finding.get("risk_score", 0),
+                    threat_indicators=finding.get("threat_indicators", []),
+                    content_hash=content_hash,
+                    is_duplicate=is_duplicate,
+                    duplicate_of_id=duplicate_of_id,
+                    monitor_job_id=monitor_job_id,
+                    alerts_triggered=alerts_triggered,
+                    detected_at=datetime.utcnow()
+                )
+                
+                db.add(result)
+                await db.commit()
+                logger.info(f"[Result] Saved monitoring result {result.id}")
+                return result
+        
+        except Exception as e:
+            logger.error(f"[!] Failed to save monitoring result: {e}")
+            return None
     
     async def process_message(self, topic: str, message: dict):
         """Route message to appropriate handler"""
@@ -86,9 +245,9 @@ class DarkWebWorker:
             try:
                 output_dir = await search_ahmia(
                     keyword=keyword,
-                    max_results=max_results + 100,  # get extra for filtering
+                    max_results=max_results + 100,
                     rotate_identity=True,
-                    deep_analyze=False  # We do real analysis with Playwright below
+                    deep_analyze=False
                 )
                 logger.info(f"[*] Discovery phase completed → results in {output_dir}")
             except Exception as e:
@@ -101,7 +260,6 @@ class DarkWebWorker:
             with open(raw_json_path, "r", encoding="utf-8") as f:
                 discovered = json.load(f)
 
-            # Filter out blocked illegal content and deduplicate
             valid_links = {
                 item["url"]: item for item in discovered
                 if item.get("category") != "blocked_illegal"
@@ -117,11 +275,9 @@ class DarkWebWorker:
                 })
                 return
 
-            # Create session directory for this job
             session_dir = self.output_base / f"{sanitize_filename(keyword)}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{job_id[:8]}"
             session_dir.mkdir(parents=True, exist_ok=True)
 
-            # === Scrape with Playwright ===
             findings = []
             async with async_playwright() as pw:
                 for idx, link in enumerate(onion_links[:max_results], 1):
@@ -189,9 +345,10 @@ class DarkWebWorker:
             await self.status_producer.send_status(job_id, "FAILED", {"error": str(e)})
 
     async def handle_monitor(self, job_id: str, payload: dict):
-        """Handle targeted URL monitoring job"""
+        """Enhanced monitor handler with dedup and alert triggering"""
         url = payload.get("target_url") or payload.get("url")
         user_id = payload.get("user_id")
+        monitor_job_id = payload.get("monitor_job_id")
 
         if not url:
             await self.status_producer.send_status(job_id, "FAILED", {"error": "No URL provided"})
@@ -228,13 +385,33 @@ class DarkWebWorker:
                         "user_id": user_id,
                         "monitor_job": True
                     }
+                    
+                    is_duplicate, duplicate_of_id, active_alerts = await self.check_duplicate_and_get_alert_triggers(
+                        url, meta.get("text_excerpt", ""), user_id
+                    )
+                    
+                    alert_results = await self.trigger_alerts_for_finding(
+                        finding, [{"id": str(a.id), "keyword": a.keyword, "risk_level_threshold": a.risk_level_threshold, "notification_type": a.notification_type, "notification_endpoint": a.notification_endpoint} for a in active_alerts], user_id
+                    )
+                    
+                    await self.save_monitoring_result(
+                        finding,
+                        is_duplicate,
+                        duplicate_of_id,
+                        alert_results.get("alerts_triggered", []),
+                        user_id,
+                        job_id,
+                        monitor_job_id
+                    )
 
                     await self.es_client.index_finding(finding)
-                    logger.info(f"[Success] Monitor job {job_id} completed | Risk: {risk_level}")
+                    logger.info(f"[Success] Monitor job {job_id} completed | Risk: {risk_level} | Alerts: {alert_results.get('alert_count', 0)}")
 
                     await self.status_producer.send_status(job_id, "COMPLETED", {
                         "findings_count": 1,
-                        "risk_level": risk_level
+                        "risk_level": risk_level,
+                        "is_duplicate": is_duplicate,
+                        "alerts_triggered": len(alert_results.get("alerts_triggered", []))
                     })
                 else:
                     await self.status_producer.send_status(job_id, "FAILED", {"error": meta.get("error")})
@@ -282,7 +459,7 @@ class DarkWebWorker:
             raw_html = await page.content()
             visible_text = await page.inner_text("body") if await page.query_selector("body") else ""
             
-            # FIX: Ensure visible_text is always a string
+            # Ensure visible_text is always a string
             visible_text = visible_text or ""
             
             # Save HTML
@@ -315,7 +492,7 @@ class DarkWebWorker:
             except:
                 pass
             
-            meta["title"] = meta["title"] or "Untitled"  # FIX: Default to string
+            meta["title"] = meta["title"] or "Untitled"  # Default to string
             
             # Extract entities
             full_text = raw_html + "\n" + visible_text if raw_html and visible_text else visible_text

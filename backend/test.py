@@ -38,12 +38,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger("DarkWebOSINT")
 
-import asyncio
-import random
-
-async def random_delay(min_sec: float = 1.0, max_sec: float = 4.0) -> None:
-    """Async sleep with random delay to avoid detection"""
-    await asyncio.sleep(random.uniform(min_sec, max_sec))
 # ================================
 # 2025 WORKING DARK WEB SEARCH ENGINES
 # ================================
@@ -398,7 +392,3 @@ if __name__ == "__main__":
         rotate_identity=not args.no_rotate,
         deep_analyze=not args.no_analyze
     ))
-
-
-# TEMPORARY — Remove in Q1 2026
-search_ahmia = darkweb_search_pro

@@ -18,6 +18,9 @@ elasticsearch==8.14.0
 # Messaging
 aiokafka
 
+# Scheduling
+apscheduler>=3.10.0
+
 # Web Scraping
 playwright
 requests
