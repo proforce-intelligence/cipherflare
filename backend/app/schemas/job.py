@@ -18,13 +18,12 @@ class JobCreate(BaseModel):
     job_type: JobType
     keyword: Optional[str] = None
     target_url: Optional[str] = None
-    max_results: int = Field(default=50, le=200)
+    max_results: Optional[int] = Field(default=None, le=10000)
     payload: Optional[Dict[str, Any]] = None
 
 class JobResponse(BaseModel):
     id: UUID
-    job_type: JobType
-    status: JobStatus
+    job_type: JobStatus
     keyword: Optional[str]
     target_url: Optional[str]
     findings_count: int

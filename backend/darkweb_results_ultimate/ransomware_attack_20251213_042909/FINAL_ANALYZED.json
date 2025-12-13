@@ -1,0 +1,882 @@
+[
+  {
+    "id": "a7905624-60aa-4531-b9a3-98ccfcd50376",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/malicious-software-ransomware/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347246"
+  },
+  {
+    "id": "1429dd2e-6084-4627-849e-403b8db0dbd3",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/ransomware-attacks-system-shut/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347260"
+  },
+  {
+    "id": "6c6ea25b-a784-4c6a-bf2d-ffead94f5d7a",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/russian-ransomware-attack/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347268"
+  },
+  {
+    "id": "2f7a3c74-f043-45b5-a940-f2a8d9d8931b",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/tag/ransomware-attacks/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347275"
+  },
+  {
+    "id": "1b4ae2a5-3521-4581-ac8b-fca5cb78f10d",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/maze-ransomware-attack/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347283"
+  },
+  {
+    "id": "ff79ed31-f28c-484b-bc08-cfdfd8c34485",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/us-suffered-ransomware-attacks/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347290"
+  },
+  {
+    "id": "184a8267-b7c8-4b83-a387-aa65ab1e06f7",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/300gb-data-loss/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347296"
+  },
+  {
+    "id": "31656ed9-00c7-4fb4-a0d1-94cfb222fb90",
+    "url": "http://xmh57jrknzkhv6y3ls3ubitzfqnkrwxhopf5aygthi7d6rplyvk3noyd.onion/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347303"
+  },
+  {
+    "id": "1fc8f4eb-fe48-48d3-9468-8880019114e3",
+    "url": "http://xmh57jrknzkhv6y3ls3ubitzfqnkrwxhopf5aygthi7d6rplyvk3noyd.onion/adinfo.html",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347310"
+  },
+  {
+    "id": "405f1af4-5f62-4d87-9012-119b8de6a249",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/carnival-corp-cruise-ransomware/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347317"
+  },
+  {
+    "id": "646e17ee-be7e-4d74-85a3-bcc98254a5d0",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/egregor-ransomware-hackers-arrested/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347324"
+  },
+  {
+    "id": "a7d2f17e-95eb-44cd-a484-d6be1e705871",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/tag/ransomware-attack/page/2/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347331"
+  },
+  {
+    "id": "816c7457-c841-4bbf-9ab9-6f1d927d56eb",
+    "url": "http://j233o5qxfn74dzr44x45vbruby7fhfmmvopu263oo2n5oc3guawm6vyd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360739"
+  },
+  {
+    "id": "149f6491-d623-4b0e-a801-ef4488e47212",
+    "url": "http://zeroda2aasmyjh3u7z3z2htw3lvf332jafjbp7k44zwbepqr2ra6qhyd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360754"
+  },
+  {
+    "id": "b5eba229-ba28-49ae-b946-e6b9fa55fcf0",
+    "url": "http://free7qpayg6nevett7eloccssbgtqmmuf3qs3ygcfur2tjf3py4lgiyd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360761"
+  },
+  {
+    "id": "2bda808f-2b27-4764-afe7-deaa878c4bd8",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=tce2rbic57mg25yqbrvymeb6lzruu23krmcbsiaa77xe3amjojrckgyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360771"
+  },
+  {
+    "id": "dd0ab2ed-bc7e-4048-9dc4-3791de6e7fdc",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/search?q=ransomware attack&sorttype=rel&page=1",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360782"
+  },
+  {
+    "id": "ad2a1109-7752-4ccb-8356-1aa8a0152175",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=j233o5qxfn74dzr44x45vbruby7fhfmmvopu263oo2n5oc3guawm6vyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360796"
+  },
+  {
+    "id": "1444f56e-c0c4-42f2-8760-0871c0f48e8a",
+    "url": "http://3xdlve3wm3gu5ahwlaeaelcavyfa5nvvkf5qxpz462noe7jicbrvbfqd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360804"
+  },
+  {
+    "id": "05677da8-c738-4b59-b094-7fb5248e49a5",
+    "url": "http://kimhacki773km53ptpmfjpmpitilwc43pczwiipztn33ecdjb2etesyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360811"
+  },
+  {
+    "id": "b6aa745f-7ac2-40bb-9874-61590784782c",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=zerodaqr4acpxifpjozvntrdrabya7qhb7s5hxee4soi6iyfx5fkq7yd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360819"
+  },
+  {
+    "id": "a68cdd58-f7af-45c0-8c6d-7462e63eee41",
+    "url": "http://kimhackiipih7m3zx3zgt7cbrkpbsxwgp36ipaytysk3p5bfcpxd4jid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360825"
+  },
+  {
+    "id": "205941a1-bb51-492e-bd2b-3b3e0caaa568",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/search?q=ransomware attack&sorttype=rel&page=2",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360831"
+  },
+  {
+    "id": "4c122352-c7be-4a76-be54-059fee7e0787",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=kimhacki773km53ptpmfjpmpitilwc43pczwiipztn33ecdjb2etesyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360842"
+  },
+  {
+    "id": "97a55043-669b-49ae-a535-5bc68857a2d9",
+    "url": "http://3xdlve3wm3gu5ahwlaeaelcavyfa5nvvkf5qxpz462noe7jicbrvbfqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360848"
+  },
+  {
+    "id": "3159e470-2199-4daa-b68d-15c08099f061",
+    "url": "http://tce2rbic57mg25yqbrvymeb6lzruu23krmcbsiaa77xe3amjojrckgyd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360854"
+  },
+  {
+    "id": "84459c75-bd0e-4d5e-95bf-6e14d985eacc",
+    "url": "http://tsqx4caabpk6pwc225lwf2s4r573vxeh4na7kdrbwxskytot5vqgsaid.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360859"
+  },
+  {
+    "id": "2ced3a9e-5051-4cbb-8d85-c79c92dd7e90",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=zeroda2aasmyjh3u7z3z2htw3lvf332jafjbp7k44zwbepqr2ra6qhyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360866"
+  },
+  {
+    "id": "c3bd02d3-048b-4004-b7a4-3328ffcedde1",
+    "url": "http://hacker5quf443wtg4n7hi6m3l4xpcyasknjvhhrb6pcbgakhu7bblhad.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360872"
+  },
+  {
+    "id": "9abcf965-2020-44c3-87c4-d3f5e55e6b16",
+    "url": "http://za4sn4ai4beyfpesrmbdnjrwewpyasb5yzvgqzxr62ngabmtixxlejid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360878"
+  },
+  {
+    "id": "36c13326-010f-4321-b034-f7b74ffc196f",
+    "url": "http://darkad6ydko2to4tpx7pnfk2wrhjsl5zpsvwujgcqscqr4vmm6xtijyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360883"
+  },
+  {
+    "id": "e1f299dc-021b-4e64-8608-bfcfcb409cd4",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=zerodayn7gju6753dzeiwsyidjrhpqnzat22zdtddchgddw6v4ranqqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360890"
+  },
+  {
+    "id": "73ba819d-8f4a-47a3-8080-3b37cb8e4a8c",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=au5zpcasqtlmdbphmj47ymd4tshzyanfnokzvdl2lettv3iylmdwbjad.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360896"
+  },
+  {
+    "id": "f553d1b4-5d73-4bd4-8898-846d133b106c",
+    "url": "http://xk6s3uhhe6hbm4o2k5uoskdesl24qptfviw4auvw7lkk2wzizd2wn3qd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360902"
+  },
+  {
+    "id": "9dc4d61b-2110-44c7-bfa2-2e508c8aea01",
+    "url": "http://zerodayn7gju6753dzeiwsyidjrhpqnzat22zdtddchgddw6v4ranqqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360908"
+  },
+  {
+    "id": "b69aaeec-f5cd-4746-9323-f90eaf265202",
+    "url": "http://au5zpcasqtlmdbphmj47ymd4tshzyanfnokzvdl2lettv3iylmdwbjad.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360913"
+  },
+  {
+    "id": "524419a4-d423-4c40-9ccc-2aa3d764ea41",
+    "url": "http://zerodaqr4acpxifpjozvntrdrabya7qhb7s5hxee4soi6iyfx5fkq7yd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360919"
+  },
+  {
+    "id": "6998e2fc-0502-4b43-8203-725f850b9c32",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/fresh",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360925"
+  },
+  {
+    "id": "b42f726c-be1a-469b-a5fd-6de1a805ce58",
+    "url": "http://kimhackiipih7m3zx3zgt7cbrkpbsxwgp36ipaytysk3p5bfcpxd4jid.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360930"
+  },
+  {
+    "id": "2ac39862-2b90-4f83-acd8-d722e61ee70e",
+    "url": "http://r2dpq3tdciqc434mf4zpmqdq644temqhjbljg4doh67sasou4zz7vgid.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360936"
+  },
+  {
+    "id": "770a49de-e4af-43ac-81b5-7d919abaf4da",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=xk6s3uhhe6hbm4o2k5uoskdesl24qptfviw4auvw7lkk2wzizd2wn3qd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360942"
+  },
+  {
+    "id": "7a8482be-1289-46aa-b43c-1a9ca98b5164",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/submit_onion_url",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360948"
+  },
+  {
+    "id": "b70a3ce6-1b2b-43d2-8383-29e3c2ebcf7a",
+    "url": "http://zerodaqr4acpxifpjozvntrdrabya7qhb7s5hxee4soi6iyfx5fkq7yd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360953"
+  },
+  {
+    "id": "6d2296a4-e53f-4fc7-8285-5492d800edc6",
+    "url": "http://darkad6ydko2to4tpx7pnfk2wrhjsl5zpsvwujgcqscqr4vmm6xtijyd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360959"
+  },
+  {
+    "id": "18f2067e-137e-4fa3-ba23-1435aa2d2f3d",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=darkad6y7wv6cld6euwn5clk2cn5t23hrch3v5jxycgxssq3mai2h4yd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360965"
+  },
+  {
+    "id": "369aba59-6045-4b29-838e-fa64dba79309",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360971"
+  },
+  {
+    "id": "7b1e2bd0-98e5-4e24-8ff4-3d47cddb34e5",
+    "url": "http://darkad6y7wv6cld6euwn5clk2cn5t23hrch3v5jxycgxssq3mai2h4yd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360976"
+  },
+  {
+    "id": "c479e4e8-8c9f-4e57-bc63-6a3af2e3e800",
+    "url": "http://tsqx4caabpk6pwc225lwf2s4r573vxeh4na7kdrbwxskytot5vqgsaid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360984"
+  },
+  {
+    "id": "b6761b0e-e903-4b7d-9af3-15fb2fc61d88",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=free7qpayg6nevett7eloccssbgtqmmuf3qs3ygcfur2tjf3py4lgiyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360992"
+  },
+  {
+    "id": "2d123af6-f843-45dc-b7c8-690f0337c62e",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=darkad6ydko2to4tpx7pnfk2wrhjsl5zpsvwujgcqscqr4vmm6xtijyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360998"
+  },
+  {
+    "id": "afc121b5-7a91-4fe1-8246-ac7b1ba20517",
+    "url": "http://zerodayn7gju6753dzeiwsyidjrhpqnzat22zdtddchgddw6v4ranqqd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361004"
+  },
+  {
+    "id": "0e83bb3d-697f-47ff-95f4-2b51d9fddb70",
+    "url": "http://tce2rbic57mg25yqbrvymeb6lzruu23krmcbsiaa77xe3amjojrckgyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361010"
+  },
+  {
+    "id": "c3a0b317-8f03-49d1-aa81-a0ca032d05a4",
+    "url": "http://j233o5qe6fcac7mchncj3n5xk6wy5snqovmh6ansvpfkwbz6ubi4heqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361016"
+  },
+  {
+    "id": "bc039351-cadb-4731-9190-e859b20a74b3",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/search?q=ransomware attack&sorttype=rel&nol=1&page=1",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361026"
+  },
+  {
+    "id": "69eafe54-7778-492b-afe4-f68dd98fdc46",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/search?view=gal&nol=1&q=ransomware attack&sorttype=rel&page=1",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361037"
+  },
+  {
+    "id": "15556555-6a79-479c-b2c5-ae812718bf09",
+    "url": "http://hacker5quf443wtg4n7hi6m3l4xpcyasknjvhhrb6pcbgakhu7bblhad.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361043"
+  },
+  {
+    "id": "1f7bf1ba-d9b2-46d1-b4f9-5cc68c9b0962",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=kimhackiipih7m3zx3zgt7cbrkpbsxwgp36ipaytysk3p5bfcpxd4jid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361053"
+  },
+  {
+    "id": "41c7e80a-6e10-4050-8643-e8d5db57a120",
+    "url": "http://uxivxpscaliz7atl7lujqh4psxv4vaddp77iwo74tqjdnoddnlp3stid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361059"
+  },
+  {
+    "id": "e729179e-7542-44fd-96ca-5fd6f01cab5d",
+    "url": "http://uxivxpscaliz7atl7lujqh4psxv4vaddp77iwo74tqjdnoddnlp3stid.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361065"
+  },
+  {
+    "id": "1b6c06e7-50a1-455d-b36a-05b8a99a258a",
+    "url": "http://r2dpq3tdciqc434mf4zpmqdq644temqhjbljg4doh67sasou4zz7vgid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361071"
+  },
+  {
+    "id": "864f06c3-7ebd-45f6-875a-48b5b8740e50",
+    "url": "http://cryptobcgaxxj35k3yvcyaaxm5c6si5sufq4sck3pgxlbu6qt23goqqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361077"
+  },
+  {
+    "id": "bdbace23-9573-4276-9af1-55cd3ffebfca",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/random",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361083"
+  },
+  {
+    "id": "849b73dd-0ba6-427e-8a60-49e803cc920a",
+    "url": "http://zeroda2aasmyjh3u7z3z2htw3lvf332jafjbp7k44zwbepqr2ra6qhyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361089"
+  },
+  {
+    "id": "77b6ba5d-f6b8-4457-b210-d05647f74c36",
+    "url": "http://j233o5qe6fcac7mchncj3n5xk6wy5snqovmh6ansvpfkwbz6ubi4heqd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361095"
+  },
+  {
+    "id": "005938c5-dd6f-467c-9a91-ba72826e2aa8",
+    "url": "http://rdcfwq7i2ik6i3y35dmfkvflzqd4f2qktmx7wj4gfaim4e7fvajmdsqd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361101"
+  },
+  {
+    "id": "e837cefe-f82c-42ac-b788-6893588746b4",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=uxivxpscaliz7atl7lujqh4psxv4vaddp77iwo74tqjdnoddnlp3stid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361111"
+  },
+  {
+    "id": "20c86ad4-5355-4e0a-9b25-9db1191f6ab6",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/about",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361116"
+  },
+  {
+    "id": "44858acf-229d-484d-b222-3631e5f1366e",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/advertise",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361123"
+  },
+  {
+    "id": "6f2e4aca-3bdc-4ef5-b3c6-c07d538e6c1a",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=r2dpq3tdciqc434mf4zpmqdq644temqhjbljg4doh67sasou4zz7vgid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361132"
+  },
+  {
+    "id": "d08fa5c2-5975-4386-86e9-943eac940d4d",
+    "url": "http://free7qpayg6nevett7eloccssbgtqmmuf3qs3ygcfur2tjf3py4lgiyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361138"
+  },
+  {
+    "id": "8cf4a90a-584b-4dd1-8350-36db40c2a634",
+    "url": "http://za4sn4ai4beyfpesrmbdnjrwewpyasb5yzvgqzxr62ngabmtixxlejid.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361144"
+  },
+  {
+    "id": "d40ae31b-8470-4876-abc4-d7fafca5be9c",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=za4sn4ai4beyfpesrmbdnjrwewpyasb5yzvgqzxr62ngabmtixxlejid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361150"
+  },
+  {
+    "id": "3303d543-2618-4be0-aec3-76d02e586f5c",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=j233o5qe6fcac7mchncj3n5xk6wy5snqovmh6ansvpfkwbz6ubi4heqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361160"
+  },
+  {
+    "id": "d187ec85-871a-4deb-9cc1-242e733da010",
+    "url": "http://xk6s3uhhe6hbm4o2k5uoskdesl24qptfviw4auvw7lkk2wzizd2wn3qd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361166"
+  },
+  {
+    "id": "c3696cdb-250a-45f5-8efc-f664afbdad9c",
+    "url": "http://j233o5qxfn74dzr44x45vbruby7fhfmmvopu263oo2n5oc3guawm6vyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361172"
+  },
+  {
+    "id": "4ba161da-cda0-494b-b28b-3ff6274de050",
+    "url": "http://au5zpcasqtlmdbphmj47ymd4tshzyanfnokzvdl2lettv3iylmdwbjad.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361178"
+  },
+  {
+    "id": "663861dd-f713-4776-aa92-8b22de0a4c06",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=3xdlve3wm3gu5ahwlaeaelcavyfa5nvvkf5qxpz462noe7jicbrvbfqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361185"
+  },
+  {
+    "id": "a8e5e7dd-af3a-4938-81a4-460c9f41991c",
+    "url": "http://kimhacki773km53ptpmfjpmpitilwc43pczwiipztn33ecdjb2etesyd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361191"
+  },
+  {
+    "id": "30a13c03-c248-42d9-a1f4-c35cf0fc6efa",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=hacker5quf443wtg4n7hi6m3l4xpcyasknjvhhrb6pcbgakhu7bblhad.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361198"
+  },
+  {
+    "id": "fc81fc8e-716c-4aeb-993b-1a02471a5656",
+    "url": "http://rdcfwq7i2ik6i3y35dmfkvflzqd4f2qktmx7wj4gfaim4e7fvajmdsqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361203"
+  },
+  {
+    "id": "0da5d953-a972-4fb4-a2e1-b05fc6525f69",
+    "url": "http://darkad6y7wv6cld6euwn5clk2cn5t23hrch3v5jxycgxssq3mai2h4yd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361209"
+  },
+  {
+    "id": "f8d1d3da-eb9d-471c-b045-2743330cfba2",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/top_onions",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361214"
+  },
+  {
+    "id": "25363909-1aeb-4f05-9c59-c6b676e19b2b",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=tsqx4caabpk6pwc225lwf2s4r573vxeh4na7kdrbwxskytot5vqgsaid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361224"
+  },
+  {
+    "id": "fcec8fe1-58ed-4f88-9176-efa9df044f81",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=rdcfwq7i2ik6i3y35dmfkvflzqd4f2qktmx7wj4gfaim4e7fvajmdsqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361232"
+  },
+  {
+    "id": "7b449113-e631-4e9a-8db5-86a6f689a923",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/search?query=ransomware%20attack&page=3",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021881"
+  },
+  {
+    "id": "6b880fbf-6204-4872-b457-5f8b50de934f",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021897"
+  },
+  {
+    "id": "b3e1b480-c368-4a3d-9ff4-79de3c6d9bb6",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/search?query=ransomware%20attack&page=4",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021904"
+  },
+  {
+    "id": "d22fc57d-a675-48c9-969e-1c4268be2336",
+    "url": "http://afajj7x4zfl2d3fc2u7uzxp4iwf4r2kucr5on24xk2hwrssoj7yivhid.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021910"
+  },
+  {
+    "id": "4b44cf72-edf1-429e-b63e-0ed473917226",
+    "url": "http://ransomwrg3myf44rjjuszagrkyf2tj76ipobnp5bro563ogtsuoffuad.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021917"
+  },
+  {
+    "id": "f4688926-2855-4934-a8fc-c7ea1a6aa6b8",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/search?query=ransomware%20attack&amp;page=3",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021931"
+  },
+  {
+    "id": "148ea7aa-6f06-4d48-94bd-bb9544cdc36c",
+    "url": "http://xev7uvcexztswvmtnqjywsjsf457ocjnmowo74hvvlblryucua4xovqd.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021937"
+  },
+  {
+    "id": "cc4eba0f-001e-4a7d-bbe3-cdafd7309d73",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/search?query=ransomware%20attack&amp;page=4",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021942"
+  },
+  {
+    "id": "09253be8-4787-4adf-96b1-b56020aae2b1",
+    "url": "http://vscma3qr6g5zfd7jbffzo6qvuq5h2jlbqrv6i3cmmj24xaqcr6ddloid.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022016"
+  },
+  {
+    "id": "a38abd43-3d94-43df-8042-e406d9bdce9b",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/img/excavator.png",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022037"
+  },
+  {
+    "id": "050d70fc-1a3f-4787-a13c-701632dc8b8c",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/advertise",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022043"
+  },
+  {
+    "id": "d9773a9e-4194-4eaa-9d13-aa26e6bad754",
+    "url": "http://6ybed2kofxv2s2mfd4g2gt4teq3bzwsff3vvrujzrh2dnzf3bcehbuyd.onion/",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022050"
+  },
+  {
+    "id": "c74e401d-cf5a-45e6-b6fd-1eb84e487973",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/search",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022056"
+  },
+  {
+    "id": "b5b7242f-f09c-433a-9480-c9fc60ba0fa8",
+    "url": "http://deepma62yqdoqb5ywsvn25xjivdpqm5mdt26i37g7owfhzuuvqeghfyd.onion/",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022062"
+  },
+  {
+    "id": "fdc02ac4-a014-462f-917a-cbbf1609d7ec",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/search?query=ransomware%20attack&page=2",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022068"
+  },
+  {
+    "id": "60b2328a-76f8-4ed2-9525-992b080a7af5",
+    "url": "http://exchangehd5455aori4qvrwhyno4ul7xrz4foy6qwga3olnbclp5f4qd.onion/?27e4f6c5e3",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022075"
+  },
+  {
+    "id": "ea8f8ddc-ad1c-46f6-8ecb-87dd7128ee76",
+    "url": "http://cpsex3x3lclgaxfvpx5zuzwrrnww2hf6m3b5ixi4e6b3vhqeqvxgrxid.onion/?clickid=Excavator",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022082"
+  },
+  {
+    "id": "c3323d58-c002-4fea-844e-6c1dc6f23fe2",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/feedback",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022088"
+  },
+  {
+    "id": "fbf59d62-3961-4dd2-b274-cc5d6d604ffc",
+    "url": "http://zprxx7sfc26rufggreanowmme5qqouqegr2efnko6erycquwvpq5egid.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022094"
+  },
+  {
+    "id": "0648b8a1-789d-48be-9c19-eda46372f9ac",
+    "url": "http://wormgptkf23rl2jz53krs765bziz6any5waparuuc6rdz5az2yp7p7ad.onion/",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022101"
+  },
+  {
+    "id": "f9a4fa04-6490-4dde-af34-737fc127cd12",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/add-url",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022106"
+  },
+  {
+    "id": "9f31617a-c746-45cf-a958-ecf2f91ceaa8",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/search?query=ransomware%20attack&amp;page=2",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022112"
+  },
+  {
+    "id": "a84aab1f-5eb3-4c08-8178-8b46baff0884",
+    "url": "http://torlib7fmhyvfv2k7s77xigdds3rosio6k6bxnn256xmtzlbgyizduqd.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022118"
+  },
+  {
+    "id": "55be3a19-5da7-45a6-9623-abda3db22e8a",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/about",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022124"
+  },
+  {
+    "id": "818fd80c-c9f8-4863-8957-9ec33c3c4bb7",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/css/app.min.css",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022130"
+  },
+  {
+    "id": "a07eb2ba-cb71-43f6-a40a-7b60bc7c9405",
+    "url": "http://ssg3qvvuilseciagm4nixjqu3rsiheny5lifjnwt6o5ann64iocy64ad.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022136"
+  }
+]

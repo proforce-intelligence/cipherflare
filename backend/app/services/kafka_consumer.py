@@ -32,7 +32,7 @@ class KafkaConsumer:
                     value_deserializer=lambda m: json.loads(m.decode('utf-8')),
                     auto_offset_reset='earliest',
                     enable_auto_commit=True,
-                    max_poll_interval_ms=300000,        # 5 minutes
+                    max_poll_interval_ms=900000,        # 15 minutes (was 300000)
                     session_timeout_ms=60000,
                     heartbeat_interval_ms=30000,
                     request_timeout_ms=60000,
@@ -111,8 +111,9 @@ class KafkaProducerConsumer(KafkaConsumer):
 
         try:
             await self.producer.send_and_wait("status_updates", message)
+            logger.info(f"[✓] Status sent: {job_id} -> {status}")
         except Exception as e:
-            logger.error(f"[!] Failed to send status: {e}")
+            logger.warning(f"[!] Failed to send status (topic may not exist): {e}")
 
     async def close(self):
         if self.producer:

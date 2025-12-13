@@ -1,0 +1,2354 @@
+[
+  {
+    "id": "a7905624-60aa-4531-b9a3-98ccfcd50376",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/malicious-software-ransomware/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347246"
+  },
+  {
+    "id": "1429dd2e-6084-4627-849e-403b8db0dbd3",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/ransomware-attacks-system-shut/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347260"
+  },
+  {
+    "id": "6c6ea25b-a784-4c6a-bf2d-ffead94f5d7a",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/russian-ransomware-attack/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347268"
+  },
+  {
+    "id": "2f7a3c74-f043-45b5-a940-f2a8d9d8931b",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/tag/ransomware-attacks/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347275"
+  },
+  {
+    "id": "1b4ae2a5-3521-4581-ac8b-fca5cb78f10d",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/maze-ransomware-attack/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347283"
+  },
+  {
+    "id": "ff79ed31-f28c-484b-bc08-cfdfd8c34485",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/us-suffered-ransomware-attacks/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347290"
+  },
+  {
+    "id": "184a8267-b7c8-4b83-a387-aa65ab1e06f7",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/300gb-data-loss/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347296"
+  },
+  {
+    "id": "31656ed9-00c7-4fb4-a0d1-94cfb222fb90",
+    "url": "http://xmh57jrknzkhv6y3ls3ubitzfqnkrwxhopf5aygthi7d6rplyvk3noyd.onion/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347303"
+  },
+  {
+    "id": "1fc8f4eb-fe48-48d3-9468-8880019114e3",
+    "url": "http://xmh57jrknzkhv6y3ls3ubitzfqnkrwxhopf5aygthi7d6rplyvk3noyd.onion/adinfo.html",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347310"
+  },
+  {
+    "id": "405f1af4-5f62-4d87-9012-119b8de6a249",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/carnival-corp-cruise-ransomware/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347317"
+  },
+  {
+    "id": "646e17ee-be7e-4d74-85a3-bcc98254a5d0",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/egregor-ransomware-hackers-arrested/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347324"
+  },
+  {
+    "id": "a7d2f17e-95eb-44cd-a484-d6be1e705871",
+    "url": "http://dwltorbltw3tdjskxn23j2mwz2f4q25j4ninl5bdvttiy4xb6cqzikid.onion/tag/ransomware-attack/page/2/",
+    "title": "Hidden Service — Torch",
+    "engine": "Torch",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:11.347331"
+  },
+  {
+    "id": "816c7457-c841-4bbf-9ab9-6f1d927d56eb",
+    "url": "http://j233o5qxfn74dzr44x45vbruby7fhfmmvopu263oo2n5oc3guawm6vyd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360739"
+  },
+  {
+    "id": "149f6491-d623-4b0e-a801-ef4488e47212",
+    "url": "http://zeroda2aasmyjh3u7z3z2htw3lvf332jafjbp7k44zwbepqr2ra6qhyd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360754"
+  },
+  {
+    "id": "b5eba229-ba28-49ae-b946-e6b9fa55fcf0",
+    "url": "http://free7qpayg6nevett7eloccssbgtqmmuf3qs3ygcfur2tjf3py4lgiyd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360761"
+  },
+  {
+    "id": "2bda808f-2b27-4764-afe7-deaa878c4bd8",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=tce2rbic57mg25yqbrvymeb6lzruu23krmcbsiaa77xe3amjojrckgyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360771"
+  },
+  {
+    "id": "dd0ab2ed-bc7e-4048-9dc4-3791de6e7fdc",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/search?q=ransomware attack&sorttype=rel&page=1",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360782"
+  },
+  {
+    "id": "ad2a1109-7752-4ccb-8356-1aa8a0152175",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=j233o5qxfn74dzr44x45vbruby7fhfmmvopu263oo2n5oc3guawm6vyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360796"
+  },
+  {
+    "id": "1444f56e-c0c4-42f2-8760-0871c0f48e8a",
+    "url": "http://3xdlve3wm3gu5ahwlaeaelcavyfa5nvvkf5qxpz462noe7jicbrvbfqd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360804"
+  },
+  {
+    "id": "05677da8-c738-4b59-b094-7fb5248e49a5",
+    "url": "http://kimhacki773km53ptpmfjpmpitilwc43pczwiipztn33ecdjb2etesyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360811"
+  },
+  {
+    "id": "b6aa745f-7ac2-40bb-9874-61590784782c",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=zerodaqr4acpxifpjozvntrdrabya7qhb7s5hxee4soi6iyfx5fkq7yd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360819"
+  },
+  {
+    "id": "a68cdd58-f7af-45c0-8c6d-7462e63eee41",
+    "url": "http://kimhackiipih7m3zx3zgt7cbrkpbsxwgp36ipaytysk3p5bfcpxd4jid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360825"
+  },
+  {
+    "id": "205941a1-bb51-492e-bd2b-3b3e0caaa568",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/search?q=ransomware attack&sorttype=rel&page=2",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360831"
+  },
+  {
+    "id": "4c122352-c7be-4a76-be54-059fee7e0787",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=kimhacki773km53ptpmfjpmpitilwc43pczwiipztn33ecdjb2etesyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360842"
+  },
+  {
+    "id": "97a55043-669b-49ae-a535-5bc68857a2d9",
+    "url": "http://3xdlve3wm3gu5ahwlaeaelcavyfa5nvvkf5qxpz462noe7jicbrvbfqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360848"
+  },
+  {
+    "id": "3159e470-2199-4daa-b68d-15c08099f061",
+    "url": "http://tce2rbic57mg25yqbrvymeb6lzruu23krmcbsiaa77xe3amjojrckgyd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360854"
+  },
+  {
+    "id": "84459c75-bd0e-4d5e-95bf-6e14d985eacc",
+    "url": "http://tsqx4caabpk6pwc225lwf2s4r573vxeh4na7kdrbwxskytot5vqgsaid.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360859"
+  },
+  {
+    "id": "2ced3a9e-5051-4cbb-8d85-c79c92dd7e90",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=zeroda2aasmyjh3u7z3z2htw3lvf332jafjbp7k44zwbepqr2ra6qhyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360866"
+  },
+  {
+    "id": "c3bd02d3-048b-4004-b7a4-3328ffcedde1",
+    "url": "http://hacker5quf443wtg4n7hi6m3l4xpcyasknjvhhrb6pcbgakhu7bblhad.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360872"
+  },
+  {
+    "id": "9abcf965-2020-44c3-87c4-d3f5e55e6b16",
+    "url": "http://za4sn4ai4beyfpesrmbdnjrwewpyasb5yzvgqzxr62ngabmtixxlejid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360878"
+  },
+  {
+    "id": "36c13326-010f-4321-b034-f7b74ffc196f",
+    "url": "http://darkad6ydko2to4tpx7pnfk2wrhjsl5zpsvwujgcqscqr4vmm6xtijyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360883"
+  },
+  {
+    "id": "e1f299dc-021b-4e64-8608-bfcfcb409cd4",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=zerodayn7gju6753dzeiwsyidjrhpqnzat22zdtddchgddw6v4ranqqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360890"
+  },
+  {
+    "id": "73ba819d-8f4a-47a3-8080-3b37cb8e4a8c",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=au5zpcasqtlmdbphmj47ymd4tshzyanfnokzvdl2lettv3iylmdwbjad.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360896"
+  },
+  {
+    "id": "f553d1b4-5d73-4bd4-8898-846d133b106c",
+    "url": "http://xk6s3uhhe6hbm4o2k5uoskdesl24qptfviw4auvw7lkk2wzizd2wn3qd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360902"
+  },
+  {
+    "id": "9dc4d61b-2110-44c7-bfa2-2e508c8aea01",
+    "url": "http://zerodayn7gju6753dzeiwsyidjrhpqnzat22zdtddchgddw6v4ranqqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360908"
+  },
+  {
+    "id": "b69aaeec-f5cd-4746-9323-f90eaf265202",
+    "url": "http://au5zpcasqtlmdbphmj47ymd4tshzyanfnokzvdl2lettv3iylmdwbjad.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360913"
+  },
+  {
+    "id": "524419a4-d423-4c40-9ccc-2aa3d764ea41",
+    "url": "http://zerodaqr4acpxifpjozvntrdrabya7qhb7s5hxee4soi6iyfx5fkq7yd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360919"
+  },
+  {
+    "id": "6998e2fc-0502-4b43-8203-725f850b9c32",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/fresh",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360925"
+  },
+  {
+    "id": "b42f726c-be1a-469b-a5fd-6de1a805ce58",
+    "url": "http://kimhackiipih7m3zx3zgt7cbrkpbsxwgp36ipaytysk3p5bfcpxd4jid.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360930"
+  },
+  {
+    "id": "2ac39862-2b90-4f83-acd8-d722e61ee70e",
+    "url": "http://r2dpq3tdciqc434mf4zpmqdq644temqhjbljg4doh67sasou4zz7vgid.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360936"
+  },
+  {
+    "id": "770a49de-e4af-43ac-81b5-7d919abaf4da",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=xk6s3uhhe6hbm4o2k5uoskdesl24qptfviw4auvw7lkk2wzizd2wn3qd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360942"
+  },
+  {
+    "id": "7a8482be-1289-46aa-b43c-1a9ca98b5164",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/submit_onion_url",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360948"
+  },
+  {
+    "id": "b70a3ce6-1b2b-43d2-8383-29e3c2ebcf7a",
+    "url": "http://zerodaqr4acpxifpjozvntrdrabya7qhb7s5hxee4soi6iyfx5fkq7yd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360953"
+  },
+  {
+    "id": "6d2296a4-e53f-4fc7-8285-5492d800edc6",
+    "url": "http://darkad6ydko2to4tpx7pnfk2wrhjsl5zpsvwujgcqscqr4vmm6xtijyd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360959"
+  },
+  {
+    "id": "18f2067e-137e-4fa3-ba23-1435aa2d2f3d",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=darkad6y7wv6cld6euwn5clk2cn5t23hrch3v5jxycgxssq3mai2h4yd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360965"
+  },
+  {
+    "id": "369aba59-6045-4b29-838e-fa64dba79309",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360971"
+  },
+  {
+    "id": "7b1e2bd0-98e5-4e24-8ff4-3d47cddb34e5",
+    "url": "http://darkad6y7wv6cld6euwn5clk2cn5t23hrch3v5jxycgxssq3mai2h4yd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360976"
+  },
+  {
+    "id": "c479e4e8-8c9f-4e57-bc63-6a3af2e3e800",
+    "url": "http://tsqx4caabpk6pwc225lwf2s4r573vxeh4na7kdrbwxskytot5vqgsaid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360984"
+  },
+  {
+    "id": "b6761b0e-e903-4b7d-9af3-15fb2fc61d88",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=free7qpayg6nevett7eloccssbgtqmmuf3qs3ygcfur2tjf3py4lgiyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360992"
+  },
+  {
+    "id": "2d123af6-f843-45dc-b7c8-690f0337c62e",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=darkad6ydko2to4tpx7pnfk2wrhjsl5zpsvwujgcqscqr4vmm6xtijyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.360998"
+  },
+  {
+    "id": "afc121b5-7a91-4fe1-8246-ac7b1ba20517",
+    "url": "http://zerodayn7gju6753dzeiwsyidjrhpqnzat22zdtddchgddw6v4ranqqd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361004"
+  },
+  {
+    "id": "0e83bb3d-697f-47ff-95f4-2b51d9fddb70",
+    "url": "http://tce2rbic57mg25yqbrvymeb6lzruu23krmcbsiaa77xe3amjojrckgyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361010"
+  },
+  {
+    "id": "c3a0b317-8f03-49d1-aa81-a0ca032d05a4",
+    "url": "http://j233o5qe6fcac7mchncj3n5xk6wy5snqovmh6ansvpfkwbz6ubi4heqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361016"
+  },
+  {
+    "id": "bc039351-cadb-4731-9190-e859b20a74b3",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/search?q=ransomware attack&sorttype=rel&nol=1&page=1",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361026"
+  },
+  {
+    "id": "69eafe54-7778-492b-afe4-f68dd98fdc46",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/search?view=gal&nol=1&q=ransomware attack&sorttype=rel&page=1",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361037"
+  },
+  {
+    "id": "15556555-6a79-479c-b2c5-ae812718bf09",
+    "url": "http://hacker5quf443wtg4n7hi6m3l4xpcyasknjvhhrb6pcbgakhu7bblhad.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361043"
+  },
+  {
+    "id": "1f7bf1ba-d9b2-46d1-b4f9-5cc68c9b0962",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=kimhackiipih7m3zx3zgt7cbrkpbsxwgp36ipaytysk3p5bfcpxd4jid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361053"
+  },
+  {
+    "id": "41c7e80a-6e10-4050-8643-e8d5db57a120",
+    "url": "http://uxivxpscaliz7atl7lujqh4psxv4vaddp77iwo74tqjdnoddnlp3stid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361059"
+  },
+  {
+    "id": "e729179e-7542-44fd-96ca-5fd6f01cab5d",
+    "url": "http://uxivxpscaliz7atl7lujqh4psxv4vaddp77iwo74tqjdnoddnlp3stid.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361065"
+  },
+  {
+    "id": "1b6c06e7-50a1-455d-b36a-05b8a99a258a",
+    "url": "http://r2dpq3tdciqc434mf4zpmqdq644temqhjbljg4doh67sasou4zz7vgid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361071"
+  },
+  {
+    "id": "864f06c3-7ebd-45f6-875a-48b5b8740e50",
+    "url": "http://cryptobcgaxxj35k3yvcyaaxm5c6si5sufq4sck3pgxlbu6qt23goqqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361077"
+  },
+  {
+    "id": "bdbace23-9573-4276-9af1-55cd3ffebfca",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/random",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361083"
+  },
+  {
+    "id": "849b73dd-0ba6-427e-8a60-49e803cc920a",
+    "url": "http://zeroda2aasmyjh3u7z3z2htw3lvf332jafjbp7k44zwbepqr2ra6qhyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361089"
+  },
+  {
+    "id": "77b6ba5d-f6b8-4457-b210-d05647f74c36",
+    "url": "http://j233o5qe6fcac7mchncj3n5xk6wy5snqovmh6ansvpfkwbz6ubi4heqd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361095"
+  },
+  {
+    "id": "005938c5-dd6f-467c-9a91-ba72826e2aa8",
+    "url": "http://rdcfwq7i2ik6i3y35dmfkvflzqd4f2qktmx7wj4gfaim4e7fvajmdsqd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361101"
+  },
+  {
+    "id": "e837cefe-f82c-42ac-b788-6893588746b4",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=uxivxpscaliz7atl7lujqh4psxv4vaddp77iwo74tqjdnoddnlp3stid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361111"
+  },
+  {
+    "id": "20c86ad4-5355-4e0a-9b25-9db1191f6ab6",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/about",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361116"
+  },
+  {
+    "id": "44858acf-229d-484d-b222-3631e5f1366e",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/advertise",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361123"
+  },
+  {
+    "id": "6f2e4aca-3bdc-4ef5-b3c6-c07d538e6c1a",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=r2dpq3tdciqc434mf4zpmqdq644temqhjbljg4doh67sasou4zz7vgid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361132"
+  },
+  {
+    "id": "d08fa5c2-5975-4386-86e9-943eac940d4d",
+    "url": "http://free7qpayg6nevett7eloccssbgtqmmuf3qs3ygcfur2tjf3py4lgiyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361138"
+  },
+  {
+    "id": "8cf4a90a-584b-4dd1-8350-36db40c2a634",
+    "url": "http://za4sn4ai4beyfpesrmbdnjrwewpyasb5yzvgqzxr62ngabmtixxlejid.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361144"
+  },
+  {
+    "id": "d40ae31b-8470-4876-abc4-d7fafca5be9c",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=za4sn4ai4beyfpesrmbdnjrwewpyasb5yzvgqzxr62ngabmtixxlejid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361150"
+  },
+  {
+    "id": "3303d543-2618-4be0-aec3-76d02e586f5c",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=j233o5qe6fcac7mchncj3n5xk6wy5snqovmh6ansvpfkwbz6ubi4heqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361160"
+  },
+  {
+    "id": "d187ec85-871a-4deb-9cc1-242e733da010",
+    "url": "http://xk6s3uhhe6hbm4o2k5uoskdesl24qptfviw4auvw7lkk2wzizd2wn3qd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361166"
+  },
+  {
+    "id": "c3696cdb-250a-45f5-8efc-f664afbdad9c",
+    "url": "http://j233o5qxfn74dzr44x45vbruby7fhfmmvopu263oo2n5oc3guawm6vyd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361172"
+  },
+  {
+    "id": "4ba161da-cda0-494b-b28b-3ff6274de050",
+    "url": "http://au5zpcasqtlmdbphmj47ymd4tshzyanfnokzvdl2lettv3iylmdwbjad.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361178"
+  },
+  {
+    "id": "663861dd-f713-4776-aa92-8b22de0a4c06",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=3xdlve3wm3gu5ahwlaeaelcavyfa5nvvkf5qxpz462noe7jicbrvbfqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361185"
+  },
+  {
+    "id": "a8e5e7dd-af3a-4938-81a4-460c9f41991c",
+    "url": "http://kimhacki773km53ptpmfjpmpitilwc43pczwiipztn33ecdjb2etesyd.onion/",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361191"
+  },
+  {
+    "id": "30a13c03-c248-42d9-a1f4-c35cf0fc6efa",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=hacker5quf443wtg4n7hi6m3l4xpcyasknjvhhrb6pcbgakhu7bblhad.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361198"
+  },
+  {
+    "id": "fc81fc8e-716c-4aeb-993b-1a02471a5656",
+    "url": "http://rdcfwq7i2ik6i3y35dmfkvflzqd4f2qktmx7wj4gfaim4e7fvajmdsqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361203"
+  },
+  {
+    "id": "0da5d953-a972-4fb4-a2e1-b05fc6525f69",
+    "url": "http://darkad6y7wv6cld6euwn5clk2cn5t23hrch3v5jxycgxssq3mai2h4yd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361209"
+  },
+  {
+    "id": "f8d1d3da-eb9d-471c-b045-2743330cfba2",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/top_onions",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361214"
+  },
+  {
+    "id": "25363909-1aeb-4f05-9c59-c6b676e19b2b",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=tsqx4caabpk6pwc225lwf2s4r573vxeh4na7kdrbwxskytot5vqgsaid.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361224"
+  },
+  {
+    "id": "fcec8fe1-58ed-4f88-9176-efa9df044f81",
+    "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/serviceinfo/?service=http&dom=rdcfwq7i2ik6i3y35dmfkvflzqd4f2qktmx7wj4gfaim4e7fvajmdsqd.onion",
+    "title": "Hidden Service — Tor66",
+    "engine": "Tor66",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:33.361232"
+  },
+  {
+    "id": "7b449113-e631-4e9a-8db5-86a6f689a923",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/search?query=ransomware%20attack&page=3",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021881"
+  },
+  {
+    "id": "6b880fbf-6204-4872-b457-5f8b50de934f",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021897"
+  },
+  {
+    "id": "b3e1b480-c368-4a3d-9ff4-79de3c6d9bb6",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/search?query=ransomware%20attack&page=4",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021904"
+  },
+  {
+    "id": "d22fc57d-a675-48c9-969e-1c4268be2336",
+    "url": "http://afajj7x4zfl2d3fc2u7uzxp4iwf4r2kucr5on24xk2hwrssoj7yivhid.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021910"
+  },
+  {
+    "id": "4b44cf72-edf1-429e-b63e-0ed473917226",
+    "url": "http://ransomwrg3myf44rjjuszagrkyf2tj76ipobnp5bro563ogtsuoffuad.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021917"
+  },
+  {
+    "id": "f4688926-2855-4934-a8fc-c7ea1a6aa6b8",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/search?query=ransomware%20attack&amp;page=3",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021931"
+  },
+  {
+    "id": "148ea7aa-6f06-4d48-94bd-bb9544cdc36c",
+    "url": "http://xev7uvcexztswvmtnqjywsjsf457ocjnmowo74hvvlblryucua4xovqd.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021937"
+  },
+  {
+    "id": "cc4eba0f-001e-4a7d-bbe3-cdafd7309d73",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/search?query=ransomware%20attack&amp;page=4",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.021942"
+  },
+  {
+    "id": "09253be8-4787-4adf-96b1-b56020aae2b1",
+    "url": "http://vscma3qr6g5zfd7jbffzo6qvuq5h2jlbqrv6i3cmmj24xaqcr6ddloid.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022016"
+  },
+  {
+    "id": "a38abd43-3d94-43df-8042-e406d9bdce9b",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/img/excavator.png",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022037"
+  },
+  {
+    "id": "050d70fc-1a3f-4787-a13c-701632dc8b8c",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/advertise",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022043"
+  },
+  {
+    "id": "d9773a9e-4194-4eaa-9d13-aa26e6bad754",
+    "url": "http://6ybed2kofxv2s2mfd4g2gt4teq3bzwsff3vvrujzrh2dnzf3bcehbuyd.onion/",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022050"
+  },
+  {
+    "id": "c74e401d-cf5a-45e6-b6fd-1eb84e487973",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/search",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022056"
+  },
+  {
+    "id": "b5b7242f-f09c-433a-9480-c9fc60ba0fa8",
+    "url": "http://deepma62yqdoqb5ywsvn25xjivdpqm5mdt26i37g7owfhzuuvqeghfyd.onion/",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022062"
+  },
+  {
+    "id": "fdc02ac4-a014-462f-917a-cbbf1609d7ec",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/search?query=ransomware%20attack&page=2",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022068"
+  },
+  {
+    "id": "60b2328a-76f8-4ed2-9525-992b080a7af5",
+    "url": "http://exchangehd5455aori4qvrwhyno4ul7xrz4foy6qwga3olnbclp5f4qd.onion/?27e4f6c5e3",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022075"
+  },
+  {
+    "id": "ea8f8ddc-ad1c-46f6-8ecb-87dd7128ee76",
+    "url": "http://cpsex3x3lclgaxfvpx5zuzwrrnww2hf6m3b5ixi4e6b3vhqeqvxgrxid.onion/?clickid=Excavator",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022082"
+  },
+  {
+    "id": "c3323d58-c002-4fea-844e-6c1dc6f23fe2",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/feedback",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022088"
+  },
+  {
+    "id": "fbf59d62-3961-4dd2-b274-cc5d6d604ffc",
+    "url": "http://zprxx7sfc26rufggreanowmme5qqouqegr2efnko6erycquwvpq5egid.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022094"
+  },
+  {
+    "id": "0648b8a1-789d-48be-9c19-eda46372f9ac",
+    "url": "http://wormgptkf23rl2jz53krs765bziz6any5waparuuc6rdz5az2yp7p7ad.onion/",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022101"
+  },
+  {
+    "id": "f9a4fa04-6490-4dde-af34-737fc127cd12",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/add-url",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022106"
+  },
+  {
+    "id": "9f31617a-c746-45cf-a958-ecf2f91ceaa8",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/search?query=ransomware%20attack&amp;page=2",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022112"
+  },
+  {
+    "id": "a84aab1f-5eb3-4c08-8178-8b46baff0884",
+    "url": "http://torlib7fmhyvfv2k7s77xigdds3rosio6k6bxnn256xmtzlbgyizduqd.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022118"
+  },
+  {
+    "id": "55be3a19-5da7-45a6-9623-abda3db22e8a",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/about",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022124"
+  },
+  {
+    "id": "818fd80c-c9f8-4863-8957-9ec33c3c4bb7",
+    "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/css/app.min.css",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022130"
+  },
+  {
+    "id": "a07eb2ba-cb71-43f6-a40a-7b60bc7c9405",
+    "url": "http://ssg3qvvuilseciagm4nixjqu3rsiheny5lifjnwt6o5ann64iocy64ad.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022136"
+  },
+  {
+    "id": "a776529b-f3de-4bd7-b3dd-a7b0e813423f",
+    "url": "http://yaledbex26vn3damhdofrpwz3l4t7jnp5aafquyor6kii6mslpwifvid.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022142"
+  },
+  {
+    "id": "d4dd1df8-fba3-45c6-82eb-0c029569769f",
+    "url": "http://malas2urqujwzhp6xrdghrhganyt726dem4yivo7cidvfgvkldlk43ad.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022148"
+  },
+  {
+    "id": "60761d8f-cfff-4d8e-b862-11375d1eacbc",
+    "url": "http://torzfpvho57pv3coloiexpqpnajpxg4g5du2vn3tpk5iv373kpoxhaad.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:29:53.022154"
+  },
+  {
+    "id": "c5561bb2-e0cd-485b-b13d-6dad6260c70e",
+    "url": "http://juhanurmihxlp77nkq76byazcldy2hlmovfu2epvl5ankdibsot4csyd.onion/add/",
+    "title": "Hidden Service — Ahmia",
+    "engine": "Ahmia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:30:33.161392"
+  },
+  {
+    "id": "537956ea-438f-420a-934c-6ecdc83772f1",
+    "url": "http://juhanurmihxlp77nkq76byazcldy2hlmovfu2epvl5ankdibsot4csyd.onion/blacklist/",
+    "title": "Hidden Service — Ahmia",
+    "engine": "Ahmia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:30:33.161406"
+  },
+  {
+    "id": "55815eaa-b768-456c-87fc-6c475d277991",
+    "url": "http://juhanurmihxlp77nkq76byazcldy2hlmovfu2epvl5ankdibsot4csyd.onion/privacy/",
+    "title": "Hidden Service — Ahmia",
+    "engine": "Ahmia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:30:33.161413"
+  },
+  {
+    "id": "1f57931c-786c-4329-9d79-6e517f088a43",
+    "url": "http://juhanurmihxlp77nkq76byazcldy2hlmovfu2epvl5ankdibsot4csyd.onion/",
+    "title": "Hidden Service — Ahmia",
+    "engine": "Ahmia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:30:33.161419"
+  },
+  {
+    "id": "9d01d50c-86a0-4ff3-87b2-54bc6932c825",
+    "url": "http://juhanurmihxlp77nkq76byazcldy2hlmovfu2epvl5ankdibsot4csyd.onion/legal/",
+    "title": "Hidden Service — Ahmia",
+    "engine": "Ahmia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:30:33.161424"
+  },
+  {
+    "id": "01882374-2a1a-4e7c-ae9e-23e5508001ca",
+    "url": "http://juhanurmihxlp77nkq76byazcldy2hlmovfu2epvl5ankdibsot4csyd.onion/about/",
+    "title": "Hidden Service — Ahmia",
+    "engine": "Ahmia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:30:33.161430"
+  },
+  {
+    "id": "953147d4-a275-4cd3-b0bc-01530d02438f",
+    "url": "http://juhanurmihxlp77nkq76byazcldy2hlmovfu2epvl5ankdibsot4csyd.onion/terms/",
+    "title": "Hidden Service — Ahmia",
+    "engine": "Ahmia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:30:33.161435"
+  },
+  {
+    "id": "3efb87dc-3f97-4d50-8d4f-11c841826eb2",
+    "url": "https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/",
+    "title": "Hidden Service — DuckDuckGo",
+    "engine": "DuckDuckGo",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:31:09.513516"
+  },
+  {
+    "id": "4c77e139-75da-4cad-a100-596d8e00211e",
+    "url": "https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/html/?q=ransomware%20attack",
+    "title": "Hidden Service — DuckDuckGo",
+    "engine": "DuckDuckGo",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:31:09.513529"
+  },
+  {
+    "id": "d621b46f-a672-4030-9cd1-785ee5df07c9",
+    "url": "http://onionbcj2zot4xpaddakxmfkc5wa23ur4ydmaflcqc2cun6yqgmdbbqd.onion/shop/ransomware-customizable-attack/",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "likely_scam",
+    "discovered_at": "2025-12-13T04:31:52.318172"
+  },
+  {
+    "id": "913cd98c-f045-4763-8aa6-0204a79caafb",
+    "url": "http://iy3544gmoeclh5de6gez2256v6pjh4omhpqdh2wpeeppjtvqmjhkfwad.onion/",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:31:52.318188"
+  },
+  {
+    "id": "e93b57af-373a-4649-b3d1-4951dd70b82c",
+    "url": "http://iy3544gmoeclh5de6gez2256v6pjh4omhpqdh2wpeeppjtvqmjhkfwad.onion/torgle/?page=1&query=ransomware attack&thumbs=",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:31:52.318196"
+  },
+  {
+    "id": "e6870850-f193-4485-98dc-294de4a77305",
+    "url": "http://darkcapwgmol53s3vbkkhxmoo6sfsafqa266mc55p2n3tastxjltljyd.onion/shop/ransomware-ransomware-builder-master-for-begin/",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "likely_scam",
+    "discovered_at": "2025-12-13T04:31:52.318202"
+  },
+  {
+    "id": "714425cc-496d-4348-8559-a3dda601792a",
+    "url": "http://darkcapwgmol53s3vbkkhxmoo6sfsafqa266mc55p2n3tastxjltljyd.onion/shop/ransomware-customizable-attack/",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "likely_scam",
+    "discovered_at": "2025-12-13T04:31:52.318207"
+  },
+  {
+    "id": "ecc3b88b-b422-4375-bdbf-f688970d5c2b",
+    "url": "http://5n4lhyjrvkllgffju45brqsxx4bg6j3arghhdzayujgbzujewsg5liid.onion",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:31:52.318215"
+  },
+  {
+    "id": "b9211410-5a26-4892-9ac3-412d83cd59d3",
+    "url": "http://mfaaukpsp2lnayplkejutrqpbnxfmxr3j2v7fjpdhr5gakr245unywyd.onion/shop/ransomware-customizable-attack/",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "likely_scam",
+    "discovered_at": "2025-12-13T04:31:52.318220"
+  },
+  {
+    "id": "a4ffe8e7-0335-41ee-bcb5-523764671e5d",
+    "url": "http://darkpb3w7h5mmuzsdkiurlfbzxi3snof6cmlmlkvxwjgt3ufmrd4sgid.onion/product-category/ransomware/",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:31:52.318227"
+  },
+  {
+    "id": "82cb44a2-ab2a-4ed6-bcc3-bb052136cee8",
+    "url": "http://lc6dnhwxvdat2xb2j5rv3oklotrgiazvzlybnxfwosmfknnj5nvklxqd.onion/shop/ransomware-customizable-attack/",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "likely_scam",
+    "discovered_at": "2025-12-13T04:31:52.318233"
+  },
+  {
+    "id": "1c6c75e3-cdac-4f53-ae87-e9a093a3562f",
+    "url": "http://toryhvkpn43oxee7pagny32kmf752nqmz5wtdntw4pq2jmpo4kkskyid.onion/shop/ransomware-customizable-attack/",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "likely_scam",
+    "discovered_at": "2025-12-13T04:31:52.318238"
+  },
+  {
+    "id": "55ede736-9cfe-45c2-a9b2-dd57b84b301a",
+    "url": "http://hubooomjabebx4fntzdx7vg52celbnvk52j6wprrtqpvsdjscnklaeqd.onion/category/ransomware",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:31:52.318244"
+  },
+  {
+    "id": "3cb36cff-91bd-4df0-a3ff-f24db4c4b50c",
+    "url": "http://iy3544gmoeclh5de6gez2256v6pjh4omhpqdh2wpeeppjtvqmjhkfwad.onion/torgle/?page=145&query=ransomware attack&thumbs=",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:31:52.318250"
+  },
+  {
+    "id": "7a125cdb-a9ab-4b1b-b520-28c176917db5",
+    "url": "http://lgeewpu5xlxlzt7g3hdbcnueacm5xrfdkzarkihxd3uatpwroafcspqd.onion/adhook/Files/assets/ads/ad.js",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:31:52.318257"
+  },
+  {
+    "id": "f5e83af0-9655-436c-8790-9ae6426d94da",
+    "url": "http://iy3544gmoeclh5de6gez2256v6pjh4omhpqdh2wpeeppjtvqmjhkfwad.onion/torgle/?page=0&query=ransomware attack&thumbs=",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:31:52.318264"
+  },
+  {
+    "id": "2bd164ef-7a20-493c-a97f-a245541380bc",
+    "url": "http://admate3wrcqo2qeuok36b4wncwv7k6deei6riq2w62s36htgyahsaaqd.onion/api/get-banner/15kTIRlnTGsOeqiyYKribRu0OLN88KpTTfaxr8F9rsVsLLHBSC/type/468-60/count/4",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:31:52.318272"
+  },
+  {
+    "id": "397b81f2-c9a4-4221-a13a-03c2cf212bcd",
+    "url": "http://j77vay55or2d4xztgqwagodilnzrrjhbbhbkwaho2f3sthfangkyfhqd.onion/",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:31:52.318278"
+  },
+  {
+    "id": "8cfb69b1-27ff-4319-8f6e-0f93137b511f",
+    "url": "http://dgquftlj2h3rhbalvz6o6s7ilg32bg763eqjyb76wlv4w2cndfzzrdid.onion/app/ransomware-map.html",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:31:52.318284"
+  },
+  {
+    "id": "258cba23-c8b1-4e0d-93c6-89d38a9b4867",
+    "url": "http://darkbaywuxdoqxwyjljfntk3v7s2su4xauep4dsgq3qpk5glce56nxqd.onion/shop/ransomware-customizable-attack/",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "likely_scam",
+    "discovered_at": "2025-12-13T04:31:52.318289"
+  },
+  {
+    "id": "3a6e9382-8a89-4392-9bc0-f15ca8cd2ef8",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=a220c",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917602"
+  },
+  {
+    "id": "e35768a9-3762-4993-96eb-e79941a98193",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=d7724",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917617"
+  },
+  {
+    "id": "50c0e299-5167-456e-90f2-d5f5a48563d3",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=banner&k=8e1d7",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917628"
+  },
+  {
+    "id": "3ddee633-1f89-4093-b232-d37b8cdb7668",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=911b9",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917634"
+  },
+  {
+    "id": "d8809932-f672-43cc-b8f4-9bea2bd7cd95",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=Anonymous Hacker",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917643"
+  },
+  {
+    "id": "f9766f7a-ec7a-42a8-95a8-ef829f57886a",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=810db",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917648"
+  },
+  {
+    "id": "3e59c85c-41ec-48ce-a74d-ec11c6d38958",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=60183",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917654"
+  },
+  {
+    "id": "29d08d3b-41f0-4c4b-865f-055b540935a3",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=onion sites",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917663"
+  },
+  {
+    "id": "4223ab69-a23f-48ba-8e8e-a9c51887a648",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=04306",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917669"
+  },
+  {
+    "id": "3433470c-5fb4-4ac6-8938-1adff6adfaba",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=alpha ammories trusted gun shop buy guns",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "likely_scam",
+    "discovered_at": "2025-12-13T04:32:21.917677"
+  },
+  {
+    "id": "7c97a708-c3e4-4682-8ed4-d74a384bbd9c",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=TOM",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917685"
+  },
+  {
+    "id": "0af223b8-6f76-4fae-a731-d69cf8e76740",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917692"
+  },
+  {
+    "id": "a67259bc-4926-44c6-a2a7-4c83ee5d7a4b",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=ba1f1",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917698"
+  },
+  {
+    "id": "6333b7bb-d378-44cb-8e92-722366b85e20",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=6g0hj",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917703"
+  },
+  {
+    "id": "1a7376e9-964f-4f25-9c70-8fadfbefe583",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=11",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917709"
+  },
+  {
+    "id": "85bffd9b-3028-4bcc-a1b6-e5c184dcb336",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=efde6",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917714"
+  },
+  {
+    "id": "1343c286-931e-4aed-9198-1a2d66b4bc33",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=1",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917719"
+  },
+  {
+    "id": "4e2136c9-9eca-485b-8900-8b6071d58b01",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=d7c44",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917725"
+  },
+  {
+    "id": "2f5458e8-31fc-469a-9112-d424f5d47d82",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=bef2e",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917730"
+  },
+  {
+    "id": "213be35d-21a1-4bec-9eeb-6df6d916b034",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/img/wip_580x400.png",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917735"
+  },
+  {
+    "id": "00af05d4-aeea-411c-8ce2-3a2f72577c41",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=d6238",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917741"
+  },
+  {
+    "id": "84fb0fe4-e262-487f-962e-8dfe09d521ba",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/uploads/512/zion512-2-min.png",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917749"
+  },
+  {
+    "id": "8cc5b78b-3006-4c1d-8ee5-8ab6c0769f0f",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=28cbd",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917754"
+  },
+  {
+    "id": "3562d93d-2e49-43a8-824c-0c27b510806f",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=10",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917759"
+  },
+  {
+    "id": "c792a9be-9715-40c9-ad55-e8f6daac1bc1",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/img/stealth_580x400.png",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917765"
+  },
+  {
+    "id": "74f15c46-16e8-4c1f-8efb-d3ce3212090f",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/pgp.txt",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917771"
+  },
+  {
+    "id": "42d515f8-0112-44cb-b142-9da2abdc62a9",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=00bf6",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917775"
+  },
+  {
+    "id": "87ea7b47-9069-4478-91d7-c0d0bf998e00",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=dcd05",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917783"
+  },
+  {
+    "id": "b94a49a3-39f3-4d8b-8790-1edf29a88f32",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=b37ba",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917788"
+  },
+  {
+    "id": "a7046896-314d-46b8-a5f2-db5a054c7112",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=information",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917797"
+  },
+  {
+    "id": "9eed5dcd-9be5-424c-81b8-1dd2181b2bcd",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=j8id3",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917802"
+  },
+  {
+    "id": "9caeba44-55da-44af-b71f-0283de4f7c72",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=267eb",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917807"
+  },
+  {
+    "id": "7d7aeb6c-027e-46c4-9dd3-6a15d26f1d87",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=e459c",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917812"
+  },
+  {
+    "id": "107439f6-486e-472b-a3ec-e695ddc74362",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/amnesia.png",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917822"
+  },
+  {
+    "id": "f154b193-4c40-4763-9034-f57c5da37ace",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=e422e",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917828"
+  },
+  {
+    "id": "6420d168-7b7a-468f-ab75-57ddd16ba043",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=Deep",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917834"
+  },
+  {
+    "id": "170ab485-d1ce-4b5a-8d9b-71d09c8bc474",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=Bolivian",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917842"
+  },
+  {
+    "id": "16dbcbf0-f027-4069-98fa-0def8a01c799",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=ff007",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917847"
+  },
+  {
+    "id": "90f943be-3112-495c-81bd-4b2bcff61a26",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=6",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917852"
+  },
+  {
+    "id": "8ee8b96d-639a-4e3f-a4e4-282a64bc7491",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=4ls43",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917857"
+  },
+  {
+    "id": "7059062c-262d-4df5-b60a-c848b6d5d586",
+    "url": "http://hologram6d4agtfbwkdtruigzo3l6wztcz5rg27rmh54qatyinqmzgid.onion",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917863"
+  },
+  {
+    "id": "2308dff3-a54a-4914-a92d-eb5f9ef70266",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/img/nexus_580x400.png",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917869"
+  },
+  {
+    "id": "de6d8a93-f3a6-44ad-8836-2750d4b53466",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/img/amnesia_580x400.png",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917875"
+  },
+  {
+    "id": "43d302e5-e2ef-4555-877a-7381e292c16c",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/onions.txt",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917880"
+  },
+  {
+    "id": "0ff74b73-b3d9-4fda-aaba-6ff18803e25f",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=13",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917885"
+  },
+  {
+    "id": "c970c4cc-1ec4-4473-a102-c973c89e38b2",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=banner&k=4e9a2",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917892"
+  },
+  {
+    "id": "22ad9e10-c1b5-4cdf-813b-787e5f1b7548",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=c2f64",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917897"
+  },
+  {
+    "id": "70fb6113-3fa1-46eb-adf3-5f8d8b81f320",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=4",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917902"
+  },
+  {
+    "id": "ac31f6c4-0403-4888-a37d-fbfb372ed6d8",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=6d1dc",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917906"
+  },
+  {
+    "id": "78cee836-f174-4b96-8339-390ab905642f",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/img/hologram_580x400.png",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917912"
+  },
+  {
+    "id": "f2081563-8569-4e12-a65d-c66a3c14c6d2",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=60d08",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917916"
+  },
+  {
+    "id": "4dc0c516-38cd-48c6-a747-fcfd916065c4",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=pentesting",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917924"
+  },
+  {
+    "id": "129ee9ee-311d-4c34-b638-9ae4e8fe1c2a",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=fb5d9",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917929"
+  },
+  {
+    "id": "8b47d804-adc8-4bae-8a78-35c35db43950",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=41a9e",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917933"
+  },
+  {
+    "id": "586e6c3a-bd79-4926-ac4c-9c8a8c58e191",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=d6c3e",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917938"
+  },
+  {
+    "id": "762493ab-e5d1-456b-a108-e37d8fd4c3c7",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=e54d3",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917943"
+  },
+  {
+    "id": "5480a947-8451-4144-8cc6-04bd6f47e698",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=ff6fb",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917947"
+  },
+  {
+    "id": "c4da0944-7212-4dfa-81d5-9d90bf730d71",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=e018d",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917952"
+  },
+  {
+    "id": "36ba5a6f-a447-4a42-9f8d-2d1eb699c0e3",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=80fb7",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917956"
+  },
+  {
+    "id": "415256f2-d7d4-43e1-8070-1768b2b9b937",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=3567c",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917960"
+  },
+  {
+    "id": "58ce0326-fcc9-4d40-8530-83c54b422e6e",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917966"
+  },
+  {
+    "id": "313a0f0b-4324-4d28-8242-6228171eff54",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=95e03",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917971"
+  },
+  {
+    "id": "83df0142-ffd7-45a8-945a-0dc47ba4a927",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=2dad4",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917975"
+  },
+  {
+    "id": "4d003f7a-940b-4c43-91e6-b4f821f0299d",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=onion",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917982"
+  },
+  {
+    "id": "15554c49-05d7-4549-90f7-d9e747df63a0",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/about",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917987"
+  },
+  {
+    "id": "9739909a-2129-4f21-bc88-6269c82f9672",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=malwares",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.917995"
+  },
+  {
+    "id": "0002e445-241b-466a-b201-07743b3b2722",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=11162",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918001"
+  },
+  {
+    "id": "53c30004-e9e9-4321-a461-6debd3b05f92",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=TOM & JERRY",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918008"
+  },
+  {
+    "id": "9bc426fb-31eb-41d4-ad38-0dfd0538ce5d",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=daf48",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918014"
+  },
+  {
+    "id": "acd01f49-cb19-4d1b-85a6-770eddd0d628",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918019"
+  },
+  {
+    "id": "b0de86b4-310a-464e-b1e5-a7233a7d32b4",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=03hhv",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918024"
+  },
+  {
+    "id": "6a4f0be5-ba40-4df2-93d2-6ca85f7d083e",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/directory",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918029"
+  },
+  {
+    "id": "7b1475ab-8c35-4e7e-85cb-09c78a5a153f",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=7",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918034"
+  },
+  {
+    "id": "069de9d5-3d12-4406-b8b7-f2d4f597373e",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=6cg0k",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918039"
+  },
+  {
+    "id": "258b37aa-5fbf-4e60-ab60-943560837729",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=r2f6j",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918043"
+  },
+  {
+    "id": "2484b7a7-8dfe-4333-aab2-1f216d453466",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=0d54j",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918048"
+  },
+  {
+    "id": "22347ddd-0a6b-4578-9c42-72cd630a8210",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=12",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918052"
+  },
+  {
+    "id": "fb5418e5-3d86-44cb-85ef-408589c50ba9",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=167fe",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918057"
+  },
+  {
+    "id": "b5222541-2e9b-42c7-8377-3ddcdae25b18",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=a2b92",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918061"
+  },
+  {
+    "id": "312a0d94-fb1a-4904-baed-1baedd7d676a",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/webmaster",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918066"
+  },
+  {
+    "id": "55da8d72-245f-47ae-b0fa-96e5364b8ae3",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/uploads/banners/deepwebfeed.gif",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918075"
+  },
+  {
+    "id": "7416e297-6feb-48c0-9ecf-a73928170daf",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=3",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918080"
+  },
+  {
+    "id": "a282d500-da56-4bfa-86d9-39c314ff72ab",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=dr5n8",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918084"
+  },
+  {
+    "id": "b6f74311-6a9f-4cd3-b2ca-8ec7f4c79c11",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=shop cargs",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "likely_scam",
+    "discovered_at": "2025-12-13T04:32:21.918090"
+  },
+  {
+    "id": "6aa63ee0-7892-4e41-84dc-2abb8e6b1c3b",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=7hte4",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918095"
+  },
+  {
+    "id": "c13b3444-227f-41d3-9508-81ff6d02795b",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/donate.txt",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918101"
+  },
+  {
+    "id": "35c5b892-3a9e-4715-aed4-4e0e62a5356a",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=567nn",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918105"
+  },
+  {
+    "id": "27ab6fb4-0bb8-4e96-8a6d-34736e47c644",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=f1a33",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918110"
+  },
+  {
+    "id": "0da7c1e4-a357-43f1-babf-5f03ddaef3da",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=a1630",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918114"
+  },
+  {
+    "id": "94021ceb-de2a-4c3b-87e0-25d37cb84a21",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=f05f7",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918121"
+  },
+  {
+    "id": "b02fd5f0-03b3-43dc-bc29-1c6e3b869cc7",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/uploads/banners/btcmixer_banner.png",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918130"
+  },
+  {
+    "id": "dd5a8b32-a245-4ca7-a8f8-d4ff56888afe",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/img/amnesia_logo.png",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918137"
+  },
+  {
+    "id": "d8d623d0-7417-4ade-9e8a-3dd04dd80358",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=9",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918141"
+  },
+  {
+    "id": "06251a2f-98ec-4227-beff-fd91a46df33d",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=2",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918146"
+  },
+  {
+    "id": "d1745b01-5eff-4f9b-8c06-b0b6db305b82",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=rental",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918151"
+  },
+  {
+    "id": "31ed9c15-af97-4cab-b162-0584d03bccdb",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=9aa82",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918156"
+  },
+  {
+    "id": "24727375-b8fe-4a95-b37d-221b2ed68d9f",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=0a735",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918163"
+  },
+  {
+    "id": "bf9828e5-52b5-4c1b-9762-a2c09882c44d",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=60926",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918169"
+  },
+  {
+    "id": "cd0da1ca-6d03-4baf-a3ab-b82aa66c7611",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=8a8d0",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918174"
+  },
+  {
+    "id": "88378639-4dbd-4133-8a29-d40d97c6f49c",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/css/amnesia.css",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918182"
+  },
+  {
+    "id": "3d166bf1-d58a-45f9-a2d7-ed5bec953bdf",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=western",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918187"
+  },
+  {
+    "id": "58c82ae8-31f2-4b8e-b707-648ac5c629d6",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=USDC",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918193"
+  },
+  {
+    "id": "3577d017-8f2d-4e1b-81f9-fb307ea3de02",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/track_impression.php?ad=",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918199"
+  },
+  {
+    "id": "23ac4c90-9319-4745-8927-ba69da718003",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=vps",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918204"
+  },
+  {
+    "id": "ba58ca8e-e048-4362-a3b1-0121003e8260",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=59106",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918209"
+  },
+  {
+    "id": "fc7cadf4-fe94-4281-8883-06ba39fdd712",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=09gfl",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918215"
+  },
+  {
+    "id": "e078da38-3d4d-4c88-8dc5-ea8273df2e4d",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=8c2e6",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918220"
+  },
+  {
+    "id": "fdbdba19-be58-439c-8c22-bc9f610f99f9",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/js/jquery-3.4.1.min.js",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918227"
+  },
+  {
+    "id": "8095d5df-87f4-44f7-9e63-73975a345340",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=9j3xs",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918233"
+  },
+  {
+    "id": "1f4c042e-2e23-4325-9d3d-fc55b7c74d8f",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/css/jquery-ui.css",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918241"
+  },
+  {
+    "id": "e41ef4ee-d4ed-426b-bb72-a612b50a1716",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=e4ka1",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918247"
+  },
+  {
+    "id": "08a01134-d09a-43f8-b009-857e67cb08f9",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=b2f2c",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918251"
+  },
+  {
+    "id": "c83f5cf9-0461-4439-8111-8693ece67c09",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=8ed3c",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918258"
+  },
+  {
+    "id": "c2a53a08-2ae7-4e24-a62e-a5ee905433c5",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/js/jquery-ui.min.js",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918264"
+  },
+  {
+    "id": "8f7faf16-08f3-4094-bda4-bc3f06e72cca",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=hr8ck",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918271"
+  },
+  {
+    "id": "8fb12650-9ab8-442d-9ade-ac94227bf160",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=linux",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918276"
+  },
+  {
+    "id": "646b6848-aca8-4cf5-991e-e7b5d24f6b6a",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/js/sha.js",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918283"
+  },
+  {
+    "id": "469d83f0-caeb-4e95-9e0d-62d36e74476a",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=information security",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918291"
+  },
+  {
+    "id": "8505712c-da2c-40c9-962f-4b83ae0dd149",
+    "url": "http://stealth5wfeiuvmtgd2s3m2nx2bb3ywdo2yiklof77xf6emkwjqo53yd.onion",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918297"
+  },
+  {
+    "id": "ff1fcf66-7858-423f-ae01-9cbee10cc03f",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/advertising",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918303"
+  },
+  {
+    "id": "0ea8472c-6c01-4bba-8199-a6fe4b460ee5",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=cbd85",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918309"
+  },
+  {
+    "id": "3d7a6ecb-56f8-4a57-86c0-6a48eb045e93",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=a3645",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918315"
+  },
+  {
+    "id": "f85626b2-04ec-4058-b046-0b9e84570bed",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=shop",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "likely_scam",
+    "discovered_at": "2025-12-13T04:32:21.918321"
+  },
+  {
+    "id": "a1df666e-1921-4973-acc7-496107a38c37",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=6ftsp",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918328"
+  },
+  {
+    "id": "69a6e134-1757-47d3-a7ea-e81300629fbb",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/css/responsive.css",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918336"
+  },
+  {
+    "id": "6746bec1-bb84-4a9f-97c7-f55dbb26e7de",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/css/reset.css",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918343"
+  },
+  {
+    "id": "fc9af27b-afe5-4cb2-930f-771face481cc",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=0day",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918350"
+  },
+  {
+    "id": "cecae97c-f02c-46be-98f0-0069a2517ba7",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=09g99",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918356"
+  },
+  {
+    "id": "c58e1f04-79bc-4981-ad86-5f96899654ff",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=9ld4e",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918363"
+  },
+  {
+    "id": "775daa5a-561a-4497-8d1e-444e84a7ea7b",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=62d32",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918369"
+  },
+  {
+    "id": "772617b6-746b-4745-b5f4-bbfdd0c5927b",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=alpha",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918376"
+  },
+  {
+    "id": "753a985d-e372-4f89-9229-4a4c3c65c07b",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=5c123",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918382"
+  },
+  {
+    "id": "c90c1589-7e0f-47a0-b102-058a44e7fcf2",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=6d3a1",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918389"
+  },
+  {
+    "id": "4de3ef1d-8e50-49de-bc26-a8ce298c03ad",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=ab1a7",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918394"
+  },
+  {
+    "id": "c3dc592e-fd8f-467f-ad2c-53cc03fbe6dc",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/contact",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918403"
+  },
+  {
+    "id": "c8e3777e-4014-4940-ac30-949e28a18c31",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=sidebar&k=abab9",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918410"
+  },
+  {
+    "id": "3fd90faa-362a-4885-b356-1ff1088401a2",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/js/autocomplete.js",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918417"
+  },
+  {
+    "id": "ff34603f-6025-4f31-8bdf-62c6c48f26c9",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/img/favicon1.png",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918424"
+  },
+  {
+    "id": "533d1324-cdd6-443a-bc1d-3d45c650e8ec",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=a0790",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918430"
+  },
+  {
+    "id": "e58692ea-537a-4554-9c60-0cc9e8d5200d",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=8",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918437"
+  },
+  {
+    "id": "20bdcab2-5448-4d37-adad-c623c06ec57a",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=infosec",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918443"
+  },
+  {
+    "id": "b4667850-f80c-47ff-9985-d2607392ddf4",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=5",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918450"
+  },
+  {
+    "id": "d09793c1-0162-43bf-9db6-926359f81768",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/canary.txt",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918457"
+  },
+  {
+    "id": "e0306a73-e321-4224-bcff-2c9d30b77d3b",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=pentesting training",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918465"
+  },
+  {
+    "id": "8baed858-8157-4d2c-8360-a68431eb7424",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=94735",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918471"
+  },
+  {
+    "id": "c6314c4a-9a26-4906-96b5-6629474e4d22",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=Honest",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918478"
+  },
+  {
+    "id": "b0bab0d5-3806-4e01-94a7-719b3748ff57",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=ft2l9",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918485"
+  },
+  {
+    "id": "09c37301-643d-4776-91ea-7c7d688fdc46",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=Anonymous",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918492"
+  },
+  {
+    "id": "acf22cb6-de47-4867-9d04-51b86d86385e",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=ransomware",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918498"
+  },
+  {
+    "id": "a85f2437-34e2-47ab-ad81-bcbf85ba6fb5",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=weh67",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918505"
+  },
+  {
+    "id": "8b397ad5-d86c-493f-a3fb-ee5c57c6142a",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=ac4a2",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918511"
+  },
+  {
+    "id": "fa66066e-abd1-4df5-a918-6693fc2c95c0",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=9fn45",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918517"
+  },
+  {
+    "id": "6013a5b7-62f6-4a2c-89a2-10542bba6cc1",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/t?ad=directory&k=89a59",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918523"
+  },
+  {
+    "id": "8e9951ee-5e0a-44f1-90d4-b3d7804a3ed4",
+    "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query=Bolivian Cocaine",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2025-12-13T04:32:21.918531"
+  }
+]

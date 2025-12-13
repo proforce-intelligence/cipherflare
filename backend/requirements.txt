@@ -18,6 +18,9 @@ elasticsearch==8.14.0
 # Messaging
 aiokafka
 
+# Scheduling
+apscheduler>=3.10.0
+
 # Web Scraping
 playwright
 requests
@@ -27,6 +30,7 @@ lxml
 # Tor Control
 stem
 nest-asyncio
+
 # Utilities
 python-dotenv
 aiohttp
@@ -37,6 +41,15 @@ pysocks
 
 # Security
 cryptography
+python-gnupg
+
+# LLM and AI
+langchain
+langchain-core
+langchain-openai
+langchain-anthropic
+langchain-google-genai
+langchain-ollama
 
 # Development (optional)
 pytest
