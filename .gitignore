@@ -45,3 +45,6 @@ kafka_*/
 
 # === Git itself (never commit .git) ===
 .git
+backend/dark_web.db
+backend/darkweb_results_ultimate/
+*.json
