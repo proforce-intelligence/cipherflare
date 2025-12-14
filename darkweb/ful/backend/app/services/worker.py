@@ -283,6 +283,12 @@ class DarkWebWorker:
             links_to_scrape = onion_links if not max_results else onion_links[:max_results]
             total_links = len(links_to_scrape)
             
+            await self.status_producer.send_status(job_id, "PROCESSING", {
+                "sites_scraped": 0,
+                "total_sites": total_links,
+                "progress": 0
+            })
+            
             async with async_playwright() as pw:
                 for idx, link in enumerate(links_to_scrape, 1):
                     try:
@@ -331,6 +337,14 @@ class DarkWebWorker:
                             findings.append(finding)
                             logger.info(f"[Success] Indexed: {link} | Risk: {risk_level} | Score: {risk_score:.1f}")
 
+                        progress = int((idx / total_links) * 100)
+                        await self.status_producer.send_status(job_id, "PROCESSING", {
+                            "sites_scraped": idx,
+                            "total_sites": total_links,
+                            "findings_count": len(findings),
+                            "progress": progress
+                        })
+
                         await random_delay(1, 4)
 
                     except Exception as e:
@@ -341,7 +355,10 @@ class DarkWebWorker:
             await self.status_producer.send_status(job_id, "COMPLETED", {
                 "findings_count": len(findings),
                 "discovered_count": len(onion_links),
-                "session_dir": str(session_dir)
+                "session_dir": str(session_dir),
+                "sites_scraped": total_links,
+                "total_sites": total_links,
+                "progress": 100
             })
 
         except Exception as e:

@@ -221,7 +221,7 @@ export default function DashboardPage() {
                 { time: "20:15 UTC", action: "Ransomware campaign identified", type: "threat" },
                 { time: "19:58 UTC", action: "Suspicious transaction pattern flagged", type: "wallet" },
               ].map((log, idx) => (
-                <div key={idx} className="flex gap-3 text-xs">
+                <div key={`activity-${idx}-${log.time}`} className="flex gap-3 text-xs">
                   <div className="text-neutral-500 font-mono min-w-fit">{log.time}</div>
                   <div className="flex-1 text-neutral-300">{log.action}</div>
                 </div>

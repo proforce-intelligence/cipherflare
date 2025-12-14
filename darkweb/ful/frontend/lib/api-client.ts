@@ -16,7 +16,7 @@ export interface Job {
   job_id: string
   job_name: string
   query: string
-  status: "pending" | "running" | "completed" | "failed"
+  status: "queued" | "processing" | "completed" | "failed"
   progress: number
   total_sites: number
   scraped_sites: number
@@ -28,7 +28,16 @@ export interface Job {
 export interface JobResult {
   job_id: string
   results: SearchResult[]
-  summary?: string
+  summary?: {
+    success: boolean
+    query: string
+    model_used: string
+    summary: string
+    findings_analyzed: number
+    source_links_count: number
+    pgp_verification_results?: any
+  }
+  total_findings?: number
 }
 
 export interface SearchResult {
@@ -78,6 +87,7 @@ export interface MonitoringJob {
 class ApiClient {
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     try {
+      console.log("[v0] API Request:", endpoint)
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,
         headers: {
@@ -88,13 +98,31 @@ class ApiClient {
 
       if (!response.ok) {
         const error = await response.json().catch(() => ({ detail: response.statusText }))
+        console.error("[v0] API Error:", error)
         throw new Error(error.detail || "Request failed")
       }
 
-      return response.json()
+      const data = await response.json()
+      console.log("[v0] API Response:", endpoint, data)
+      return data
     } catch (error) {
       console.error("[v0] API request failed:", error)
       throw error
+    }
+  }
+
+  private mapBackendJobToFrontend(backendJob: any): Job {
+    return {
+      job_id: backendJob.id || backendJob.job_id,
+      job_name: backendJob.job_name,
+      query: backendJob.keyword || backendJob.query || "",
+      status: backendJob.status,
+      progress: backendJob.progress || 0,
+      total_sites: backendJob.max_results || 100,
+      scraped_sites: backendJob.findings_count || 0,
+      created_at: backendJob.created_at,
+      completed_at: backendJob.completed_at,
+      error: backendJob.error_message || backendJob.error,
     }
   }
 
@@ -125,15 +153,23 @@ class ApiClient {
     if (filters?.limit) queryParams.append("limit", filters.limit.toString())
     if (filters?.offset) queryParams.append("offset", filters.offset.toString())
 
-    const response = await this.request<{ success: boolean; jobs: Job[]; total: number }>(
+    const response = await this.request<{ success: boolean; jobs: any[]; total: number }>(
       `/api/v1/jobs?${queryParams.toString()}`,
     )
-    return { jobs: response.jobs, total: response.total }
+
+    const mappedJobs = response.jobs.map((job) => this.mapBackendJobToFrontend(job))
+    console.log("[v0] Mapped jobs:", mappedJobs)
+
+    return { jobs: mappedJobs, total: response.total }
   }
 
   async getJob(jobId: string): Promise<Job> {
-    const response = await this.request<{ success: boolean; job: Job }>(`/api/v1/jobs/${jobId}`)
-    return response.job
+    const response = await this.request<{ success: boolean; job: any }>(`/api/v1/jobs/${jobId}`)
+
+    const mappedJob = this.mapBackendJobToFrontend(response.job)
+    console.log("[v0] Mapped single job:", mappedJob)
+
+    return mappedJob
   }
 
   async getJobResults(
@@ -144,7 +180,14 @@ class ApiClient {
     if (params?.include_summary) queryParams.append("include_summary", "true")
     if (params?.model_choice) queryParams.append("model_choice", params.model_choice)
 
-    return this.request<JobResult>(`/api/v1/jobs/${jobId}/results?${queryParams.toString()}`)
+    const response = await this.request<any>(`/api/v1/jobs/${jobId}/results?${queryParams.toString()}`)
+
+    return {
+      job_id: response.job_id,
+      results: response.findings || [],
+      summary: response.summary, // Keep the full object with metadata
+      total_findings: response.total_findings,
+    }
   }
 
   async deleteJob(jobId: string): Promise<void> {

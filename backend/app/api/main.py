@@ -13,6 +13,7 @@ from app.api.routes.alerts import router as alerts_router
 from app.api.routes.stats import router as stats_router
 from app.database.database import init_db
 from app.services.scheduler import MonitoringScheduler
+from app.services.status_consumer import StatusConsumer
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -48,11 +49,13 @@ app.include_router(alerts_router)
 app.include_router(stats_router)
 
 _scheduler: Optional[MonitoringScheduler] = None
+_status_consumer: Optional[StatusConsumer] = None
 
 @app.on_event("startup")
 async def startup():
     """Initialize database and scheduler on startup"""
     global _scheduler
+    global _status_consumer
     
     try:
         await init_db()
@@ -72,11 +75,19 @@ async def startup():
         logger.info("[✓] Monitoring scheduler initialized and started")
     except Exception as e:
         logger.warning(f"[!] Scheduler initialization warning (may be normal if broker unavailable): {e}")
+    
+    try:
+        _status_consumer = StatusConsumer()
+        asyncio.create_task(_status_consumer.start())
+        logger.info("[✓] Status consumer started - listening for job updates")
+    except Exception as e:
+        logger.warning(f"[!] Status consumer initialization warning: {e}")
 
 @app.on_event("shutdown")
 async def shutdown():
     """Clean up on shutdown"""
     global _scheduler
+    global _status_consumer
     
     if _scheduler:
         try:
@@ -84,6 +95,13 @@ async def shutdown():
             logger.info("[✓] Scheduler shutdown complete")
         except Exception as e:
             logger.error(f"[!] Scheduler shutdown error: {e}")
+    
+    if _status_consumer:
+        try:
+            await _status_consumer.stop()
+            logger.info("[✓] Status consumer shutdown complete")
+        except Exception as e:
+            logger.error(f"[!] Status consumer shutdown error: {e}")
 
 @app.get("/health")
 async def health():

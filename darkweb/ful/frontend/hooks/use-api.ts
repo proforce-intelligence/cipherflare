@@ -3,7 +3,9 @@ import { apiClient } from "@/lib/api-client"
 
 export function useJobs(filters?: { status?: string; job_type?: string }) {
   const { data, error, isLoading, mutate } = useSWR(["/api/v1/jobs", filters], () => apiClient.getJobs(filters), {
-    refreshInterval: 3000, // Poll every 3 seconds for active jobs
+    refreshInterval: 2000, // Poll every 2 seconds for active jobs
+    revalidateOnFocus: true,
+    dedupingInterval: 1000,
   })
 
   return {
@@ -21,12 +23,15 @@ export function useJob(jobId: string | null) {
     () => (jobId ? apiClient.getJob(jobId) : null),
     {
       refreshInterval: (data) => {
-        // Stop polling when job is completed or failed
         if (data && ["completed", "failed"].includes(data.status)) {
+          console.log("[v0] Job completed/failed, stopping polling")
           return 0
         }
-        return 2000 // Poll every 2 seconds for active job
+        console.log("[v0] Job still active, continue polling")
+        return 1500 // Poll every 1.5 seconds for active job
       },
+      revalidateOnFocus: true,
+      dedupingInterval: 500,
     },
   )
 

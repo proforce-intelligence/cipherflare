@@ -30,7 +30,7 @@ class TorManager:
             self.control_host = os.getenv("TOR_CONTROL_HOST", "127.0.0.1")
             self.control_port = int(os.getenv("TOR_CONTROL_PORT", "9051"))
         
-        self.control_password = os.getenv("TOR_CONTROL_PASS", "")
+        self.control_password = os.getenv("TOR_CONTROL_PASS", "nextyearthistime")
         self.stem_available = STEM_AVAILABLE
     
     def check_tor_connectivity(self) -> bool:

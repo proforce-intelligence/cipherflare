@@ -48,3 +48,4 @@ kafka_*/
 backend/dark_web.db
 backend/darkweb_results_ultimate/
 *.json
+darkweb.zip

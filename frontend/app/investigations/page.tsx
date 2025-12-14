@@ -69,14 +69,14 @@ Completed: ${selectedJob.completed_at || "In progress"}
 Sites Scraped: ${selectedJob.scraped_sites}
 
 RESULTS (${results.total_findings || 0} findings):
-${results.findings
+${results.results
   ?.map(
     (r: any, i: number) => `
 ${i + 1}. ${r.title || "Untitled"}
    URL: ${r.url}
-   Content: ${r.content?.substring(0, 200)}...
-   Timestamp: ${r.timestamp}
-   ${r.pgp_verified ? "✓ PGP Verified" : ""}
+   Risk Level: ${r.risk_level || "N/A"}
+   Content: ${(r.text_excerpt || r.content || "").substring(0, 200)}...
+   Timestamp: ${r.scraped_at || r.timestamp}
 `,
   )
   .join("\n")}
@@ -201,7 +201,7 @@ ${results.summary || "No summary available"}
               <div className="flex gap-2">
                 <Button
                   onClick={handleExportResults}
-                  disabled={!results || !results.findings || results.findings.length === 0}
+                  disabled={!results || !results.results || results.results.length === 0}
                   className="bg-orange-500 hover:bg-orange-600 text-black"
                   size="sm"
                 >
@@ -219,37 +219,62 @@ ${results.summary || "No summary available"}
               <div className="flex justify-center py-8">
                 <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
               </div>
-            ) : results && results.findings && results.findings.length > 0 ? (
+            ) : results && results.results && results.results.length > 0 ? (
               <>
                 {/* AI Summary */}
                 {results.summary && (
                   <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
                     <h4 className="text-sm font-semibold text-blue-400 mb-2">AI SUMMARY</h4>
-                    <p className="text-sm text-neutral-300">{results.summary}</p>
+                    <p className="text-sm text-neutral-300 whitespace-pre-wrap">{results.summary}</p>
                   </div>
                 )}
 
                 {/* Results List */}
                 <div className="space-y-3">
-                  {results.findings.map((result: any, idx: number) => (
+                  {results.results.map((result: any, idx: number) => (
                     <div
                       key={`${selectedJob.job_id}-result-${idx}`}
                       className="bg-neutral-800 border border-neutral-700 rounded-lg p-4 hover:border-orange-500/50 transition-colors"
                     >
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="text-sm font-semibold text-white">{result.title || "Untitled"}</h4>
-                        {result.pgp_verified && (
-                          <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">
-                            ✓ PGP Verified
+                        {result.risk_level && (
+                          <span
+                            className={`text-xs px-2 py-1 rounded ${
+                              result.risk_level === "critical"
+                                ? "bg-red-500/20 text-red-400"
+                                : result.risk_level === "high"
+                                  ? "bg-orange-500/20 text-orange-400"
+                                  : result.risk_level === "medium"
+                                    ? "bg-yellow-500/20 text-yellow-400"
+                                    : "bg-green-500/20 text-green-400"
+                            }`}
+                          >
+                            {result.risk_level.toUpperCase()}
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-neutral-400 mb-2">{result.url}</p>
-                      <p className="text-sm text-neutral-300 mb-3">{result.content?.substring(0, 300)}...</p>
+                      <p className="text-xs text-neutral-400 mb-2 font-mono break-all">{result.url}</p>
+                      <p className="text-sm text-neutral-300 mb-3">
+                        {result.text_excerpt?.substring(0, 300) || result.content?.substring(0, 300)}
+                        {(result.text_excerpt || result.content)?.length > 300 && "..."}
+                      </p>
                       <div className="flex items-center gap-4 text-xs text-neutral-500">
+                        {result.risk_score && <span>Risk Score: {result.risk_score.toFixed(1)}</span>}
                         {result.relevance_score && <span>Relevance: {result.relevance_score.toFixed(2)}</span>}
-                        <span>Found: {formatDistanceToNow(new Date(result.timestamp), { addSuffix: true })}</span>
+                        {result.scraped_at && (
+                          <span>Found: {formatDistanceToNow(new Date(result.scraped_at), { addSuffix: true })}</span>
+                        )}
                       </div>
+                      {result.threat_indicators && result.threat_indicators.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          {result.threat_indicators.slice(0, 5).map((indicator: string, i: number) => (
+                            <span key={i} className="text-xs bg-red-500/10 text-red-400 px-2 py-0.5 rounded">
+                              {indicator}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

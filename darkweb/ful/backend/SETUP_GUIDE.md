@@ -35,6 +35,7 @@ This starts:
 - Kafka on port 9092
 - API server on port 8000
 - 2 worker processes
+- Status consumer (automatically runs within API)
 
 ### Search for Threat Intelligence
 \`\`\`bash
@@ -57,6 +58,26 @@ bash scripts/setup.sh
 \`\`\`
 
 ## Troubleshooting
+
+### Job Status Not Updating (Frontend shows "QUEUED" forever)
+
+**Cause**: The status consumer is not running or Kafka is not properly connected.
+
+**Solution**:
+\`\`\`bash
+# Check API logs for status consumer
+tail -f /tmp/cipherflare_api.log | grep StatusConsumer
+
+# You should see:
+# [✓] Status consumer started - listening for job updates
+
+# Check worker logs to ensure status updates are being sent
+tail -f /tmp/cipherflare_worker_*.log | grep "Status sent"
+
+# Restart the API to reinitialize the status consumer
+pkill -f "uvicorn app.api.main:app"
+# Then start again via scripts/setup.sh option 2
+\`\`\`
 
 ### Port Already in Use
 \`\`\`bash
@@ -99,10 +120,11 @@ python -m scripts.setup_es
 cipherflare/
 ├── app/
 │   ├── api/
-│   │   ├── main.py          # FastAPI app
+│   │   ├── main.py          # FastAPI app + Status Consumer
 │   │   └── routes/          # Endpoints
 │   ├── services/
-│   │   ├── worker.py        # Kafka consumer
+│   │   ├── worker.py        # Kafka consumer (processes jobs)
+│   │   ├── status_consumer.py  # NEW: Updates job status in DB
 │   │   ├── kafka_consumer.py
 │   │   ├── kafka_producer.py
 │   │   ├── scraper_utils.py # Dark web scraping
@@ -119,6 +141,18 @@ cipherflare/
 └── venv/                    # Virtual environment (auto-created)
 \`\`\`
 
+## Architecture: How Job Status Updates Work
+
+1. **User creates job** → API creates Job record in DB with status=QUEUED
+2. **API publishes to Kafka** → Job message sent to "ad_hoc_jobs" or "monitor_jobs" topic
+3. **Worker consumes job** → Worker processes the job and sends status updates:
+   - PROCESSING (when scraping starts)
+   - COMPLETED (when finished with findings_count)
+   - FAILED (if error occurs)
+4. **Status updates to Kafka** → Worker sends updates to "status_updates" topic
+5. **Status Consumer updates DB** → API's background status consumer listens to "status_updates" and updates Job records in real-time
+6. **Frontend polls API** → Frontend fetches updated job status from database
+
 ## API Examples
 
 ### Search Keyword
@@ -126,9 +160,19 @@ cipherflare/
 curl "http://localhost:8000/api/v1/search?keyword=botnet&max_results=100"
 \`\`\`
 
+### Get Job Status
+\`\`\`bash
+curl "http://localhost:8000/api/v1/jobs/{job_id}"
+\`\`\`
+
 ### Get Job Results
 \`\`\`bash
-curl "http://localhost:8000/api/v1/findings/job/{job_id}?offset=0&limit=20"
+curl "http://localhost:8000/api/v1/jobs/{job_id}/results?offset=0&limit=20"
+\`\`\`
+
+### List All Jobs
+\`\`\`bash
+curl "http://localhost:8000/api/v1/jobs?limit=50&offset=0"
 \`\`\`
 
 ### Get Stats
@@ -142,6 +186,7 @@ curl "http://localhost:8000/api/v1/stats"
 - Fresh scrape queue: **Async (non-blocking)**
 - Worker throughput: **~5-10 sites per minute**
 - Data retention: **30 days (auto-cleanup)**
+- Status update latency: **<500ms** (via Kafka)
 
 ## Security Notes
 
