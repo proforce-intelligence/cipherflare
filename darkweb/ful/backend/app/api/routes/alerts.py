@@ -63,17 +63,21 @@ async def get_dashboard_alerts(
         for r in results:
             alerts_data.append({
                 "id": str(r.id),
-                "type": "threat_detection",
+                "job_id": str(r.id),
+                "job_name": r.title or "Unknown Job",
+                "type": "threat_detected",
                 "title": f"Threat Detected: {r.title or 'Unknown'}",
                 "message": r.text_excerpt[:200] if r.text_excerpt else "No description available",
-                "severity": r.risk_level,
-                "risk_score": r.risk_score,
-                "source_url": r.target_url,
-                "threat_indicators": r.threat_indicators or [],
-                "is_duplicate": r.is_duplicate,
-                "triggered_alerts": r.alerts_triggered or [],
-                "timestamp": r.created_at.isoformat(),
-                "is_read": False  # Could add read status to model
+                "severity": r.risk_level if r.risk_level in ["info", "warning", "error", "success"] else "info",
+                "created_at": r.created_at.isoformat(),
+                "read": False,  # Could add read status to model
+                "data": {
+                    "risk_score": r.risk_score,
+                    "source_url": r.target_url,
+                    "threat_indicators": r.threat_indicators or [],
+                    "is_duplicate": r.is_duplicate,
+                    "triggered_alerts": r.alerts_triggered or []
+                }
             })
         
         # Get stats
@@ -91,14 +95,58 @@ async def get_dashboard_alerts(
             "high_severity": high_severity_count,
             "limit": limit,
             "offset": offset,
-            "alerts": alerts_data
+            "alerts": alerts_data  # Always returns array
         }
         
     except Exception as e:
         logger.error(f"[Alerts] Dashboard fetch failed: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch alerts")
 
-@router.post("/alerts/{alert_id}/mark-read")
+@router.get("/alerts")
+async def get_alerts_simple(
+    unread_only: bool = Query(False),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Simplified alerts endpoint for backward compatibility
+    Returns array directly
+    """
+    try:
+        query = select(MonitoringResult)
+        
+        # Get paginated results
+        result = await db.execute(
+            query.order_by(desc(MonitoringResult.created_at))
+            .limit(50)
+        )
+        results = result.scalars().all()
+        
+        alerts_data = []
+        for r in results:
+            alerts_data.append({
+                "id": str(r.id),
+                "job_id": str(r.id),
+                "job_name": r.title or "Unknown Job",
+                "type": "threat_detected",
+                "title": f"Threat Detected: {r.title or 'Unknown'}",
+                "message": r.text_excerpt[:200] if r.text_excerpt else "No description available",
+                "severity": r.risk_level if r.risk_level in ["info", "warning", "error", "success"] else "info",
+                "created_at": r.created_at.isoformat(),
+                "read": False,
+                "data": {
+                    "risk_score": r.risk_score,
+                    "source_url": r.target_url,
+                    "threat_indicators": r.threat_indicators or [],
+                }
+            })
+        
+        return alerts_data
+        
+    except Exception as e:
+        logger.error(f"[Alerts] Fetch failed: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch alerts")
+
+@router.post("/alerts/{alert_id}/read")
 async def mark_alert_read(
     alert_id: str,
     db: AsyncSession = Depends(get_db)
@@ -142,8 +190,13 @@ async def delete_alert(
     Delete an alert from dashboard
     """
     try:
+        try:
+            alert_uuid = uuid.UUID(alert_id)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid alert ID format")
+        
         result = await db.execute(
-            select(MonitoringResult).where(MonitoringResult.id == alert_id)
+            select(MonitoringResult).where(MonitoringResult.id == alert_uuid)
         )
         record = result.scalar_one_or_none()
         

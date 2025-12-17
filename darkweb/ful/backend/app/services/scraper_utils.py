@@ -88,16 +88,24 @@ TRUSTED_DOMAINS = {
     "torbayb6ojqskcclob22hnlcwpouc4vtmksdhwirqvtf3zdc3zezskid.onion",
     "3bbad7fauom4d6sgppalyqddsqbf5u5p56b5k5uk2zxsy3d6ey2jobad.onion",
 }
+# ILLEGAL_CP_KEYWORDS = [
+#     "child", "pedo", "pthc", "loli", "toddler", "rape", "torture", "abuse",
+#     "kids", "underage", "hebe", "cp ", "jailbait", "pedo hub", "abyss", "baby"
+# ]
 
 ILLEGAL_CP_KEYWORDS = [
     "child", "pedo", "pthc", "loli", "toddler", "rape", "torture", "abuse",
-    "kids", "underage", "hebe", "cp ", "jailbait", "pedo hub", "abyss", "baby"
+    "kids", "underage", "hebe", "pedo hub", "abyss", "baby"
 ]
 
+# SCAM_KEYWORDS = [
+#     "buy ", "sell ", "shop", "store", "market", "escrow", "vendor", "deposit",
+#     "fullz", "cvv", "dumps", "rdp", "socks5", "smtp", "free ", "bonus", "gift",
+#     "telegram:", "discord:", "100% success", "guaranteed", "verified vendor"
+# ]
+
 SCAM_KEYWORDS = [
-    "buy ", "sell ", "shop", "store", "market", "escrow", "vendor", "deposit",
-    "fullz", "cvv", "dumps", "rdp", "socks5", "smtp", "free ", "bonus", "gift",
-    "telegram:", "discord:", "100% success", "guaranteed", "verified vendor"
+     "100% success", "guaranteed", "verified vendor"
 ]
 
 # ================================

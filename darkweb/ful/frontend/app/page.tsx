@@ -1,7 +1,18 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronRight, Database, AlertTriangle, Search, Zap, BarChart3, Bell, RefreshCw } from "lucide-react"
+import {
+  ChevronRight,
+  Database,
+  AlertTriangle,
+  Search,
+  Zap,
+  BarChart3,
+  Bell,
+  RefreshCw,
+  Monitor,
+  Activity,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import AggregationPage from "./aggregation/page"
 import WalletTrackerPage from "./wallet-tracker/page"
@@ -9,6 +20,8 @@ import ThreatIntelligencePage from "./threat-intelligence/page"
 import InvestigationsPage from "./investigations/page"
 import ReportingPage from "./reporting/page"
 import DashboardPage from "./dashboard/page"
+import LiveMirrorPage from "./live-mirror/page"
+import MonitoringPage from "./monitoring/page"
 
 export default function CipherflareApp() {
   const [activeSection, setActiveSection] = useState("dashboard")
@@ -42,7 +55,9 @@ export default function CipherflareApp() {
             {[
               { id: "dashboard", icon: BarChart3, label: "DASHBOARD" },
               { id: "investigations", icon: Search, label: "INVESTIGATIONS" },
+              { id: "monitoring", icon: Activity, label: "MONITORING" },
               { id: "aggregation", icon: Database, label: "AGGREGATION" },
+              { id: "live-mirror", icon: Monitor, label: "LIVE MIRROR" },
               { id: "wallet", icon: Zap, label: "WALLET TRACKER" },
               { id: "threats", icon: AlertTriangle, label: "THREAT INTEL" },
               { id: "reporting", icon: BarChart3, label: "REPORTING" },
@@ -106,10 +121,12 @@ export default function CipherflareApp() {
         {/* Dashboard Content */}
         <div className="flex-1 overflow-auto">
           {activeSection === "dashboard" && <DashboardPage />}
+          {activeSection === "investigations" && <InvestigationsPage />}
+          {activeSection === "monitoring" && <MonitoringPage />}
           {activeSection === "aggregation" && <AggregationPage />}
+          {activeSection === "live-mirror" && <LiveMirrorPage />}
           {activeSection === "wallet" && <WalletTrackerPage />}
           {activeSection === "threats" && <ThreatIntelligencePage />}
-          {activeSection === "investigations" && <InvestigationsPage />}
           {activeSection === "reporting" && <ReportingPage />}
         </div>
       </div>

@@ -10,7 +10,7 @@ import sys
 import re
 import json
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 import uuid
 
 from playwright.async_api import async_playwright
@@ -32,6 +32,7 @@ from app.services.scraper_utils import (
 from app.services.tor_manager import TorManager
 from app.services.deduplication import DeduplicationService
 from app.services.alert_sender import AlertSender
+from app.services.crypto_utils import decrypt_credential  # Added decryption import
 from app.database.database import AsyncSessionLocal
 from app.models.alert import Alert
 from app.models.monitoring_result import MonitoringResult
@@ -183,9 +184,13 @@ class DarkWebWorker:
             )
             user_uuid = _get_user_uuid(user_id)
             
+            job_uuid = uuid.UUID(job_id) if job_id and not isinstance(job_id, uuid.UUID) else job_id
+            monitor_job_uuid = uuid.UUID(monitor_job_id) if monitor_job_id and not isinstance(monitor_job_id, uuid.UUID) else None
+            duplicate_of_uuid = uuid.UUID(duplicate_of_id) if duplicate_of_id and not isinstance(duplicate_of_id, uuid.UUID) else None
+            
             async with AsyncSessionLocal() as db:
                 result = MonitoringResult(
-                    job_id=job_id,
+                    job_id=job_uuid,
                     user_id=user_uuid,
                     target_url=finding.get("url"),
                     title=finding.get("title"),
@@ -195,10 +200,10 @@ class DarkWebWorker:
                     threat_indicators=finding.get("threat_indicators", []),
                     content_hash=content_hash,
                     is_duplicate=is_duplicate,
-                    duplicate_of_id=duplicate_of_id,
-                    monitor_job_id=monitor_job_id,
+                    duplicate_of_id=duplicate_of_uuid,
+                    monitor_job_id=monitor_job_uuid,
                     alerts_triggered=alerts_triggered,
-                    detected_at=datetime.utcnow()
+                    detected_at=datetime.now(timezone.utc)
                 )
                 
                 db.add(result)
@@ -326,8 +331,8 @@ class DarkWebWorker:
                                 "screenshot_file": meta.get("screenshot_file"),
                                 "text_file": meta.get("text_file"),
                                 "html_file": meta.get("raw_html_file"),
-                                "scraped_at": datetime.utcnow().isoformat(),
-                                "created_at": datetime.utcnow().isoformat(),
+                                "scraped_at": datetime.now(timezone.utc).isoformat(),
+                                "created_at": datetime.now(timezone.utc).isoformat(),
                                 "job_id": job_id,
                                 "user_id": user_id,
                                 "keyword": keyword
@@ -366,19 +371,56 @@ class DarkWebWorker:
             await self.status_producer.send_status(job_id, "FAILED", {"error": str(e)})
 
     async def handle_monitor(self, job_id: str, payload: dict):
-        """Enhanced monitor handler with dedup and alert triggering"""
+        """Handle monitoring job with optional authentication"""
         url = payload.get("target_url") or payload.get("url")
         user_id = payload.get("user_id")
         monitor_job_id = payload.get("monitor_job_id")
-
+        
+        auth_config = {
+            "auth_username": payload.get("auth_username"),
+            "auth_password": payload.get("auth_password"),
+            "login_path": payload.get("login_path"),
+            "username_selector": payload.get("username_selector"),
+            "password_selector": payload.get("password_selector"),
+            "submit_selector": payload.get("submit_selector")
+        }
+        has_auth = bool(auth_config.get("auth_username") and auth_config.get("auth_password"))
+        
         if not url:
             await self.status_producer.send_status(job_id, "FAILED", {"error": "No URL provided"})
             return
 
         try:
-            logger.info(f"[Monitor] Starting monitor scrape for: {url}")
+            logger.info(f"[Monitor] Starting scrape for: {url} (auth: {has_auth})")
 
             async with async_playwright() as pw:
+                browser = await pw.chromium.launch(
+                    headless=True,
+                    proxy={"server": f"socks5://{TOR_SOCKS}"},
+                    args=["--no-sandbox", "--disable-dev-shm-usage"]
+                )
+                context = await browser.new_context(viewport={"width": 1280, "height": 900})
+                page = await context.new_page()
+
+                if has_auth:
+                    await page.goto(url, wait_until="domcontentloaded", timeout=60000)
+                    auth_success = await self.perform_authentication(page, auth_config)
+                    
+                    if not auth_success:
+                        await self.status_producer.send_status(job_id, "FAILED", {
+                            "error": "Authentication failed",
+                            "url": url
+                        })
+                        await browser.close()
+                        return
+                    
+                    # After successful auth, navigate to target URL
+                    await page.goto(url, wait_until="domcontentloaded", timeout=60000)
+                else:
+                    # No auth required, navigate directly
+                    await page.goto(url, wait_until="domcontentloaded", timeout=60000)
+
+                # Proceed with normal scraping
                 meta = await self.scrape_onion_page(pw, url, self.output_base, "")
 
                 if meta.get("ok"):
@@ -401,7 +443,7 @@ class DarkWebWorker:
                         "keywords_found": meta.get("keywords_found", []),
                         "screenshot_file": meta.get("screenshot_file"),
                         "text_file": meta.get("text_file"),
-                        "scraped_at": datetime.utcnow().isoformat(),
+                        "scraped_at": datetime.now(timezone.utc).isoformat(),
                         "job_id": job_id,
                         "user_id": user_id,
                         "monitor_job": True
@@ -426,21 +468,16 @@ class DarkWebWorker:
                     )
 
                     await self.es_client.index_finding(finding)
-                    logger.info(f"[Success] Monitor job {job_id} completed | Risk: {risk_level} | Alerts: {alert_results.get('alert_count', 0)}")
-
-                    await self.status_producer.send_status(job_id, "COMPLETED", {
-                        "findings_count": 1,
-                        "risk_level": risk_level,
-                        "is_duplicate": is_duplicate,
-                        "alerts_triggered": len(alert_results.get("alerts_triggered", []))
-                    })
+                    logger.info(f"[Monitor] Successfully scraped {url}")
                 else:
                     await self.status_producer.send_status(job_id, "FAILED", {"error": meta.get("error")})
+                
+                await browser.close()
 
         except Exception as e:
-            logger.error(f"[Failed] Monitor job failed: {e}")
+            logger.error(f"[Monitor] Failed: {e}")
             await self.status_producer.send_status(job_id, "FAILED", {"error": str(e)})
-
+    
     async def scrape_onion_page(self, playwright, url: str, out_dir: Path, keyword: str = ""):
         """Scrape .onion URL and return metadata — Now captures FULL page text with no limits"""
         browser = await playwright.chromium.launch(
@@ -458,7 +495,7 @@ class DarkWebWorker:
         meta = {
             "url": url,
             "safe_name": safe_name,
-            "scraped_at": datetime.utcnow().isoformat(),
+            "scraped_at": datetime.now(timezone.utc).isoformat(),
             "ok": False,
             "error": None,
             "title": "",
@@ -543,7 +580,83 @@ class DarkWebWorker:
             await context.close()
             await browser.close()
             return meta
-
+    
+    async def perform_authentication(self, page, auth_config: dict) -> bool:
+        """
+        Perform authentication on a dark web site
+        Returns True if successful, False otherwise
+        """
+        try:
+            username_raw = auth_config.get("auth_username")
+            password_raw = auth_config.get("auth_password")
+            
+            # Try to decrypt, but fall back to plaintext if decryption fails
+            try:
+                username = decrypt_credential(username_raw) if username_raw else None
+                password = decrypt_credential(password_raw) if password_raw else None
+            except Exception as e:
+                logger.warning(f"[Auth] Using plaintext credentials (decryption not available): {e}")
+                username = username_raw
+                password = password_raw
+            
+            if not username or not password:
+                logger.warning("[Auth] Missing credentials after decryption")
+                return False
+            
+            login_path = auth_config.get("login_path", "")
+            username_selector = auth_config.get("username_selector", 'input[name="username"]')
+            password_selector = auth_config.get("password_selector", 'input[name="password"]')
+            submit_selector = auth_config.get("submit_selector", 'button[type="submit"]')
+            
+            current_url = page.url
+            login_url = current_url.rstrip('/') + login_path if login_path else current_url
+            
+            logger.info(f"[Auth] Attempting login at: {login_url}")
+            
+            # Navigate to login page if different
+            if login_path:
+                await page.goto(login_url, wait_until="domcontentloaded", timeout=60000)
+            
+            # Fill username field
+            await page.wait_for_selector(username_selector, timeout=10000)
+            await page.fill(username_selector, username)
+            logger.info(f"[Auth] Filled username field")
+            
+            # Fill password field
+            await page.fill(password_selector, password)
+            logger.info(f"[Auth] Filled password field")
+            
+            # Submit form
+            await page.click(submit_selector)
+            logger.info(f"[Auth] Clicked submit button")
+            
+            # Wait for navigation
+            await page.wait_for_load_state("networkidle", timeout=60000)
+            
+            # Check if login was successful
+            # Look for common error indicators
+            page_content = await page.content()
+            error_indicators = [
+                "login failed", "invalid credentials", "incorrect password",
+                "authentication failed", "wrong username", "access denied"
+            ]
+            
+            if any(indicator in page_content.lower() for indicator in error_indicators):
+                logger.error("[Auth] Login failed - error message detected")
+                return False
+            
+            # Check if we're still on login page
+            if "login" in page.url.lower() and login_path:
+                logger.error("[Auth] Still on login page after submission")
+                return False
+            
+            logger.info("[Auth] Login successful")
+            return True
+            
+        except Exception as e:
+            logger.error(f"[Auth] Authentication failed: {e}")
+            return False
+    
     async def run(self):
         try:
             await self.consumer.connect()

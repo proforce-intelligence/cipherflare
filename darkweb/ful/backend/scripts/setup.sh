@@ -377,3 +377,4 @@ while true; do
         *) log_error "Invalid option" ;;
     esac
 done
+</merged_code

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import Column, String, Integer, DateTime, UUID, Text, Float, Boolean, ForeignKey, JSON
 from sqlalchemy.orm import declarative_base
 import uuid
@@ -33,5 +33,5 @@ class MonitoringResult(Base):
     # Alert triggering
     alerts_triggered = Column(JSON, nullable=True)  # List of alert IDs triggered
     
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False, index=True)
     detected_at = Column(DateTime, nullable=True)  # When change was detected on page

@@ -53,7 +53,7 @@ export function useAlerts(unreadOnly = false) {
   )
 
   return {
-    alerts: data || [],
+    alerts: Array.isArray(data) ? data : [],
     isLoading,
     error,
     refresh: mutate,
@@ -75,11 +75,41 @@ export function useStats() {
 
 export function useMonitoringJobs() {
   const { data, error, isLoading, mutate } = useSWR("/api/v1/monitoring/jobs", () => apiClient.getMonitoringJobs(), {
-    refreshInterval: 30000, // Poll every 30 seconds
+    refreshInterval: (data) => {
+      // Poll every 3 seconds if there are active jobs, otherwise every 10 seconds
+      const hasActiveJobs = data?.some((job: any) => job.status === "active")
+      return hasActiveJobs ? 3000 : 10000
+    },
+    revalidateOnFocus: true,
+    dedupingInterval: 1000,
   })
 
   return {
     jobs: data || [],
+    isLoading,
+    error,
+    refresh: mutate,
+  }
+}
+
+export function useMonitoringJob(jobId: string | null) {
+  const { data, error, isLoading, mutate } = useSWR(
+    jobId ? `/api/v1/monitoring/jobs/${jobId}` : null,
+    () => (jobId ? apiClient.getMonitoringJob(jobId) : null),
+    {
+      refreshInterval: (data) => {
+        if (data && ["completed", "failed"].includes(data.status)) {
+          return 0
+        }
+        return 2000 // Poll every 2 seconds for active monitoring jobs
+      },
+      revalidateOnFocus: true,
+      dedupingInterval: 500,
+    },
+  )
+
+  return {
+    job: data,
     isLoading,
     error,
     refresh: mutate,

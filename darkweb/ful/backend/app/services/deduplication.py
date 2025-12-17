@@ -1,6 +1,6 @@
 import hashlib
 from typing import Dict, Any, Optional
-from datetime import datetime, timedelta
+from datetime import datetime, timezone
 import logging
 
 logger = logging.getLogger(__name__)
@@ -51,5 +51,5 @@ class DeduplicationService:
             "old_hash": DeduplicationService.generate_content_hash(old_content),
             "new_hash": DeduplicationService.generate_content_hash(new_content),
             "change_type": "content_update" if is_significant else "no_change",
-            "detected_at": datetime.utcnow().isoformat()
+            "detected_at": datetime.now(timezone.utc).isoformat()
         }

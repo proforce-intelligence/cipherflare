@@ -6,9 +6,10 @@ from app.services.kafka_producer import KafkaProducer
 from app.api.deps import get_current_user
 from app.models.alert import Alert
 from app.models.monitoring_result import MonitoringResult
+from app.services.crypto_utils import encrypt_credential  # Added encryption import
 import logging
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 logger = logging.getLogger(__name__)
@@ -30,29 +31,51 @@ def _get_user_uuid(user_id_str: str) -> uuid.UUID:
     try:
         if isinstance(user_id_str, uuid.UUID):
             return user_id_str
-        # Try parsing as UUID
         return uuid.UUID(user_id_str)
     except (ValueError, AttributeError):
-        # Fallback for string identifiers
         return uuid.uuid5(uuid.NAMESPACE_DNS, user_id_str)
 
 @router.post("/monitor/target")
 async def setup_target_monitoring(
     url: str = Query(..., description="Full .onion URL to monitor", min_length=10, regex=r"^http://.*\.onion"),
     interval_hours: int = Query(6, ge=1, le=720, description="Check interval in hours"),
+    username: Optional[str] = Query(None, description="Username for site authentication (if required)"),
+    password: Optional[str] = Query(None, description="Password for site authentication (if required)"),
+    login_path: Optional[str] = Query(None, description="Relative path to login page (e.g., '/login')"),
+    username_selector: Optional[str] = Query(None, description="CSS selector for username field"),
+    password_selector: Optional[str] = Query(None, description="CSS selector for password field"),
+    submit_selector: Optional[str] = Query(None, description="CSS selector for submit button"),
     current_user: dict = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
     kafka: KafkaProducer = Depends(get_kafka)
 ):
     """
     Setup continuous monitoring of a specific .onion URL
-    Sends first job immediately + schedules recurring ones
+    Supports optional authentication for sites requiring login
     """
     user_id = current_user.get("sub")
     if not user_id:
         raise HTTPException(status_code=401, detail="Authentication required")
     
+    if (username and not password) or (password and not username):
+        raise HTTPException(
+            status_code=400,
+            detail="Both username and password must be provided for authentication"
+        )
+    
     job_id = str(uuid.uuid4())
+
+    encrypted_username = None
+    encrypted_password = None
+    
+    if username and password:
+        try:
+            encrypted_username = encrypt_credential(username)
+            encrypted_password = encrypt_credential(password)
+            logger.info(f"[Monitor] Encrypted credentials for job {job_id}")
+        except Exception as e:
+            logger.error(f"[Monitor] Credential encryption failed: {e}")
+            raise HTTPException(status_code=500, detail="Failed to encrypt credentials")
 
     payload = {
         "job_id": job_id,
@@ -60,12 +83,18 @@ async def setup_target_monitoring(
         "target_url": url.strip(),
         "interval_hours": interval_hours,
         "user_id": user_id,
-        "created_at": datetime.utcnow().isoformat(),
-        "next_run_at": datetime.utcnow().isoformat()  # Run now
+        "auth_username": encrypted_username,
+        "auth_password": encrypted_password,
+        "login_path": login_path,
+        "username_selector": username_selector or 'input[name="username"], input[id="username"], input[type="text"]',
+        "password_selector": password_selector or 'input[name="password"], input[id="password"], input[type="password"]',
+        "submit_selector": submit_selector or 'button[type="submit"], input[type="submit"], button[name="login"]',
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "next_run_at": datetime.now(timezone.utc).isoformat()
     }
 
     await kafka.produce("monitor_jobs", payload)
-    logger.info(f"[Monitor] Queued monitor job {job_id} for {url} (every {interval_hours}h)")
+    logger.info(f"[Monitor] Queued monitor job {job_id} for {url} (auth: {bool(username)})")
 
     return {
         "success": True,
@@ -75,6 +104,7 @@ async def setup_target_monitoring(
             "url": url,
             "interval_hours": interval_hours,
             "user_id": user_id,
+            "requires_auth": bool(username),
             "status": "active"
         }
     }
@@ -123,7 +153,7 @@ async def setup_alert(
             notification_type=notification_type,
             notification_endpoint=notification_endpoint.strip() if notification_endpoint else None,
             is_active=True,
-            created_at=datetime.utcnow()
+            created_at=datetime.now(timezone.utc)
         )
 
         db.add(alert)
@@ -200,7 +230,6 @@ async def delete_alert(
 
         user_id = _get_user_uuid(user_id_str)
 
-        # Soft delete: just deactivate
         result = await db.execute(
             select(Alert).where(Alert.id == alert_id)
         )
@@ -213,7 +242,8 @@ async def delete_alert(
             raise HTTPException(status_code=403, detail="Not authorized")
 
         alert.is_active = False
-        alert.deactivated_at = datetime.utcnow()
+        if hasattr(alert, 'deactivated_at'):
+            alert.deactivated_at = datetime.now(timezone.utc)
         await db.commit()
 
         logger.info(f"[Alert] Deactivated alert {alert_id}")

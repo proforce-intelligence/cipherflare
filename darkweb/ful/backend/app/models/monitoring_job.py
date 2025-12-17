@@ -22,6 +22,13 @@ class MonitoringJob(Base):
     target_url = Column(String(512), nullable=False, index=True)
     interval_hours = Column(Integer, default=6)  # Check every N hours
     
+    auth_username_encrypted = Column(String(512), nullable=True)
+    auth_password_encrypted = Column(String(512), nullable=True)
+    login_path = Column(String(256), nullable=True)  # Optional custom login path
+    username_selector = Column(String(256), nullable=True)  # Custom form selector
+    password_selector = Column(String(256), nullable=True)  # Custom form selector
+    submit_selector = Column(String(256), nullable=True)  # Custom submit button selector
+    
     # Status tracking
     status = Column(SQLEnum(MonitoringJobStatus), default=MonitoringJobStatus.ACTIVE, nullable=False, index=True)
     
