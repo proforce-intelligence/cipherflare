@@ -19,8 +19,8 @@ cat .env | grep -E "GOOGLE_API_KEY|GEMINI_API_KEY"
 
 You should see:
 \`\`\`
-GOOGLE_API_KEY="AIzaSyCrBD1GwEU3rtTD7tdhSkucXS8ohpvpZJk"
-GEMINI_API_KEY="AIzaSyCrBD1GwEU3rtTD7tdhSkucXS8ohpvpZJk"
+GOOGLE_API_KEY=""
+GEMINI_API_KEY=""
 \`\`\`
 
 ### 2. Restart the API server
