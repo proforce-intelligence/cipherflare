@@ -76,12 +76,12 @@ export default function InvestigationsPage() {
   }
 
   const handlePreviewScreenshot = (screenshotFile: string) => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL || "http://192.168.1.250:8000"}/files/${screenshotFile}`
+    const url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/files/${screenshotFile}`
     setPreviewModal({ type: "screenshot", url })
   }
 
   const handlePreviewText = (textFile: string) => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL || "http://192.168.1.250:8000"}/files/${textFile}`
+    const url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/files/${textFile}`
     setPreviewModal({ type: "text", url })
   }
 
