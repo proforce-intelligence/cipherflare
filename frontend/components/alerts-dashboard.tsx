@@ -15,7 +15,7 @@ export function AlertsDashboard() {
   const [showUnreadOnly, setShowUnreadOnly] = useState(false)
   const { alerts, isLoading, refresh } = useAlerts(showUnreadOnly)
 
-  const unreadCount = alerts.filter((a) => !a.read).length
+  const unreadCount = Array.isArray(alerts) ? alerts.filter((a) => !a.read).length : 0
 
   const handleMarkRead = async (alertId: string) => {
     try {
@@ -105,7 +105,7 @@ export function AlertsDashboard() {
           <div className="flex items-center justify-center py-8">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
-        ) : alerts.length === 0 ? (
+        ) : !Array.isArray(alerts) || alerts.length === 0 ? (
           <div className="text-center py-8">
             <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-3 opacity-50" />
             <p className="text-muted-foreground">{showUnreadOnly ? "No unread alerts" : "No alerts yet"}</p>

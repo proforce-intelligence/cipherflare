@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Depends
 from fastapi.responses import JSONResponse
 from app.services.es_client import ESClient
 from app.services.kafka_producer import KafkaProducer
@@ -7,6 +7,10 @@ import logging
 import uuid
 from datetime import datetime
 from typing import Optional
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import func, select
+from app.database.database import get_db
+from app.models.job import Job, JobStatus
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/v1", tags=["search"])
@@ -208,18 +212,55 @@ async def get_available_models():
         return JSONResponse(content={"error": "Failed to retrieve models"}, status_code=500)
 
 @router.get("/stats")
-async def get_stats():
+async def get_stats(db: AsyncSession = Depends(get_db)):
     """
-    Get aggregated dark web threat statistics
+    Get aggregated dark web threat statistics and job counts
     """
     try:
         user_id = None
         es = get_es()
-        stats = await es.get_stats(user_id=user_id)
+        
+        findings_stats = await es.get_stats(user_id=user_id)
+        
+        # Total jobs
+        total_jobs_result = await db.execute(select(func.count(Job.id)))
+        total_jobs = total_jobs_result.scalar() or 0
+        
+        # Active jobs (QUEUED + PROCESSING)
+        active_jobs_result = await db.execute(
+            select(func.count(Job.id)).where(
+                Job.status.in_([JobStatus.QUEUED, JobStatus.PROCESSING])
+            )
+        )
+        active_jobs = active_jobs_result.scalar() or 0
+        
+        # Completed jobs
+        completed_jobs_result = await db.execute(
+            select(func.count(Job.id)).where(Job.status == JobStatus.COMPLETED)
+        )
+        completed_jobs = completed_jobs_result.scalar() or 0
+        
+        # Failed jobs
+        failed_jobs_result = await db.execute(
+            select(func.count(Job.id)).where(Job.status == JobStatus.FAILED)
+        )
+        failed_jobs = failed_jobs_result.scalar() or 0
+        
+        # Total searches (same as total jobs for now)
+        total_searches = total_jobs
+        
+        # Active threats (findings with high risk)
+        active_threats = findings_stats.get("risk_distribution", {}).get("high", 0)
         
         response_data = {
             "success": True,
-            "statistics": stats
+            "statistics": findings_stats,
+            "total_jobs": total_jobs,
+            "active_jobs": active_jobs,
+            "completed_jobs": completed_jobs,
+            "failed_jobs": failed_jobs,
+            "total_searches": total_searches,
+            "active_threats": active_threats
         }
         
         return JSONResponse(content=response_data, status_code=200)

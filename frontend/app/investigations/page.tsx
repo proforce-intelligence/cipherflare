@@ -19,6 +19,7 @@ export default function InvestigationsPage() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null)
   const [results, setResults] = useState<any>(null)
   const [loadingResults, setLoadingResults] = useState(false)
+  const [previewModal, setPreviewModal] = useState<{ type: "screenshot" | "text"; url: string } | null>(null)
   const { jobs, isLoading } = useJobs()
 
   const handleJobCreated = (jobId: string) => {
@@ -44,8 +45,7 @@ export default function InvestigationsPage() {
 
     try {
       const jobResults = await apiClient.getJobResults(job.job_id, {
-        include_summary: true,
-        model_choice: "gemini-2.5-flash",
+        include_summary: false, // Don't auto-generate summary
       })
       setResults(jobResults)
     } catch (error) {
@@ -54,6 +54,35 @@ export default function InvestigationsPage() {
     } finally {
       setLoadingResults(false)
     }
+  }
+
+  const handleGenerateSummary = async () => {
+    if (!selectedJob) return
+
+    setLoadingResults(true)
+    try {
+      const jobResults = await apiClient.getJobResults(selectedJob.job_id, {
+        include_summary: true,
+        model_choice: "gemini-2.5-flash",
+      })
+      setResults(jobResults)
+      toast.success("AI summary generated successfully")
+    } catch (error) {
+      toast.error("Failed to generate AI summary")
+      console.error(error)
+    } finally {
+      setLoadingResults(false)
+    }
+  }
+
+  const handlePreviewScreenshot = (screenshotFile: string) => {
+    const url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/files/${screenshotFile}`
+    setPreviewModal({ type: "screenshot", url })
+  }
+
+  const handlePreviewText = (textFile: string) => {
+    const url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/files/${textFile}`
+    setPreviewModal({ type: "text", url })
   }
 
   const handleExportResults = () => {
@@ -68,8 +97,8 @@ Created: ${selectedJob.created_at}
 Completed: ${selectedJob.completed_at || "In progress"}
 Sites Scraped: ${selectedJob.scraped_sites}
 
-RESULTS (${results.total_findings || 0} findings):
-${results.results
+RESULTS (${results.findings?.length || 0} findings):
+${results.findings
   ?.map(
     (r: any, i: number) => `
 ${i + 1}. ${r.title || "Untitled"}
@@ -97,7 +126,6 @@ ${results.summary || "No summary available"}
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header - Added functional New Search button */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-orange-400">SEARCH & INVESTIGATIONS</h2>
@@ -199,9 +227,19 @@ ${results.summary || "No summary available"}
                 SEARCH RESULTS - {selectedJob.job_name}
               </CardTitle>
               <div className="flex gap-2">
+                {results && results.findings && results.findings.length > 0 && !results.summary && (
+                  <Button
+                    onClick={handleGenerateSummary}
+                    disabled={loadingResults}
+                    className="bg-blue-500 hover:bg-blue-600 text-white"
+                    size="sm"
+                  >
+                    {loadingResults ? <Loader2 className="w-4 h-4 animate-spin" /> : "Generate AI Summary"}
+                  </Button>
+                )}
                 <Button
                   onClick={handleExportResults}
-                  disabled={!results || !results.results || results.results.length === 0}
+                  disabled={!results || !results.findings || results.findings.length === 0}
                   className="bg-orange-500 hover:bg-orange-600 text-black"
                   size="sm"
                 >
@@ -219,21 +257,39 @@ ${results.summary || "No summary available"}
               <div className="flex justify-center py-8">
                 <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
               </div>
-            ) : results && results.results && results.results.length > 0 ? (
+            ) : results && results.findings && results.findings.length > 0 ? (
               <>
-                {/* AI Summary */}
                 {results.summary && (
                   <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
                     <h4 className="text-sm font-semibold text-blue-400 mb-2">AI SUMMARY</h4>
-                    <p className="text-sm text-neutral-300 whitespace-pre-wrap">{results.summary}</p>
+                    <p className="text-sm text-neutral-300 whitespace-pre-wrap">
+                      {typeof results.summary === "string"
+                        ? results.summary
+                        : results.summary?.summary || JSON.stringify(results.summary, null, 2)}
+                    </p>
+                    {results.summary?.pgp_verification_results &&
+                      results.summary.pgp_verification_results.length > 0 && (
+                        <div className="mt-4 pt-4 border-t border-blue-500/20">
+                          <h5 className="text-xs font-semibold text-blue-400 mb-2">PGP VERIFICATION RESULTS</h5>
+                          <div className="space-y-2">
+                            {results.summary.pgp_verification_results.map((pgp: any, idx: number) => (
+                              <div key={idx} className="text-xs bg-neutral-800 p-2 rounded">
+                                <span className="text-neutral-400">{pgp.onion}: </span>
+                                <span className={pgp.verified ? "text-green-400" : "text-red-400"}>
+                                  {pgp.verified ? "✓ Verified" : "✗ Not Verified"}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                   </div>
                 )}
 
-                {/* Results List */}
                 <div className="space-y-3">
-                  {results.results.map((result: any, idx: number) => (
+                  {results.findings.map((result: any, idx: number) => (
                     <div
-                      key={`${selectedJob.job_id}-result-${idx}`}
+                      key={result.id || `${selectedJob.job_id}-result-${idx}`}
                       className="bg-neutral-800 border border-neutral-700 rounded-lg p-4 hover:border-orange-500/50 transition-colors"
                     >
                       <div className="flex items-start justify-between mb-2">
@@ -256,23 +312,79 @@ ${results.summary || "No summary available"}
                       </div>
                       <p className="text-xs text-neutral-400 mb-2 font-mono break-all">{result.url}</p>
                       <p className="text-sm text-neutral-300 mb-3">
-                        {result.text_excerpt?.substring(0, 300) || result.content?.substring(0, 300)}
-                        {(result.text_excerpt || result.content)?.length > 300 && "..."}
+                        {result.text_excerpt?.substring(0, 300)}
+                        {result.text_excerpt && result.text_excerpt.length > 300 && "..."}
                       </p>
+
+                      <div className="flex items-center gap-4 mb-3">
+                        {result.screenshot_file && (
+                          <Button
+                            onClick={() => handlePreviewScreenshot(result.screenshot_file)}
+                            size="sm"
+                            variant="outline"
+                            className="text-xs"
+                          >
+                            <Eye className="w-3 h-3 mr-1" />
+                            View Screenshot
+                          </Button>
+                        )}
+                        {result.text_file && (
+                          <Button
+                            onClick={() => handlePreviewText(result.text_file)}
+                            size="sm"
+                            variant="outline"
+                            className="text-xs"
+                          >
+                            <Eye className="w-3 h-3 mr-1" />
+                            View Scraped Text
+                          </Button>
+                        )}
+                      </div>
+
                       <div className="flex items-center gap-4 text-xs text-neutral-500">
-                        {result.risk_score && <span>Risk Score: {result.risk_score.toFixed(1)}</span>}
-                        {result.relevance_score && <span>Relevance: {result.relevance_score.toFixed(2)}</span>}
+                        {result.risk_score !== undefined && <span>Risk Score: {result.risk_score.toFixed(1)}</span>}
+                        {result.relevance_score !== undefined && (
+                          <span>Relevance: {result.relevance_score.toFixed(2)}</span>
+                        )}
                         {result.scraped_at && (
                           <span>Found: {formatDistanceToNow(new Date(result.scraped_at), { addSuffix: true })}</span>
                         )}
                       </div>
-                      {result.threat_indicators && result.threat_indicators.length > 0 && (
-                        <div className="mt-2 flex flex-wrap gap-1">
-                          {result.threat_indicators.slice(0, 5).map((indicator: string, i: number) => (
-                            <span key={i} className="text-xs bg-red-500/10 text-red-400 px-2 py-0.5 rounded">
-                              {indicator}
-                            </span>
-                          ))}
+
+                      {result.threat_indicators &&
+                        Array.isArray(result.threat_indicators) &&
+                        result.threat_indicators.length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-1">
+                            {result.threat_indicators.slice(0, 5).map((indicator: string, i: number) => (
+                              <span key={i} className="text-xs bg-red-500/10 text-red-400 px-2 py-0.5 rounded">
+                                {indicator}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                      {result.entities && (
+                        <div className="mt-3 pt-3 border-t border-neutral-700">
+                          {result.entities.emails && result.entities.emails.length > 0 && (
+                            <div className="mb-2">
+                              <span className="text-xs text-neutral-500">Emails: </span>
+                              {result.entities.emails.map((email: string, i: number) => (
+                                <span key={i} className="text-xs text-orange-400 mr-2">
+                                  {email}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                          {result.entities.btc_addresses && result.entities.btc_addresses.length > 0 && (
+                            <div className="mb-2">
+                              <span className="text-xs text-neutral-500">BTC: </span>
+                              {result.entities.btc_addresses.map((addr: string, i: number) => (
+                                <span key={i} className="text-xs text-orange-400 mr-2 font-mono">
+                                  {addr}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -287,6 +399,34 @@ ${results.summary || "No summary available"}
             )}
           </CardContent>
         </Card>
+      )}
+
+      {previewModal && (
+        <div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+          onClick={() => setPreviewModal(null)}
+        >
+          <div
+            className="bg-neutral-900 border border-orange-500 rounded-lg max-w-6xl max-h-[90vh] w-full overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between p-4 border-b border-neutral-700">
+              <h3 className="text-orange-400 font-semibold">
+                {previewModal.type === "screenshot" ? "Screenshot Preview" : "Scraped Text Preview"}
+              </h3>
+              <Button onClick={() => setPreviewModal(null)} variant="ghost" size="sm">
+                ✕
+              </Button>
+            </div>
+            <div className="p-4 overflow-auto max-h-[calc(90vh-80px)]">
+              {previewModal.type === "screenshot" ? (
+                <img src={previewModal.url || "/placeholder.svg"} alt="Screenshot" className="w-full rounded" />
+              ) : (
+                <iframe src={previewModal.url} className="w-full h-[70vh] bg-white rounded" />
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

@@ -27,16 +27,8 @@ export interface Job {
 
 export interface JobResult {
   job_id: string
-  results: SearchResult[]
-  summary?: {
-    success: boolean
-    query: string
-    model_used: string
-    summary: string
-    findings_analyzed: number
-    source_links_count: number
-    pgp_verification_results?: any
-  }
+  findings: SearchResult[]
+  summary?: string | SummaryObject // Can be string or object
   total_findings?: number
 }
 
@@ -70,6 +62,8 @@ export interface Stats {
   total_results: number
   alerts_count: number
   uptime: string
+  total_searches: number
+  active_threats: number
 }
 
 export interface MonitoringJob {
@@ -82,6 +76,51 @@ export interface MonitoringJob {
   last_run?: string
   next_run?: string
   created_at: string
+}
+
+export interface SummaryObject {
+  success: boolean
+  query: string
+  model_used: string
+  summary: string
+  findings_analyzed: number
+  source_links_count: number
+  pgp_verification_results?: Array<{
+    onion: string
+    verified: boolean
+    pgp_key?: string
+    error?: string
+  }>
+}
+
+export interface MonitoringJobConfig {
+  url: string
+  name?: string
+  interval_hours?: number
+  username?: string
+  password?: string
+  login_path?: string
+  username_selector?: string
+  password_selector?: string
+  submit_selector?: string
+}
+
+export interface LiveMirrorSession {
+  session_id: string
+  target_url: string
+  javascript_enabled: boolean
+  websocket_url: string
+  timeout_minutes: number
+}
+
+export interface AlertConfig {
+  name: string
+  keywords: string[]
+  notification_type: "dashboard" | "email" | "webhook" | "slack"
+  severity: "info" | "warning" | "error" | "success"
+  email?: string
+  webhook_url?: string
+  slack_webhook?: string
 }
 
 class ApiClient {
@@ -184,9 +223,9 @@ class ApiClient {
 
     return {
       job_id: response.job_id,
-      results: response.findings || [],
-      summary: response.summary, // Keep the full object with metadata
-      total_findings: response.total_findings,
+      findings: response.findings || response.results || [],
+      summary: response.summary,
+      total_findings: response.total_findings || response.total,
     }
   }
 
@@ -198,8 +237,14 @@ class ApiClient {
 
   // Alerts
   async getAlerts(unreadOnly = false): Promise<Alert[]> {
-    const query = unreadOnly ? "?unread_only=true" : ""
-    return this.request<Alert[]>(`/api/v1/alerts${query}`)
+    const query = unreadOnly ? "?status=unread" : "?status=all"
+    const response = await this.request<{
+      success: boolean
+      alerts: Alert[]
+      total: number
+    }>(`/api/v1/alerts/dashboard${query}`)
+
+    return Array.isArray(response.alerts) ? response.alerts : []
   }
 
   async markAlertRead(alertId: string): Promise<void> {
@@ -220,9 +265,50 @@ class ApiClient {
     })
   }
 
+  async createAlertConfig(config: AlertConfig): Promise<{ success: boolean; alert_id: string }> {
+    const keyword = config.keywords.join(",")
+    const queryParams = new URLSearchParams()
+    queryParams.append("keyword", keyword)
+    queryParams.append("risk_threshold", config.severity === "error" ? "high" : "medium")
+    queryParams.append("notification_type", config.notification_type)
+
+    if (config.email) {
+      queryParams.append("notification_endpoint", config.email)
+    } else if (config.webhook_url) {
+      queryParams.append("notification_endpoint", config.webhook_url)
+    } else if (config.slack_webhook) {
+      queryParams.append("notification_endpoint", config.slack_webhook)
+    }
+
+    return this.request<{ success: boolean; alert_id: string }>(`/api/v1/alert/setup?${queryParams.toString()}`, {
+      method: "POST",
+    })
+  }
+
   // Stats
   async getStats(): Promise<Stats> {
-    return this.request<Stats>("/api/v1/stats")
+    const response = await this.request<{
+      success: boolean
+      statistics: any
+      total_jobs: number
+      active_jobs: number
+      completed_jobs: number
+      failed_jobs: number
+      total_searches: number
+      active_threats: number
+    }>("/api/v1/stats")
+
+    return {
+      total_jobs: response.total_jobs || 0,
+      active_jobs: response.active_jobs || 0,
+      completed_jobs: response.completed_jobs || 0,
+      failed_jobs: response.failed_jobs || 0,
+      total_searches: response.total_searches || 0,
+      active_threats: response.active_threats || 0,
+      total_results: response.statistics?.total_findings || 0,
+      alerts_count: 0, // Will be updated later if needed
+      uptime: "N/A",
+    }
   }
 
   // Monitoring Jobs
@@ -263,6 +349,81 @@ class ApiClient {
   async getAvailableModels(): Promise<string[]> {
     const response = await this.request<{ available_models: string[] }>("/api/v1/models/available")
     return response.available_models
+  }
+
+  async setupMonitoring(config: MonitoringJobConfig): Promise<{ success: boolean; job_id: string }> {
+    const queryParams = new URLSearchParams()
+    queryParams.append("url", config.url)
+    if (config.interval_hours) queryParams.append("interval_hours", config.interval_hours.toString())
+    if (config.username) queryParams.append("username", config.username)
+    if (config.password) queryParams.append("password", config.password)
+    if (config.login_path) queryParams.append("login_path", config.login_path)
+    if (config.username_selector) queryParams.append("username_selector", config.username_selector)
+    if (config.password_selector) queryParams.append("password_selector", config.password_selector)
+    if (config.submit_selector) queryParams.append("submit_selector", config.submit_selector)
+
+    return this.request<{ success: boolean; job_id: string }>(`/api/v1/monitor/target?${queryParams.toString()}`, {
+      method: "POST",
+    })
+  }
+
+  async pauseMonitoringJob(jobId: string): Promise<void> {
+    return this.request<void>(`/api/v1/monitoring/jobs/${jobId}/pause`, {
+      method: "POST",
+    })
+  }
+
+  async resumeMonitoringJob(jobId: string): Promise<void> {
+    return this.request<void>(`/api/v1/monitoring/jobs/${jobId}/resume`, {
+      method: "POST",
+    })
+  }
+
+  async startLiveMirror(url: string, javascriptEnabled = false): Promise<LiveMirrorSession> {
+    const queryParams = new URLSearchParams()
+    queryParams.append("url", url)
+    queryParams.append("javascript_enabled", javascriptEnabled.toString())
+
+    const response = await this.request<{
+      success: boolean
+      session_id: string
+      websocket_url: string
+      config: {
+        url: string
+        javascript_enabled: boolean
+        timeout_minutes: number
+      }
+    }>(`/api/v1/monitor/live?${queryParams.toString()}`, {
+      method: "POST",
+    })
+
+    return {
+      session_id: response.session_id,
+      target_url: response.config.url,
+      javascript_enabled: response.config.javascript_enabled,
+      websocket_url: response.websocket_url,
+      timeout_minutes: response.config.timeout_minutes,
+    }
+  }
+
+  async stopLiveMirror(sessionId: string): Promise<void> {
+    return this.request<void>(`/api/v1/monitor/live/${sessionId}`, {
+      method: "DELETE",
+    })
+  }
+
+  async navigateLiveMirror(sessionId: string, url: string): Promise<void> {
+    const queryParams = new URLSearchParams()
+    queryParams.append("url", url)
+
+    return this.request<void>(`/api/v1/monitor/live/${sessionId}/navigate?${queryParams.toString()}`, {
+      method: "POST",
+    })
+  }
+
+  async getMonitoringJob(jobId: string): Promise<MonitoringJob> {
+    const response = await this.request<{ success: boolean; job: any }>(`/api/v1/monitoring/jobs/${jobId}`)
+    return response.job
   }
 }
 

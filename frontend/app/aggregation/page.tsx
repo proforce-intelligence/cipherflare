@@ -6,70 +6,93 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Play, Pause, Plus, Trash2, RefreshCw, Loader2 } from "lucide-react"
+import { Play, Pause, Plus, Trash2, RefreshCw, Loader2, Lock, Eye } from "lucide-react"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 import { useMonitoringJobs, useStats } from "@/hooks/use-api"
 import { apiClient, type MonitoringJobConfig } from "@/lib/api-client"
 import { toast } from "sonner"
 import { formatDistanceToNow } from "date-fns"
+import { Checkbox } from "@/components/ui/checkbox"
+import { LiveMirrorViewer } from "@/components/live-mirror-viewer"
 
 export default function AggregationPage() {
   const [showForm, setShowForm] = useState(false)
   const { monitoringJobs, isLoading, refresh } = useMonitoringJobs()
   const { stats } = useStats()
 
-  const [jobConfig, setJobConfig] = useState<Partial<MonitoringJobConfig>>({
-    name: "",
-    keywords: [],
-    sites: [],
-    frequency: "hourly",
-    notification_type: "dashboard",
+  const [monitorConfig, setMonitorConfig] = useState<Partial<MonitoringJobConfig>>({
+    url: "",
+    interval_hours: 6,
+    username: "",
+    password: "",
+    login_path: "",
   })
-  const [keywordInput, setKeywordInput] = useState("")
-  const [siteInput, setSiteInput] = useState("")
+  const [requiresAuth, setRequiresAuth] = useState(false)
 
-  const handleCreateJob = async () => {
-    if (!jobConfig.name || !jobConfig.keywords || jobConfig.keywords.length === 0) {
-      toast.error("Please provide job name and at least one keyword")
+  const [liveMirrorSession, setLiveMirrorSession] = useState<{
+    sessionId: string
+    targetUrl: string
+  } | null>(null)
+  const [isStartingLiveMirror, setIsStartingLiveMirror] = useState(false)
+
+  const handleCreateMonitoring = async () => {
+    if (!monitorConfig.url) {
+      toast.error("Please provide a .onion URL")
+      return
+    }
+
+    if (!monitorConfig.url.match(/^http:\/\/.*\.onion/)) {
+      toast.error("Invalid .onion URL format")
+      return
+    }
+
+    if (requiresAuth && (!monitorConfig.username || !monitorConfig.password)) {
+      toast.error("Please provide authentication credentials")
       return
     }
 
     try {
-      await apiClient.createMonitoringJob(jobConfig as MonitoringJobConfig)
+      const config: MonitoringJobConfig = {
+        url: monitorConfig.url,
+        interval_hours: monitorConfig.interval_hours || 6,
+      }
+
+      if (requiresAuth) {
+        config.username = monitorConfig.username
+        config.password = monitorConfig.password
+        config.login_path = monitorConfig.login_path || ""
+      }
+
+      await apiClient.setupMonitoring(config)
       toast.success("Monitoring job created successfully")
       setShowForm(false)
-      setJobConfig({
-        name: "",
-        keywords: [],
-        sites: [],
-        frequency: "hourly",
-        notification_type: "dashboard",
+      setMonitorConfig({
+        url: "",
+        interval_hours: 6,
+        username: "",
+        password: "",
+        login_path: "",
       })
-      setKeywordInput("")
-      setSiteInput("")
+      setRequiresAuth(false)
       refresh()
     } catch (error) {
       toast.error("Failed to create monitoring job")
     }
   }
 
-  const addKeyword = () => {
-    if (keywordInput.trim()) {
-      setJobConfig({
-        ...jobConfig,
-        keywords: [...(jobConfig.keywords || []), keywordInput.trim()],
+  const handleStartLiveMirror = async (url: string) => {
+    setIsStartingLiveMirror(true)
+    try {
+      const session = await apiClient.startLiveMirror(url, false)
+      setLiveMirrorSession({
+        sessionId: session.session_id,
+        targetUrl: url,
       })
-      setKeywordInput("")
-    }
-  }
-
-  const addSite = () => {
-    if (siteInput.trim()) {
-      setJobConfig({
-        ...jobConfig,
-        sites: [...(jobConfig.sites || []), siteInput.trim()],
-      })
-      setSiteInput("")
+      toast.success("Live mirror started")
+    } catch (error) {
+      toast.error("Failed to start live mirror session")
+    } finally {
+      setIsStartingLiveMirror(false)
     }
   }
 
@@ -98,7 +121,6 @@ export default function AggregationPage() {
     }
   }
 
-  // Mock collection trend data
   const collectionTrendData = [
     { time: "00:00", rate: 200 },
     { time: "04:00", rate: 350 },
@@ -108,138 +130,129 @@ export default function AggregationPage() {
     { time: "20:00", rate: 847 },
   ]
 
+  if (liveMirrorSession) {
+    return (
+      <div className="p-6 h-[calc(100vh-4rem)]">
+        <LiveMirrorViewer
+          sessionId={liveMirrorSession.sessionId}
+          targetUrl={liveMirrorSession.targetUrl}
+          onClose={() => setLiveMirrorSession(null)}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="p-6 space-y-6">
-      {/* Header - Added functional Create Job button */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-orange-400">CONTINUOUS MONITORING</h2>
-          <p className="text-sm text-neutral-500 mt-1">Monitor dark web, breach forums, and paste sites continuously</p>
+          <p className="text-sm text-neutral-500 mt-1">
+            Monitor dark web sites continuously with optional authentication
+          </p>
         </div>
         <Button onClick={() => setShowForm(!showForm)} className="bg-orange-500 hover:bg-orange-600 text-black">
           <Plus className="w-4 h-4 mr-2" />
-          {showForm ? "Cancel" : "Create Monitoring Job"}
+          {showForm ? "Cancel" : "Setup Monitoring"}
         </Button>
       </div>
 
       {showForm && (
         <Card className="bg-neutral-900 border-orange-900/30 animate-in fade-in slide-in-from-top-4 duration-300">
           <CardHeader>
-            <CardTitle className="text-sm font-medium text-orange-400">CREATE MONITORING JOB</CardTitle>
+            <CardTitle className="text-sm font-medium text-orange-400">SETUP MONITORING</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-4">
               <div className="space-y-2">
-                <Label>Job Name</Label>
+                <Label>Target .onion URL</Label>
                 <Input
-                  placeholder="e.g., Ransomware Monitor"
-                  value={jobConfig.name}
-                  onChange={(e) => setJobConfig({ ...jobConfig, name: e.target.value })}
+                  placeholder="http://example.onion"
+                  value={monitorConfig.url}
+                  onChange={(e) => setMonitorConfig({ ...monitorConfig, url: e.target.value })}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label>Frequency</Label>
+                <Label>Check Interval (hours)</Label>
                 <Select
-                  value={jobConfig.frequency}
-                  onValueChange={(value) => setJobConfig({ ...jobConfig, frequency: value as any })}
+                  value={monitorConfig.interval_hours?.toString()}
+                  onValueChange={(value) =>
+                    setMonitorConfig({ ...monitorConfig, interval_hours: Number.parseInt(value) })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="hourly">Hourly</SelectItem>
-                    <SelectItem value="daily">Daily</SelectItem>
-                    <SelectItem value="weekly">Weekly</SelectItem>
+                    <SelectItem value="1">Every hour</SelectItem>
+                    <SelectItem value="6">Every 6 hours</SelectItem>
+                    <SelectItem value="12">Every 12 hours</SelectItem>
+                    <SelectItem value="24">Every 24 hours</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="space-y-2 md:col-span-2">
-                <Label>Keywords to Monitor</Label>
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Enter keyword"
-                    value={keywordInput}
-                    onChange={(e) => setKeywordInput(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addKeyword())}
-                  />
-                  <Button onClick={addKeyword} type="button" variant="outline">
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-                {jobConfig.keywords && jobConfig.keywords.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {jobConfig.keywords.map((keyword) => (
-                      <span
-                        key={keyword}
-                        className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-sm flex items-center gap-2"
-                      >
-                        {keyword}
-                        <button
-                          onClick={() =>
-                            setJobConfig({
-                              ...jobConfig,
-                              keywords: jobConfig.keywords?.filter((k) => k !== keyword),
-                            })
-                          }
-                          className="hover:text-orange-300"
-                        >
-                          ✕
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
+              <div className="flex items-center space-x-2 pt-2">
+                <Checkbox
+                  id="requires-auth"
+                  checked={requiresAuth}
+                  onCheckedChange={(checked) => setRequiresAuth(checked as boolean)}
+                />
+                <Label htmlFor="requires-auth" className="flex items-center gap-2 cursor-pointer">
+                  <Lock className="w-4 h-4" />
+                  Site requires authentication
+                </Label>
               </div>
 
-              <div className="space-y-2 md:col-span-2">
-                <Label>Target Sites (Optional)</Label>
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Enter .onion URL"
-                    value={siteInput}
-                    onChange={(e) => setSiteInput(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addSite())}
-                  />
-                  <Button onClick={addSite} type="button" variant="outline">
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-                {jobConfig.sites && jobConfig.sites.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {jobConfig.sites.map((site) => (
-                      <span
-                        key={site}
-                        className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-sm flex items-center gap-2"
-                      >
-                        {site}
-                        <button
-                          onClick={() =>
-                            setJobConfig({
-                              ...jobConfig,
-                              sites: jobConfig.sites?.filter((s) => s !== site),
-                            })
-                          }
-                          className="hover:text-blue-300"
-                        >
-                          ✕
-                        </button>
-                      </span>
-                    ))}
+              {requiresAuth && (
+                <div className="space-y-4 p-4 bg-neutral-800 rounded-lg border border-orange-900/30">
+                  <p className="text-xs text-neutral-400 mb-3">
+                    Provide credentials to access authenticated dark web sites. Credentials are encrypted before
+                    storage.
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Username</Label>
+                      <Input
+                        placeholder="Username"
+                        value={monitorConfig.username}
+                        onChange={(e) => setMonitorConfig({ ...monitorConfig, username: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Password</Label>
+                      <Input
+                        type="password"
+                        placeholder="Password"
+                        value={monitorConfig.password}
+                        onChange={(e) => setMonitorConfig({ ...monitorConfig, password: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="space-y-2 md:col-span-2">
+                      <Label>Login Path (optional)</Label>
+                      <Input
+                        placeholder="/login or leave empty"
+                        value={monitorConfig.login_path}
+                        onChange={(e) => setMonitorConfig({ ...monitorConfig, login_path: e.target.value })}
+                      />
+                      <p className="text-xs text-neutral-500">Relative path to login page if different from main URL</p>
+                    </div>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
 
-            <Button onClick={handleCreateJob} className="w-full bg-orange-500 hover:bg-orange-600 text-black">
+            <Button onClick={handleCreateMonitoring} className="w-full bg-orange-500 hover:bg-orange-600 text-black">
               Create Monitoring Job
             </Button>
           </CardContent>
         </Card>
       )}
 
-      {/* Stats - Using real stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="bg-neutral-900 border-orange-900/30">
           <CardContent className="pt-6">
@@ -268,7 +281,6 @@ export default function AggregationPage() {
         </Card>
       </div>
 
-      {/* Collection Rate Chart */}
       <Card className="bg-neutral-900 border-orange-900/30">
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-medium text-orange-400 tracking-wider">MONITORING ACTIVITY</CardTitle>
@@ -286,7 +298,6 @@ export default function AggregationPage() {
         </CardContent>
       </Card>
 
-      {/* Active Monitoring Jobs - Real data with pause/resume/delete */}
       <Card className="bg-neutral-900 border-orange-900/30">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
@@ -305,7 +316,7 @@ export default function AggregationPage() {
             <div className="space-y-3">
               {monitoringJobs.map((job) => (
                 <div
-                  key={job.job_id}
+                  key={job.id}
                   className="flex items-center justify-between p-4 bg-neutral-800 border border-neutral-700 rounded hover:border-orange-500/50 transition-colors"
                 >
                   <div className="flex-1">
@@ -319,7 +330,7 @@ export default function AggregationPage() {
                               : "bg-red-500"
                         }`}
                       ></div>
-                      <p className="text-sm text-white font-mono">{job.name}</p>
+                      <p className="text-sm text-white font-mono">{job.target_url}</p>
                       <span
                         className={`text-xs font-bold px-2 py-1 rounded ${
                           job.status === "active"
@@ -331,25 +342,42 @@ export default function AggregationPage() {
                       </span>
                     </div>
                     <div className="flex gap-4 text-xs text-neutral-500">
-                      <span>Keywords: {job.keywords?.join(", ")}</span>
-                      <span>Frequency: {job.frequency}</span>
+                      <span>Interval: Every {job.interval_hours}h</span>
+                      <span>Checks: {job.total_checks}</span>
+                      <span>Findings: {job.findings_count}</span>
                       <span>Created: {formatDistanceToNow(new Date(job.created_at), { addSuffix: true })}</span>
                     </div>
                   </div>
                   <div className="flex gap-2">
                     <Button
-                      onClick={() => toggleJobStatus(job.job_id, job.status)}
+                      onClick={() => handleStartLiveMirror(job.target_url)}
+                      variant="ghost"
+                      size="icon"
+                      disabled={isStartingLiveMirror}
+                      className="text-neutral-400 hover:text-blue-400"
+                      title="View Live"
+                    >
+                      {isStartingLiveMirror ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </Button>
+                    <Button
+                      onClick={() => toggleJobStatus(job.id, job.status)}
                       variant="ghost"
                       size="icon"
                       className="text-neutral-400 hover:text-orange-500"
+                      title={job.status === "active" ? "Pause" : "Resume"}
                     >
                       {job.status === "active" ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                     </Button>
                     <Button
-                      onClick={() => deleteJob(job.job_id)}
+                      onClick={() => deleteJob(job.id)}
                       variant="ghost"
                       size="icon"
                       className="text-neutral-400 hover:text-red-400"
+                      title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -360,7 +388,7 @@ export default function AggregationPage() {
           ) : (
             <div className="text-center py-8 text-neutral-500">
               <RefreshCw className="w-12 h-12 mx-auto mb-3 opacity-50" />
-              <p>No monitoring jobs yet. Click "Create Monitoring Job" to get started.</p>
+              <p>No monitoring jobs yet. Click "Setup Monitoring" to get started.</p>
             </div>
           )}
         </CardContent>

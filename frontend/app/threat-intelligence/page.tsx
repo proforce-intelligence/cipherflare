@@ -72,7 +72,14 @@ export default function ThreatIntelligencePage() {
     })
   }
 
-  const filteredAlerts = alertFilter === "all" ? alerts : alerts.filter((a) => a.severity === alertFilter)
+  const filteredAlerts =
+    alertFilter === "all"
+      ? Array.isArray(alerts)
+        ? alerts
+        : []
+      : Array.isArray(alerts)
+        ? alerts.filter((a) => a.severity === alertFilter)
+        : []
 
   const threatTrendData = [
     { time: "00:00", threats: 12 },
@@ -230,7 +237,7 @@ export default function ThreatIntelligencePage() {
           <CardContent className="pt-6">
             <p className="text-xs text-neutral-500 uppercase tracking-wider mb-2">Error Alerts</p>
             <p className="text-3xl font-bold text-red-400 font-mono">
-              {alerts.filter((a) => a.severity === "error").length}
+              {Array.isArray(alerts) ? alerts.filter((a) => a.severity === "error").length : 0}
             </p>
             <p className="text-xs text-red-400 mt-2">Require immediate action</p>
           </CardContent>
@@ -240,7 +247,7 @@ export default function ThreatIntelligencePage() {
           <CardContent className="pt-6">
             <p className="text-xs text-neutral-500 uppercase tracking-wider mb-2">Warnings</p>
             <p className="text-3xl font-bold text-orange-400 font-mono">
-              {alerts.filter((a) => a.severity === "warning").length}
+              {Array.isArray(alerts) ? alerts.filter((a) => a.severity === "warning").length : 0}
             </p>
             <p className="text-xs text-orange-400 mt-2">Needs investigation</p>
           </CardContent>
@@ -250,7 +257,7 @@ export default function ThreatIntelligencePage() {
           <CardContent className="pt-6">
             <p className="text-xs text-neutral-500 uppercase tracking-wider mb-2">Info Alerts</p>
             <p className="text-3xl font-bold text-yellow-400 font-mono">
-              {alerts.filter((a) => a.severity === "info").length}
+              {Array.isArray(alerts) ? alerts.filter((a) => a.severity === "info").length : 0}
             </p>
             <p className="text-xs text-yellow-400 mt-2">For awareness</p>
           </CardContent>
@@ -259,7 +266,7 @@ export default function ThreatIntelligencePage() {
         <Card className="bg-neutral-900 border-orange-900/30">
           <CardContent className="pt-6">
             <p className="text-xs text-neutral-500 uppercase tracking-wider mb-2">Total Alerts</p>
-            <p className="text-3xl font-bold text-orange-400 font-mono">{alerts.length}</p>
+            <p className="text-3xl font-bold text-orange-400 font-mono">{Array.isArray(alerts) ? alerts.length : 0}</p>
             <p className="text-xs text-orange-400 mt-2">All time</p>
           </CardContent>
         </Card>
