@@ -162,7 +162,7 @@ start_services() {
     
     log_info "Waiting for Elasticsearch to be ready..."
     for i in {1..30}; do
-        if curl -s http://192.168.1.250:9200 > /dev/null 2>&1; then
+        if curl -s http://0.0.0.0:9200 > /dev/null 2>&1; then
             log_success "Elasticsearch is ready"
             break
         fi
@@ -199,7 +199,7 @@ start_services() {
         "$PIP_BIN" install uvicorn fastapi
     fi
     
-    log_info "Starting API server on http://192.168.1.250:8000..."
+    log_info "Starting API server on http://0.0.0.0:8000..."
     cd "$PROJECT_DIR"
     "$PYTHON_BIN" -m uvicorn app.api.main:app --host 0.0.0.0 --port 8000 --reload > /tmp/cipherflare_api.log 2>&1 &
     API_PID=$!
@@ -237,8 +237,8 @@ start_services() {
     done
     
     log_success "All services started!"
-    log_info "API Docs: http://192.168.1.250:8000/docs"
-    log_info "API Endpoint: http://192.168.1.250:8000/api/v1/search?keyword=ransomware"
+    log_info "API Docs: http://0.0.0.0:8000/docs"
+    log_info "API Endpoint: http://0.0.0.0:8000/api/v1/search?keyword=ransomware"
     log_info "Logs: tail -f /tmp/cipherflare_*.log"
 }
 
@@ -294,7 +294,7 @@ check_status() {
     fi
     
     # Check API
-    if curl -s http://192.168.1.250:8000/docs > /dev/null 2>&1; then
+    if curl -s http://0.0.0.0:8000/docs > /dev/null 2>&1; then
         log_success "API Server: Running on port 8000"
     else
         log_error "API Server: Not responding"
@@ -343,7 +343,7 @@ view_logs() {
 test_api() {
     log_info "Testing API endpoint..."
     
-    RESPONSE=$(curl -s "http://192.168.1.250:8000/api/v1/search?keyword=ransomware" 2>&1)
+    RESPONSE=$(curl -s "http://0.0.0.0:8000/api/v1/search?keyword=ransomware" 2>&1)
     
     if echo "$RESPONSE" | grep -q '"success"'; then
         log_success "API is working!"

@@ -98,7 +98,7 @@ class ESClient:
             result = self.client.search(
                 index=self.index_name,
                 query={"term": {"job_id": job_id}},
-                size=500
+                size=10000 # Increased to allow more findings
             )
             
             findings = []

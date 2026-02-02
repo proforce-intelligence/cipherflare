@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.1.250:8000"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://0.0.0.0:8000"
 
 // Types
 export interface SearchParams {

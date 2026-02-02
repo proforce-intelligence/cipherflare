@@ -57,3 +57,5 @@ pytest-asyncio
 black
 flake8
 httpx[socks]
+python-jose
+bcrypt
