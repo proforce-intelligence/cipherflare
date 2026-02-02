@@ -229,7 +229,7 @@ export default function MonitoringPage() {
                       )}
                       {job.next_run_at && (
                         <span className="text-orange-400">
-                          Next: {formatDistanceToNow(new Date(job.next_run_at), { addSuffix: true })}
+                          Next: {formatDistanceToNow(new Date(job.next_run), { addSuffix: true })}
                         </span>
                       )}
                     </div>

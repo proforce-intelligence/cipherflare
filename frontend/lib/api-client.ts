@@ -1,4 +1,6 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+import { ReactNode } from "react"
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://192.168.1.250:8000"
 
 // Types
 export interface SearchParams {
@@ -67,6 +69,14 @@ export interface Stats {
 }
 
 export interface MonitoringJob {
+  last_run_at: string | number | Date
+  next_run_at: string | number | Date
+  target_url: ReactNode
+  interval_hours: ReactNode
+  alerts_triggered: number
+  findings_count: number
+  total_checks: number
+  status: string
   id: string
   name: string
   query: string

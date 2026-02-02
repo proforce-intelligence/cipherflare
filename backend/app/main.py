@@ -1,4 +1,4 @@
-from app.api.routes import jobs, alerts, stats, monitoring, models
+from app.api.routes import jobs, alerts, stats, monitoring, models auth
 from app.api.routes import files
 
 
@@ -9,3 +9,4 @@ app.include_router(stats.router)
 app.include_router(monitoring.router)
 app.include_router(models.router)
 app.include_router(files.router)
+app.include_router(auth.router)
