@@ -19,6 +19,7 @@ from app.api.routes.jobs import router as jobs_router
 from app.api.routes.alerts import router as alerts_router
 from app.api.routes.stats import router as stats_router
 from app.api.routes.live_mirror import router as live_mirror_router
+from app.api.routes.reporting import router as reporting_router
 
 from app.database.database import init_db
 from app.services.scheduler import MonitoringScheduler
@@ -67,6 +68,7 @@ app.include_router(alerts_router)
 app.include_router(stats_router)
 app.include_router(live_mirror_router)
 app.include_router(auth)
+app.include_router(reporting_router)
 
 # Custom OpenAPI schema - this makes Bearer token work consistently for ALL protected endpoints
 def custom_openapi():

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, delete, func
+from sqlalchemy import select, delete, func, text
 from app.database.database import get_db
 from app.services.kafka_producer import KafkaProducer
 from app.api.deps import get_current_user
@@ -256,7 +256,6 @@ async def delete_alert(
         await db.rollback()
         raise HTTPException(status_code=500, detail="Failed to delete alert")
 
-
 @router.get("/monitoring/results")
 async def get_monitoring_results(
     limit: int = Query(50, ge=1, le=500),
@@ -264,7 +263,6 @@ async def get_monitoring_results(
     current_user: dict = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Get monitoring results for current user"""
     user_id_str = current_user.get("sub")
     if not user_id_str:
         raise HTTPException(status_code=401, detail="Authentication required")
@@ -272,7 +270,6 @@ async def get_monitoring_results(
     user_id = _get_user_uuid(user_id_str)
 
     try:
-        # Get total count
         count_result = await db.execute(
             select(func.count(MonitoringResult.id)).where(
                 MonitoringResult.user_id == user_id
@@ -280,15 +277,39 @@ async def get_monitoring_results(
         )
         total = count_result.scalar() or 0
 
-        # Get results
+        # Use raw column names instead of letting SQLAlchemy convert to UUID
         result = await db.execute(
-            select(MonitoringResult)
+            select(
+                MonitoringResult.id.label("id_raw"),
+                MonitoringResult.target_url,
+                MonitoringResult.title,
+                MonitoringResult.risk_level,
+                MonitoringResult.risk_score,
+                MonitoringResult.is_duplicate,
+                MonitoringResult.alerts_triggered,
+                MonitoringResult.created_at,
+                MonitoringResult.detected_at,
+                # Add other fields you need...
+            )
             .where(MonitoringResult.user_id == user_id)
             .order_by(MonitoringResult.created_at.desc())
             .limit(limit)
             .offset(offset)
         )
-        results = result.scalars().all()
+
+        rows = result.all()
+
+        def safe_uuid(val):
+            if val is None:
+                return None
+            if isinstance(val, uuid.UUID):
+                return str(val)
+            if isinstance(val, (int, str)):
+                try:
+                    return str(uuid.UUID(int=val) if isinstance(val, int) else val)
+                except ValueError:
+                    return str(val)  # fallback - return as string
+            return str(val)
 
         return {
             "success": True,
@@ -297,22 +318,22 @@ async def get_monitoring_results(
             "offset": offset,
             "results": [
                 {
-                    "id": str(r.id),
-                    "target_url": r.target_url,
-                    "title": r.title,
-                    "risk_level": r.risk_level,
-                    "risk_score": r.risk_score,
-                    "is_duplicate": r.is_duplicate,
-                    "alerts_triggered": r.alerts_triggered or [],
-                    "created_at": r.created_at.isoformat(),
-                    "detected_at": r.detected_at.isoformat() if r.detected_at else None
+                    "id": safe_uuid(row.id_raw),
+                    "target_url": row.target_url,
+                    "title": row.title,
+                    "risk_level": row.risk_level,
+                    "risk_score": row.risk_score,
+                    "is_duplicate": row.is_duplicate,
+                    "alerts_triggered": row.alerts_triggered or [],
+                    "created_at": row.created_at.isoformat() if row.created_at else None,
+                    "detected_at": row.detected_at.isoformat() if row.detected_at else None,
                 }
-                for r in results
+                for row in rows
             ]
         }
 
     except Exception as e:
-        logger.error(f"[Monitoring] Get results failed: {e}")
+        logger.error(f"[Monitoring] Get results failed: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to fetch results")
 
 
@@ -322,49 +343,74 @@ async def get_monitoring_result_detail(
     current_user: dict = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Get detailed monitoring result"""
     user_id_str = current_user.get("sub")
     if not user_id_str:
         raise HTTPException(status_code=401, detail="Authentication required")
 
     user_id = _get_user_uuid(user_id_str)
 
-    try:
-        result = await db.execute(
-            select(MonitoringResult).where(
-                MonitoringResult.id == result_id,
-                MonitoringResult.user_id == user_id
-            )
-        )
-        record = result.scalar_one_or_none()
+    # Raw SQL - no ORM UUID coercion issues
+    query = text("""
+        SELECT 
+            id,
+            target_url,
+            title,
+            text_excerpt,
+            risk_level,
+            risk_score,
+            threat_indicators,
+            content_hash,
+            is_duplicate,
+            alerts_triggered,
+            created_at,
+            detected_at
+        FROM monitoring_results
+        WHERE id = :result_id 
+          AND user_id = :user_id
+    """)
 
-        if not record:
-            raise HTTPException(status_code=404, detail="Result not found")
-
-        return {
-            "success": True,
-            "result": {
-                "id": str(record.id),
-                "target_url": record.target_url,
-                "title": record.title,
-                "text_excerpt": record.text_excerpt,
-                "risk_level": record.risk_level,
-                "risk_score": record.risk_score,
-                "threat_indicators": record.threat_indicators or [],
-                "is_duplicate": record.is_duplicate,
-                "duplicate_of_id": str(record.duplicate_of_id) if record.duplicate_of_id else None,
-                "alerts_triggered": record.alerts_triggered or [],
-                "created_at": record.created_at.isoformat(),
-                "detected_at": record.detected_at.isoformat() if record.detected_at else None
-            }
+    result = await db.execute(
+        query,
+        {
+            "result_id": result_id,
+            "user_id": str(user_id)
         }
+    )
 
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"[Monitoring] Get detail failed: {e}")
-        raise HTTPException(status_code=500, detail="Failed to fetch result")
+    row = result.mappings().first()
 
+    if not row:
+        raise HTTPException(status_code=404, detail="Monitoring result not found or not authorized")
+
+    def safe_uuid(val):
+        if val is None:
+            return None
+        if isinstance(val, uuid.UUID):
+            return str(val)
+        if isinstance(val, str):
+            try:
+                return str(uuid.UUID(val))
+            except ValueError:
+                return val
+        return str(val)
+
+    return {
+        "success": True,
+        "result": {
+            "id": safe_uuid(row["id"]),
+            "target_url": row["target_url"],
+            "title": row["title"],
+            "text_excerpt": row["text_excerpt"],
+            "risk_level": row["risk_level"],
+            "risk_score": row["risk_score"],
+            "threat_indicators": row["threat_indicators"],
+            "content_hash": row["content_hash"],
+            "is_duplicate": row["is_duplicate"],
+            "alerts_triggered": row["alerts_triggered"] or [],
+            "created_at": row["created_at"].isoformat() if row["created_at"] else None,
+            "detected_at": row["detected_at"].isoformat() if row["detected_at"] else None,
+        }
+    }
 
 @router.get("/monitoring/stats")
 async def get_monitoring_stats(
