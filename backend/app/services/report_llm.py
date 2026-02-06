@@ -1,6 +1,7 @@
 # app/services/report_llm.py
 """
 Dedicated LLM service for generating threat intelligence reports
+Using local OpenAI-compatible server at http://127.0.0.1:1234/v1
 """
 
 import logging
@@ -11,15 +12,20 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
-from app.services.llm_utils import get_llm, _normalize_model_name
+# Use OpenAI client — compatible with LM Studio, Ollama WebUI, etc.
+from langchain_openai import ChatOpenAI
 
 logger = logging.getLogger(__name__)
 
+# Your local server endpoint
+LOCAL_LLM_BASE_URL = "http://127.0.0.1:1234/v1"
+LOCAL_LLM_API_KEY = "lm-studio"  # dummy key — most local servers accept anything
 
 # ────────────────────────────────────────────────
 #               Report-specific prompts
 # ────────────────────────────────────────────────
 
+# (your existing prompts here - unchanged)
 EXECUTIVE_SUMMARY_PROMPT = PromptTemplate.from_template(
     """You are a senior threat intelligence analyst preparing an executive summary for stakeholders.
 
@@ -92,16 +98,11 @@ Findings to base the report on:
 Output the full report content now:"""
 )
 
-
 # ────────────────────────────────────────────────
-#               Helper functions
+#               Helper functions (unchanged)
 # ────────────────────────────────────────────────
 
 def prepare_findings_context(findings: List[Dict]) -> Dict[str, Any]:
-    """
-    Prepare summarized context from raw findings for LLM prompt.
-    Returns dict suitable for prompt formatting.
-    """
     if not findings:
         return {
             "total_findings": 0,
@@ -111,12 +112,11 @@ def prepare_findings_context(findings: List[Dict]) -> Dict[str, Any]:
             "high_count": 0
         }
 
-    # Simple aggregation — customize based on your actual ES document structure
     critical = sum(1 for f in findings if f.get("risk_level", "").lower() in ["critical"])
     high = sum(1 for f in findings if f.get("risk_level", "").lower() in ["high"])
     text_summary = "\n".join(
         f"- {f.get('title', 'Untitled')} ({f.get('risk_level', 'unknown')}) — {f.get('source_url', 'no url')}"
-        for f in findings[:30]  # limit to avoid token overflow
+        for f in findings[:30]
     )
 
     return {
@@ -129,7 +129,6 @@ def prepare_findings_context(findings: List[Dict]) -> Dict[str, Any]:
 
 
 def get_report_prompt(report_type: str):
-    """Select the appropriate prompt template based on report type."""
     prompts = {
         "executive": EXECUTIVE_SUMMARY_PROMPT,
         "technical": TECHNICAL_ANALYSIS_PROMPT,
@@ -139,7 +138,7 @@ def get_report_prompt(report_type: str):
 
 
 # ────────────────────────────────────────────────
-#               Main report generation function
+#               Main report generation function (Ollama-compatible server)
 # ────────────────────────────────────────────────
 
 async def generate_report_content(
@@ -148,27 +147,28 @@ async def generate_report_content(
     findings: List[Dict],
     jobs_count: int = 0,
     time_period: str = "N/A",
-    model_choice: str = "gemini-2.5-flash",
+    model_choice: str = "llama3.1",           # change to your loaded model name
     max_findings_for_prompt: int = 50,
 ) -> str:
     """
-    Generate full report text using LLM based on collected findings.
-
-    Returns:
-        str: The generated report content (markdown/text)
+    Generate full report text using local Ollama-compatible server
     """
     try:
-        llm = get_llm(model_choice)
-        
-        # Prepare context
+        logger.info(f"Connecting to local LLM at {LOCAL_LLM_BASE_URL} with model: {model_choice}")
+
+        llm = ChatOpenAI(
+            base_url=LOCAL_LLM_BASE_URL,
+            api_key=LOCAL_LLM_API_KEY,          # dummy key
+            model=model_choice,
+            temperature=0.3,
+            max_tokens=4096,
+            timeout=300,                        # generous timeout for long reports
+        )
+
         context = prepare_findings_context(findings[:max_findings_for_prompt])
-        
         generated_date = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
-        
-        # Select prompt
         prompt_template = get_report_prompt(report_type)
-        
-        # Build chain
+
         chain = (
             {
                 "title": lambda x: title,
@@ -185,9 +185,9 @@ async def generate_report_content(
         )
 
         logger.info(f"Generating {report_type} report: '{title}' using model {model_choice}")
-        
+
         report_text = await chain.ainvoke({})
-        
+
         return report_text.strip()
 
     except Exception as e:
@@ -195,12 +195,8 @@ async def generate_report_content(
         raise RuntimeError(f"Report generation failed: {str(e)}")
 
 
-# ────────────────────────────────────────────────
-#               Export / Public API
-# ────────────────────────────────────────────────
-
 __all__ = [
     "generate_report_content",
-    "ReportType",           # if you want to use the enum outside
+    "ReportType",
     "prepare_findings_context",
 ]

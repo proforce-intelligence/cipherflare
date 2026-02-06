@@ -1,7 +1,8 @@
 # app/models/report.py
 from datetime import datetime
-from sqlalchemy import Column, String, Integer, DateTime, UUID, Text, Enum as SQLEnum, JSON, Boolean
+from sqlalchemy import Column, String, Integer, DateTime, UUID, Text, Enum as SQLEnum, JSON, Boolean, Float
 from sqlalchemy.orm import declarative_base
+from sqlalchemy.dialects.postgresql import UUID
 import uuid
 import enum
 
@@ -25,7 +26,7 @@ class Report(Base):
     __tablename__ = "reports"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), nullable=False, index=True)
+    user_id = Column(String(32), nullable=False, index=True)
 
     title = Column(String(255), nullable=False)
     report_type = Column(SQLEnum(ReportType), nullable=False)
@@ -40,7 +41,8 @@ class Report(Base):
 
     # File information
     file_path    = Column(String(512), nullable=True, index=True)
-    file_size_mb = Column(String(20), nullable=True)           # "2.4" or "0.8"
+    file_size_mb = Column(Float(precision=2), nullable=True)
+    
 
     # Timestamps
     created_at   = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
