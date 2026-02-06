@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, BackgroundTasks, HTTPException, Query
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, func
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 import os
@@ -527,8 +527,15 @@ async def view_shared_report(
     if not report.is_publicly_shared:
         raise HTTPException(403, "This report is no longer publicly shared")
 
+    # Fix: Make both datetimes timezone-aware for comparison
     now = datetime.now(timezone.utc)
-    if report.share_expires_at and report.share_expires_at < now:
+    
+    # If share_expires_at is naive (from DB), make it aware (assume UTC)
+    expires_at = report.share_expires_at
+    if expires_at and expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+
+    if expires_at and expires_at < now:
         raise HTTPException(410, "This share link has expired")
 
     if not report.file_path or not os.path.exists(report.file_path):
@@ -583,7 +590,7 @@ async def get_report_details(
     is_generating = report.status == ReportStatus.GENERATING
 
     # Build action URLs
-    base_url = "http://localhost:8000"  # ← Replace with your actual domain
+    base_url = "http://localhost:8000"  # ← Replace with your actual domain in production
     action_urls = {
         "download": f"/api/v1/reports/{report_id}/download" if is_ready else None,
         "preview": f"/api/v1/reports/{report_id}/preview" if is_ready else None,
@@ -599,7 +606,14 @@ async def get_report_details(
     # Format dates
     created_at = report.created_at.isoformat() if report.created_at else None
     completed_at = report.completed_at.isoformat() if report.completed_at else None
-    share_expires_at = report.share_expires_at.isoformat() if report.share_expires_at else None
+
+    # Format share expiration
+    share_expires_at = None
+    if report.share_expires_at:
+        expires = report.share_expires_at
+        if expires.tzinfo is None:
+            expires = expires.replace(tzinfo=timezone.utc)
+        share_expires_at = expires.isoformat()
 
     # Format filters (make them readable)
     formatted_filters = report.filters or {}
@@ -621,15 +635,17 @@ async def get_report_details(
         else:
             time_elapsed = f"{int(elapsed_seconds // 3600)}h"
 
-    # Sharing status
+    # Sharing status (fixed comparison)
+    now_utc = datetime.now(timezone.utc)
+    expires_at = report.share_expires_at
+    if expires_at and expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+
     sharing_status = {
         "is_shared": report.is_publicly_shared,
         "share_token": report.share_token,
         "expires_at": share_expires_at,
-        "is_expired": (
-            report.share_expires_at 
-            and report.share_expires_at < datetime.now(timezone.utc)
-        ),
+        "is_expired": bool(expires_at and expires_at < now_utc),
         "share_url": action_urls["share_url"]
     }
 
