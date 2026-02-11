@@ -1,5 +1,5 @@
 # app/routers/auth.py  (or your existing file)
-from fastapi import APIRouter, Depends, HTTPException, status, Response, Request, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Response, Request, Query, Body
 from fastapi.security import OAuth2PasswordRequestForm
 
 from datetime import timedelta
@@ -7,11 +7,11 @@ from sqlalchemy import select, func, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from app.core.security import (
     verify_password,
     create_token,
     get_current_user,
+    oauth2_scheme,
     require_role,
     ACCESS_TOKEN_EXPIRE_MINUTES,
     REFRESH_TOKEN_EXPIRE_DAYS,
@@ -23,129 +23,121 @@ from app.core.roles import Role
 router = APIRouter(prefix="/api/v1/auth", tags=["auth"])
 
 
-def set_auth_cookies(
-    response: Response,
-    access_token: str,
-    refresh_token: str,
-    secure: bool = False,           # False in local dev without HTTPS
-    samesite: str = "lax",
-):
-    # Access token – short lived
-    response.set_cookie(
-        key="access_token",
-        value=access_token,
-        httponly=True,
-        secure=secure,
-        samesite=samesite,
-        max_age=int(ACCESS_TOKEN_EXPIRE_MINUTES * 60),
-        path="/",
-    )
+# def set_auth_cookies(
+#     response: Response,
+#     access_token: str,
+#     refresh_token: str,
+#     secure: bool = False,           # False in local dev without HTTPS
+#     samesite: str = "lax",
+# ):
+#     # Access token – short lived
+#     response.set_cookie(
+#         key="access_token",
+#         value=access_token,
+#         httponly=True,
+#         secure=secure,
+#         samesite=samesite,
+#         max_age=int(ACCESS_TOKEN_EXPIRE_MINUTES * 60),
+#         path="/",
+#     )
+# 
+#     # Refresh token – long lived
+#     response.set_cookie(
+#         key="refresh_token",
+#         value=refresh_token,
+#         httponly=True,
+#         secure=secure,
+#         samesite=samesite,
+#         max_age=int(REFRESH_TOKEN_EXPIRE_DAYS * 24 * 3600),
+#         path="/",
+#     )
 
-    # Refresh token – long lived
-    response.set_cookie(
-        key="refresh_token",
-        value=refresh_token,
-        httponly=True,
-        secure=secure,
-        samesite=samesite,
-        max_age=int(REFRESH_TOKEN_EXPIRE_DAYS * 24 * 3600),
-        path="/",
-    )
+# 
+# @router.post("/login")
+# async def login(
+#     form: OAuth2PasswordRequestForm = Depends(),
+#     db: AsyncSession = Depends(get_db),
+#     request: Request = None,
+# ):
+#     """
+#     Authenticate user and return access + refresh tokens in response body
+#     (Bearer token style – suitable for API clients, Swagger, Postman, mobile apps, etc.)
+#     """
+#     ip_address = request.client.host if request else "unknown"
+#     user_agent = request.headers.get("user-agent", "unknown")
+# 
+#     # Find user
+#     result = await db.execute(select(User).where(User.username == form.username))
+#     user: User | None = result.scalar_one_or_none()
+# 
+#     # Check credentials
+#     success = user is not None and verify_password(form.password, user.hashed_password)
+# 
+#     # Log attempt (even failed ones)
+#     login_log = LoginLog(
+#         user_id=user.id if user else None,
+#         ip_address=ip_address,
+#         user_agent=user_agent,
+#         success=success,
+#     )
+#     db.add(login_log)
+# 
+#     if not success:
+#         await db.commit()
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Incorrect username or password",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
+# 
+#     # ─── Create tokens ───────────────────────────────────────────────
+#     access_token = create_token(
+#         subject=str(user.id),
+#         role=user.role.value,
+#         expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
+#         token_type="access",
+#     )
+# 
+#     refresh_token = create_token(
+#         subject=str(user.id),
+#         role=user.role.value,
+#         expires_delta=timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
+#         token_type="refresh",
+#     )
+# 
+#     # ─── Log successful login ────────────────────────────────────────
+#     db.add(
+#         AuditLog(
+#             user_id=user.id,
+#             action="login_success",
+#             details={"ip": ip_address, "user_agent": user_agent},
+#         )
+#     )
+# 
+#     await db.commit()
+# 
+#     # ─── Return tokens + user info in body ───────────────────────────
+#     return {
+#         "access_token": access_token,
+#         "refresh_token": refresh_token,     # optional – remove if you don't want to expose it
+#         "token_type": "bearer",
+#         "expires_in": int(ACCESS_TOKEN_EXPIRE_MINUTES * 60),  # in seconds
+#         "message": "Login successful",
+#         "user": {
+#             "id": user.id,
+#             "username": user.username,
+#             "role": user.role.value,
+#             "status": "ACTIVE" if user.is_active else "INACTIVE",
+#             "created_at": user.created_at.isoformat() if user.created_at else None,
+#         }
+#     }
 
-@router.post("/login")
-async def login(
-    response: Response,
-    form: OAuth2PasswordRequestForm = Depends(),
-    db: AsyncSession = Depends(get_db),
-    request: Request = None,
-):
-    ip_address = request.client.host if request else "unknown"
-    user_agent = request.headers.get("user-agent", "unknown")
-
-    result = await db.execute(select(User).where(User.username == form.username))
-    user: User | None = result.scalar_one_or_none()
-
-    success = user is not None and verify_password(form.password, user.hashed_password)
-
-    login_log = LoginLog(
-        user_id=user.id if user else None,
-        ip_address=ip_address,
-        user_agent=user_agent,
-        success=success,
-    )
-    db.add(login_log)
-
-    if not success:
-        await db.commit()
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-    # ─── Create tokens ───────────────────────────────────────────────
-    access_token = create_token(
-        subject=str(user.id),
-        role=user.role.value,
-        expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
-    )
-
-    refresh_token = create_token(
-        subject=str(user.id),
-        role=user.role.value,
-        expires_delta=timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
-        token_type="refresh",
-    )
-
-    # ─── Set HTTP-only cookies ───────────────────────────────────────
-    set_auth_cookies(
-        response,
-        access_token=access_token,
-        refresh_token=refresh_token,
-        secure=False if "localhost" in request.url.hostname else True,
-        samesite="lax",   # change to "strict" if you prefer stronger CSRF protection
-    )
-
-    # ─── Log successful login ────────────────────────────────────────
-    db.add(
-        AuditLog(
-            user_id=user.id,
-            action="login_success",
-            details={"ip": ip_address, "user_agent": user_agent},
-        )
-    )
-    await db.commit()
-
-    # ─── Prepare the exact response shape you want ───────────────────
-    response_data = {
-        "admin": {
-            "id": user.id,                    # or whatever admin-level ID you want
-            "Role": user.role.value,          # e.g. "SUPER_ADMIN"
-            "userId": user.id,
-            "user": {
-                "id": user.id,
-                "UserName": user.username,    # assuming username is full name here
-                "userRole": user.role.value,
-                "status": "ACTIVE" if user.is_active else "INACTIVE",
-                "created_at": user.created_at.isoformat() if user.created_at else None,
-                
-            }
-        },
-        "message": "Login successful"
-    }
-
-    return response_data
 
 @router.post("/refresh")
 async def refresh_token(
-    response: Response,
-    request: Request,
+    refresh_token: str = Body(..., embed=True),  # send as JSON: {"refresh_token": "..."}
     db: AsyncSession = Depends(get_db),
 ):
-    refresh_token = request.cookies.get("refresh_token")
-    if not refresh_token:
-        raise HTTPException(status_code=401, detail="Refresh token missing")
-
     credentials_exception = HTTPException(
         status_code=401,
         detail="Invalid refresh token"
@@ -160,7 +152,7 @@ async def refresh_token(
         raise credentials_exception
 
     result = await db.execute(select(User).where(User.id == user_id))
-    user: User | None = result.scalar_one_or_none()
+    user = result.scalar_one_or_none()
     if not user or not user.is_active:
         raise credentials_exception
 
@@ -168,21 +160,14 @@ async def refresh_token(
         subject=str(user.id),
         role=user.role.value,
         expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
+        token_type="access",
     )
 
-    # Update access token cookie (refresh token stays the same)
-    response.set_cookie(
-        key="access_token",
-        value=new_access_token,
-        httponly=True,
-        secure=True if "localhost" not in request.url.hostname else False,
-        samesite="lax",
-        max_age=int(ACCESS_TOKEN_EXPIRE_MINUTES * 60),
-        path="/",
-    )
-
-    return {"message": "Token refreshed"}
-
+    return {
+        "access_token": new_access_token,
+        "token_type": "bearer",
+        "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60
+    }
 
 @router.get("/profile")
 async def get_profile(current_user: User = Depends(get_current_user)):
