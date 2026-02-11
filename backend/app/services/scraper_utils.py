@@ -341,6 +341,7 @@ async def fetch_engine_results(client: httpx.AsyncClient, engine: dict, keyword:
 
         results = []
         for link in onion_urls:
+            logger.info(f"Discovered URL: {link} from {engine['name']}") # Added logging statement
             category = categorize_result(link)
             if category == "blocked_illegal":
                 logger.warning(f"BLOCKED ILLEGAL: {link} ({engine['name']})")
