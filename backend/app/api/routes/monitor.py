@@ -37,7 +37,7 @@ def _get_user_uuid(user_id_str: str) -> uuid.UUID:
 
 @router.post("/monitor/target")
 async def setup_target_monitoring(
-    url: str = Query(..., description="Full .onion URL to monitor", min_length=10, regex=r"^http://.*\.onion"),
+    url: str = Query(..., description="Full .onion URL to monitor", min_length=10, pattern=r"^http://.*\.onion"),
     interval_hours: int = Query(6, ge=1, le=720, description="Check interval in hours"),
     username: Optional[str] = Query(None, description="Username for site authentication (if required)"),
     password: Optional[str] = Query(None, description="Password for site authentication (if required)"),
@@ -115,12 +115,12 @@ async def setup_alert(
     keyword: str = Query(..., min_length=2, max_length=100, description="Keyword to monitor"),
     risk_threshold: str = Query(
         "medium",
-        regex="^(low|medium|high|critical)$",
+        pattern="^(low|medium|high|critical)$",
         description="Minimum risk level to trigger alert"
     ),
     notification_type: str = Query(
         "email",
-        regex="^(email|webhook|slack)$",
+        pattern="^(email|webhook|slack)$",
         description="How to notify"
     ),
     notification_endpoint: Optional[str] = Query(

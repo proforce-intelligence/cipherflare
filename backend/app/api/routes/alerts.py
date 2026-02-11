@@ -30,8 +30,8 @@ def _get_user_uuid(user_id_str: str) -> uuid.UUID:
 async def get_dashboard_alerts(
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
-    status: Optional[str] = Query(None, regex="^(unread|read|all)$"),
-    severity: Optional[str] = Query(None, regex="^(low|medium|high|critical)$"),
+    status: Optional[str] = Query(None, pattern="^(unread|read|all)$"),
+    severity: Optional[str] = Query(None, pattern="^(low|medium|high|critical)$"),
     db: AsyncSession = Depends(get_db)
 ):
     """

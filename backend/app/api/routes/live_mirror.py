@@ -29,7 +29,7 @@ def get_live_mirror_manager() -> LiveMirrorManager:
 
 @router.post("/monitor/live")
 async def start_live_mirror(
-    url: str = Query(..., description="Full .onion URL to mirror", min_length=10, regex=r"^http://.*\.onion"),
+    url: str = Query(..., description="Full .onion URL to mirror", min_length=10, pattern=r"^http://.*\.onion"),
     javascript_enabled: bool = Query(False, description="Enable JavaScript (security risk)"),
     current_user: dict = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)

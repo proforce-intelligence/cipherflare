@@ -38,7 +38,7 @@ def _get_user_uuid(user_id_str: str) -> uuid.UUID:
 
 @router.get("/monitoring/jobs")
 async def list_monitoring_jobs(
-    status: Optional[str] = Query(None, regex="^(active|paused|completed|failed)$"),
+    status: Optional[str] = Query(None, pattern="^(active|paused|completed|failed)$"),
     limit: int = Query(50, ge=1, le=500),
     offset: int = Query(0, ge=0),
     db: AsyncSession = Depends(get_db)
