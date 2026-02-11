@@ -95,7 +95,8 @@ TRUSTED_DOMAINS = {
 
 ILLEGAL_CP_KEYWORDS = [
     "child", "pedo", "pthc", "loli", "toddler", "rape", "torture", "abuse",
-    "kids", "underage", "hebe", "pedo hub", "abyss", "baby"
+    "kids", "underage", "hebe", "pedo hub", "abyss", "baby",
+    "incest", "teen", "lolita", "shota", "underage" # Added more terms
 ]
 
 # SCAM_KEYWORDS = [
@@ -105,7 +106,9 @@ ILLEGAL_CP_KEYWORDS = [
 # ]
 
 SCAM_KEYWORDS = [
-     "100% success", "guaranteed", "verified vendor"
+     "100% success", "guaranteed", "verified vendor",
+     "scam", "fraud", "carding", "stolen", "dumps", "cc", "cvv", "fullz", # Added more terms
+     "telegram:", "discord:", "whatsapp:" # Communication channels often used by scammers
 ]
 
 # ================================
@@ -147,13 +150,27 @@ def find_keyword_context(text: str, keyword: str, window: int = 160) -> List[str
     if not keyword or not text: return []
     k = keyword.lower()
     excerpts = []
-    for m in re.finditer(re.escape(k), text.lower()):
-        start = max(0, m.start() - window)
-        end = min(len(text), m.end() + window)
-        context = text[start:end].strip().replace("\n", " ")
-        context = re.sub(r'\s+', ' ', context)
-        highlighted = re.sub(f'({re.escape(keyword)})', r'**\1**', context, flags=re.IGNORECASE)
-        excerpts.append(highlighted)
+    # Use individual words for context as well, to provide more hits
+    keyword_words = [w for w in keyword.lower().split() if w]
+    for word in keyword_words:
+        for m in re.finditer(re.escape(word), text.lower()):
+            start = max(0, m.start() - window)
+            end = min(len(text), m.end() + window)
+            context = text[start:end].strip().replace("\n", " ")
+            context = re.sub(r'\s+', ' ', context)
+            highlighted = re.sub(f'({re.escape(word)})', r'**\1**', context, flags=re.IGNORECASE)
+            excerpts.append(highlighted)
+    
+    # Also include exact phrase matches
+    if keyword and any(re.finditer(re.escape(k), text.lower())):
+         for m in re.finditer(re.escape(k), text.lower()):
+            start = max(0, m.start() - window)
+            end = min(len(text), m.end() + window)
+            context = text[start:end].strip().replace("\n", " ")
+            context = re.sub(r'\s+', ' ', context)
+            highlighted = re.sub(f'({re.escape(keyword)})', r'**\1**', context, flags=re.IGNORECASE)
+            excerpts.append(highlighted)
+
     unique = []
     seen = set()
     for e in excerpts:
@@ -162,6 +179,7 @@ def find_keyword_context(text: str, keyword: str, window: int = 160) -> List[str
             unique.append(e)
             seen.add(key)
     return unique[:5]
+
 
 def calculate_enhanced_risk_score(meta: dict, keyword: str = "") -> Tuple[str, float, List[str]]:
     entities = meta.get("entities", {})
@@ -192,9 +210,19 @@ def calculate_enhanced_risk_score(meta: dict, keyword: str = "") -> Tuple[str, f
     if matches:
         risk_score += min(matches * 8, 40)
 
-    if any(re.search(p, title, re.I) for p in [r'\b(child|cp|pedo|loli)\b', r'\b(zero.?day|0day|rat|botnet)\b']):
-        risk_score += 50
-        indicators.append("CRITICAL CONTENT DETECTED")
+    # More aggressive critical content detection
+    critical_keywords = [
+        r'\b(child|cp|pedo|loli|gore|snuff|torture|rape|abuse|exploit)\b',
+        r'\b(zero.?day|0day|rat|botnet|exploit.?kit|malware|phishing|carding)\b',
+        r'\b(hitman|murder|assassin)\b'
+    ]
+    if any(re.search(p, content, re.I) for p in critical_keywords):
+        risk_score += 60 # Significantly higher score for critical content
+        indicators.append("CRITICAL CONTENT DETECTED - HIGH SEVERITY")
+
+    if any(re.search(p, title, re.I) for p in [r'\b(child|cp|pedo|loli)\b']): # Explicit child abuse in title
+        risk_score += 80 # Max score
+        indicators.append("CRITICAL CONTENT DETECTED - EXTREME SEVERITY")
 
     risk_score = max(0, min(risk_score, 100))
     level = "critical" if risk_score >= 80 else "high" if risk_score >= 60 else "medium" if risk_score >= 30 else "low"

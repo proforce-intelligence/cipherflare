@@ -235,7 +235,7 @@ class DarkWebWorker:
 
     async def handle_ad_hoc(self, job_id: str, payload: dict):
         """Handle ad-hoc search job"""
-        keyword = payload.get("keyword")
+        keyword = payload.get("keyword").strip() if payload.get("keyword") else None
         max_results = payload.get("max_results")
         user_id = payload.get("user_id")
 
