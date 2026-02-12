@@ -12,6 +12,7 @@ from app.core.security import (
     create_token,
     get_current_user,
     oauth2_scheme,
+    get_password_hash,
     require_role,
     ACCESS_TOKEN_EXPIRE_MINUTES,
     REFRESH_TOKEN_EXPIRE_DAYS,
@@ -19,6 +20,10 @@ from app.core.security import (
 from app.database.database import get_db
 from app.models.user import User, AuditLog, LoginLog
 from app.core.roles import Role
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/auth", tags=["auth"])
 
@@ -196,10 +201,15 @@ async def logout(response: Response):
 
 @router.post("/admin")
 async def create_admin(
-    username: str = Query(..., min_length=3, max_length=50, description="Unique username for the new admin"),
-    password: str = Query(..., min_length=8, description="Password for the new admin (min 8 chars)"),
-    current_user: User = Depends(require_role(Role.super_admin)),  # Strictly super_admin only
+    username: str = Query(
+        ..., min_length=3, max_length=50, description="Unique username for the new admin"
+    ),
+    password: str = Query(
+        ..., min_length=8, description="Password for the new admin (min 8 chars)"
+    ),
+    current_user: User = Depends(require_role(Role.super_admin)),
     db: AsyncSession = Depends(get_db),
+    request: Request = None,                    # ← added to access client IP
 ):
     """
     Create a new admin account - ONLY super_admin is allowed to perform this action.
@@ -217,13 +227,6 @@ async def create_admin(
                 detail="Username is already taken. Please choose a different one."
             )
 
-        # Optional: Add basic password strength check (you can expand this)
-        if len(password) < 8:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Password must be at least 8 characters long."
-            )
-
         # Hash the password
         hashed_password = get_password_hash(password)
 
@@ -237,7 +240,10 @@ async def create_admin(
         )
 
         db.add(new_admin)
-        await db.flush()  # Flush to get new_admin.id if needed for audit
+        await db.flush()  # Flush to get new_admin.id for audit log
+
+        # Get client IP safely
+        ip_address = request.client.host if request else "unknown"
 
         # Audit log entry
         audit = AuditLog(
@@ -247,7 +253,7 @@ async def create_admin(
                 "target_username": username,
                 "target_role": Role.admin.value,
                 "created_by": current_user.username,
-                "ip": request.client.host if request else "unknown"
+                "ip": ip_address,
             }
         )
         db.add(audit)
@@ -262,15 +268,17 @@ async def create_admin(
                 "username": new_admin.username,
                 "role": new_admin.role.value,
                 "created_at": new_admin.created_at.isoformat()
+                if new_admin.created_at else None,
             }
         }
 
     except HTTPException as http_exc:
         await db.rollback()
         raise http_exc
+
     except Exception as e:
         await db.rollback()
-        logger.error(f"Error creating admin: {str(e)}")
+        logger.error(f"Error creating admin: {str(e)}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An unexpected error occurred while creating the admin."

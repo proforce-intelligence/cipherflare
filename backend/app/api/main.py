@@ -11,7 +11,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response, Request
 from fastapi.security import OAuth2PasswordRequestForm
 
 from datetime import timedelta
@@ -24,6 +24,7 @@ from app.core.security import (
     verify_password,
     create_token,
     get_current_user,
+    set_secure_auth_cookies,
     ACCESS_TOKEN_EXPIRE_MINUTES,
     REFRESH_TOKEN_EXPIRE_DAYS,
 )
@@ -61,7 +62,7 @@ app.add_middleware(
         "http://127.0.0.1:4000",
         "http://192.168.1.175:4000",
         "http://192.168.1.222:3000",
-        "*",
+        
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -81,26 +82,30 @@ else:
 # ────────────────────────────────────────────────────────────────
 
 
+
 @app.post("/login")
 async def login(
+    response: Response,                             # Required to set cookies
     form: OAuth2PasswordRequestForm = Depends(),
     db: AsyncSession = Depends(get_db),
+    request: Request = None,                        # Optional: for IP logging
 ):
     """
-    Authenticate user and return access + refresh tokens in response body.
-    This endpoint is PUBLIC (no authentication required).
+    Authenticate user, set secure HTTP-only cookies, and return tokens in body.
+    PUBLIC endpoint — no authentication required.
     """
-    ip_address = "unknown"      # You can get real IP from middleware or proxy headers if needed
-    user_agent = "unknown"      # You can get from headers if needed
+    # Safely get client info (fallback to "unknown")
+    ip_address = request.client.host if request else "unknown"
+    user_agent = request.headers.get("user-agent", "unknown") if request else "unknown"
 
     # Find user
     result = await db.execute(select(User).where(User.username == form.username))
     user: User | None = result.scalar_one_or_none()
 
-    # Check credentials
+    # Verify credentials
     success = user is not None and verify_password(form.password, user.hashed_password)
 
-    # Log attempt (even failed ones)
+    # Log attempt (success or failure)
     login_log = LoginLog(
         user_id=user.id if user else None,
         ip_address=ip_address,
@@ -117,6 +122,8 @@ async def login(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+    # ── Authentication successful ────────────────────────────────────────
+
     # Create tokens
     access_token = create_token(
         subject=str(user.id),
@@ -132,6 +139,14 @@ async def login(
         token_type="refresh",
     )
 
+    # Set secure HTTP-only cookies BEFORE any commit/return
+    set_secure_auth_cookies(
+        response=response,
+        access_token=access_token,
+        refresh_token=refresh_token,
+        request=request,
+    )
+
     # Log successful login
     db.add(
         AuditLog(
@@ -141,14 +156,11 @@ async def login(
         )
     )
 
+    # Commit both logs
     await db.commit()
 
-    # Return tokens + basic user info (Bearer style)
+    # Return tokens in body (useful for Swagger, Postman, mobile apps, etc.)
     return {
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-        "token_type": "bearer",
-        "expires_in": int(ACCESS_TOKEN_EXPIRE_MINUTES * 60),
         "message": "Login successful",
         "user": {
             "id": user.id,
