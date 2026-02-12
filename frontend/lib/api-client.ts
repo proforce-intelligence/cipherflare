@@ -134,21 +134,35 @@ export interface AlertConfig {
 }
 
 class ApiClient {
-  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  // Added token parameter for authentication and improved error logging
+  private _getAuthToken(): string | null {
+    // This is an example using localStorage.
+    // In a production app, you might get this from a cookie, a global state, or NextAuth.js session.
+    return localStorage.getItem('authToken');
+  }
+
+  private async request<T>(endpoint: string, options: RequestInit = {}, token?: string): Promise<T> {
     try {
-      console.log("[v0] API Request:", endpoint)
+      const headers: HeadersInit = {
+        "Content-Type": "application/json",
+        ...options.headers,
+      };
+
+      if (token) {
+        (headers as Record<string, string>).Authorization = `Bearer ${token}`;
+      }
+
+      console.log("[v0] API Request:", endpoint);
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,
-        headers: {
-          "Content-Type": "application/json",
-          ...options.headers,
-        },
-      })
+        headers,
+      });
 
       if (!response.ok) {
-        const error = await response.json().catch(() => ({ detail: response.statusText }))
-        console.error("[v0] API Error:", error)
-        throw new Error(error.detail || "Request failed")
+        const errorBody = await response.json().catch(() => null);
+        const errorDetail = errorBody?.detail || response.statusText;
+        console.error(`[v0] API Error (Status: ${response.status} ${response.statusText}):`, errorBody || { detail: response.statusText });
+        throw new Error(errorDetail);
       }
 
       const data = await response.json()
@@ -187,9 +201,10 @@ class ApiClient {
     if (params.model_choice) queryParams.append("model_choice", params.model_choice)
     if (params.pgp_verify) queryParams.append("pgp_verify", "true")
 
+    const authToken = this._getAuthToken();
     return this.request<Job>(`/api/v1/jobs/search?${queryParams.toString()}`, {
       method: "POST",
-    })
+    }, authToken)
   }
 
   async getJobs(filters?: { status?: string; job_type?: string; limit?: number; offset?: number }): Promise<{
@@ -202,8 +217,11 @@ class ApiClient {
     if (filters?.limit) queryParams.append("limit", filters.limit.toString())
     if (filters?.offset) queryParams.append("offset", filters.offset.toString())
 
+    const authToken = this._getAuthToken();
     const response = await this.request<{ success: boolean; jobs: any[]; total: number }>(
       `/api/v1/jobs?${queryParams.toString()}`,
+      {}, // Pass empty options object if no other options are needed
+      authToken
     )
 
     const mappedJobs = response.jobs.map((job) => this.mapBackendJobToFrontend(job))
