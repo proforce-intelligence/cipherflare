@@ -168,17 +168,14 @@ def setup_index():
     }
     
     try:
-        try:
-            client.indices.delete(index=INDEX_NAME)
-            logger.info(f"[*] Deleted existing index: {INDEX_NAME}")
-        except:
-            pass
-        
-        client.indices.create(index=INDEX_NAME, body=index_settings)
-        logger.info(f"[✓] Index created: {INDEX_NAME}")
+        if not client.indices.exists(index=INDEX_NAME):
+            client.indices.create(index=INDEX_NAME, body=index_settings)
+            logger.info(f"[✓] Index created: {INDEX_NAME}")
+        else:
+            logger.info(f"[✓] Index '{INDEX_NAME}' already exists, skipping creation.")
         return True
     except Exception as e:
-        logger.error(f"[!] Failed to create index: {e}")
+        logger.error(f"[!] Failed to create or check index: {e}")
         return False
     finally:
         client.close()

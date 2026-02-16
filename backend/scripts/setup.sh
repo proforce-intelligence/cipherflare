@@ -108,13 +108,34 @@ setup_project() {
         log_success "Playwright browsers installed"
     fi
     
-    log_info "Setting up Elasticsearch index (requires ES running)..."
-    if docker ps 2>/dev/null | grep -q elasticsearch || podman ps 2>/dev/null | grep -q elasticsearch; then
-        sleep 2
-        "$PYTHON_BIN" "$PROJECT_DIR/scripts/setup_es.py" 2>&1 | tee /tmp/es_setup.log || log_warn "ES setup may need retry"
-    else
-        log_warn "Elasticsearch not running - will setup after Docker start"
+    # Ensure Elasticsearch is running for index setup
+    log_info "Starting Docker Elasticsearch for setup..."
+    cd "$PROJECT_DIR"
+    #docker-compose -f docker-compose-parrot.yml up -d elasticsearch || 
+    podman-compose -f docker-compose-parrot.yml up -d --force-recreate elasticsearch || {
+        log_error "Failed to start Elasticsearch for setup"
+        exit 1
+    }
+    
+    log_info "Waiting for Elasticsearch to be ready for setup..."
+    for i in {1..30}; do
+        if curl -s http://0.0.0.0:9200 > /dev/null 2>&1; then
+            log_success "Elasticsearch is ready for setup"
+            break
+        fi
+        if [ $i -eq 30 ]; then
+            log_error "Elasticsearch failed to start for setup"
+            exit 1
+        fi
+        sleep 1
+    done
+    
+    log_info "Setting up Elasticsearch index..."
+    if ! "$PYTHON_BIN" "$PROJECT_DIR/scripts/setup_es.py" 2>&1 | tee /tmp/es_setup.log; then
+        log_error "Failed to setup Elasticsearch index."
+        exit 1
     fi
+    log_success "Elasticsearch index setup complete"
     
     log_success "Setup complete!"
 }
@@ -158,7 +179,8 @@ start_services() {
     # Start Docker Elasticsearch only
     log_info "Starting Docker Elasticsearch..."
     cd "$PROJECT_DIR"
-    docker-compose -f docker-compose-parrot.yml up -d elasticsearch || podman-compose -f docker-compose-parrot.yml up -d --force-recreate elasticsearch || {
+    #docker-compose -f docker-compose-parrot.yml up -d elasticsearch || 
+    podman-compose -f docker-compose-parrot.yml up -d --force-recreate elasticsearch || {
         log_error "Failed to start Elasticsearch"
         return 1
     }
@@ -174,20 +196,6 @@ start_services() {
             return 1
         fi
         sleep 1
-    done
-    
-    # Setup ES index with retry logic
-    log_info "Setting up Elasticsearch index..."
-    for attempt in {1..3}; do
-        log_info "Attempt $attempt/3 to setup Elasticsearch..."
-        if "$PYTHON_BIN" "$PROJECT_DIR/scripts/setup_es.py" 2>&1 | tee /tmp/es_setup_$attempt.log; then
-            log_success "Elasticsearch index setup complete"
-            break
-        fi
-        if [ $attempt -lt 3 ]; then
-            log_warn "Setup attempt failed, retrying in 5 seconds..."
-            sleep 5
-        fi
     done
     
     export PYTHONPATH="$PROJECT_DIR"
@@ -261,15 +269,6 @@ stop_services() {
     fi
     
 
-        # Auto-create super admin if not exists
-    log_info "Checking/Creating super admin user..."
-    if "$PYTHON_BIN" "$PROJECT_DIR/scripts/create_super_admin.py" > /tmp/create_super_admin.log 2>&1; then
-        log_success "Super admin check/creation completed"
-        tail -n 5 /tmp/create_super_admin.log | sed 's/^/    /'
-    else
-        log_warn "Super admin script had issues (non-critical). Check log:"
-        tail -n 10 /tmp/create_super_admin.log | sed 's/^/    /'
-    fi
     
     # Stop Docker Elasticsearch only
     cd "$PROJECT_DIR"
