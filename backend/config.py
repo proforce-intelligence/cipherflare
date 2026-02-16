@@ -7,7 +7,7 @@ load_dotenv()
 ES_URL = os.getenv("ES_URL", "http://elasticsearch:9200")
 
 # Kafka
-KAFKA_BOOTSTRAP = os.getenv("KAFKA_BOOTSTRAP", "kafka:9092")
+KAFKA_BOOTSTRAP = os.getenv("KAFKA_BOOTSTRAP", "127.0.0.1:9092")
 
 # Tor
 TOR_SOCKS = os.getenv("TOR_SOCKS", "127.0.0.1:9050")

@@ -14,7 +14,6 @@ load_dotenv()
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from datetime import timedelta
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -24,8 +23,6 @@ from app.core.security import (
     verify_password,
     create_token,
     get_current_user,
-    ACCESS_TOKEN_EXPIRE_MINUTES,
-    REFRESH_TOKEN_EXPIRE_DAYS,
 )
 
 from app.api.routes.auth import auth
@@ -84,78 +81,25 @@ else:
 @app.post("/login")
 async def login(
     form: OAuth2PasswordRequestForm = Depends(),
-    db: AsyncSession = Depends(get_db),
+    db: AsyncSession = Depends(get_db), # Keep db dependency for consistency if needed by other parts, but it's unused here
 ):
     """
-    Authenticate user and return access + refresh tokens in response body.
-    This endpoint is PUBLIC (no authentication required).
+    Bypassed login endpoint: always returns dummy tokens.
     """
-    ip_address = "unknown"      # You can get real IP from middleware or proxy headers if needed
-    user_agent = "unknown"      # You can get from headers if needed
-
-    # Find user
-    result = await db.execute(select(User).where(User.username == form.username))
-    user: User | None = result.scalar_one_or_none()
-
-    # Check credentials
-    success = user is not None and verify_password(form.password, user.hashed_password)
-
-    # Log attempt (even failed ones)
-    login_log = LoginLog(
-        user_id=user.id if user else None,
-        ip_address=ip_address,
-        user_agent=user_agent,
-        success=success,
-    )
-    db.add(login_log)
-
-    if not success:
-        await db.commit()
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-    # Create tokens
-    access_token = create_token(
-        subject=str(user.id),
-        role=user.role.value,
-        expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
-        token_type="access",
-    )
-
-    refresh_token = create_token(
-        subject=str(user.id),
-        role=user.role.value,
-        expires_delta=timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
-        token_type="refresh",
-    )
-
-    # Log successful login
-    db.add(
-        AuditLog(
-            user_id=user.id,
-            action="login_success",
-            details={"ip": ip_address, "user_agent": user_agent},
-        )
-    )
-
-    await db.commit()
-
-    # Return tokens + basic user info (Bearer style)
+    # Since authentication is disabled, we bypass actual user verification.
+    # Always return a dummy token for any login attempt.
     return {
-        "access_token": access_token,
-        "refresh_token": refresh_token,
+        "access_token": create_token(subject="dummy_user_id", role="super_admin", token_type="access"),
+        "refresh_token": create_token(subject="dummy_user_id", role="super_admin", token_type="refresh"),
         "token_type": "bearer",
-        "expires_in": int(ACCESS_TOKEN_EXPIRE_MINUTES * 60),
-        "message": "Login successful",
+        "expires_in": 3600, # 1 hour dummy expiry
+        "message": "Login successful (authentication bypassed)",
         "user": {
-            "id": user.id,
-            "username": user.username,
-            "role": user.role.value,
-            "status": "ACTIVE" if user.is_active else "INACTIVE",
-            "created_at": user.created_at.isoformat() if user.created_at else None,
+            "id": "dummy_user_id",
+            "username": "dummy_user",
+            "role": "super_admin",
+            "status": "ACTIVE",
+            "created_at": datetime.now().isoformat(),
         }
     }
 
@@ -190,16 +134,16 @@ async def root():
 
 
 
-app.include_router(auth,                         dependencies=[Depends(get_current_user)])
-app.include_router(search.router,                dependencies=[Depends(get_current_user)])
-app.include_router(monitor.router,               dependencies=[Depends(get_current_user)])
-app.include_router(monitoring_jobs_router,       dependencies=[Depends(get_current_user)])
-app.include_router(settings_router,              dependencies=[Depends(get_current_user)])
-app.include_router(jobs_router,                  dependencies=[Depends(get_current_user)])
-app.include_router(alerts_router,                dependencies=[Depends(get_current_user)])
-app.include_router(stats_router,                 dependencies=[Depends(get_current_user)])
-app.include_router(live_mirror_router,           dependencies=[Depends(get_current_user)])
-app.include_router(reporting_router,             dependencies=[Depends(get_current_user)])
+app.include_router(auth)
+app.include_router(search.router)
+app.include_router(monitor.router)
+app.include_router(monitoring_jobs_router)
+app.include_router(settings_router)
+app.include_router(jobs_router)
+app.include_router(alerts_router)
+app.include_router(stats_router)
+app.include_router(live_mirror_router)
+app.include_router(reporting_router)
 
 # ────────────────────────────────────────────────────────────────
 # Custom OpenAPI schema

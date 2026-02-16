@@ -140,6 +140,9 @@ clean_reinstall() {
 }
 
 start_services() {
+    log_info "Stopping existing services before starting..."
+    stop_services
+    
     log_info "Starting services (API + Workers + Docker Elasticsearch)..."
     
     # Verify Kafka is running
@@ -155,7 +158,7 @@ start_services() {
     # Start Docker Elasticsearch only
     log_info "Starting Docker Elasticsearch..."
     cd "$PROJECT_DIR"
-    docker-compose -f docker-compose-parrot.yml up -d elasticsearch 2>/dev/null || podman-compose -f docker-compose-parrot.yml up -d elasticsearch 2>/dev/null || {
+    docker-compose -f docker-compose-parrot.yml up -d elasticsearch || podman-compose -f docker-compose-parrot.yml up -d --force-recreate elasticsearch || {
         log_error "Failed to start Elasticsearch"
         return 1
     }
@@ -204,7 +207,7 @@ start_services() {
     "$PYTHON_BIN" -m uvicorn app.api.main:app --host 0.0.0.0 --port 8000 --reload > /tmp/cipherflare_api.log 2>&1 &
     API_PID=$!
     echo $API_PID > /tmp/cipherflare_api.pid
-    sleep 3
+    sleep 10
     
     if ! kill -0 $API_PID 2>/dev/null; then
         log_error "API server failed to start. Check logs:"
@@ -215,6 +218,7 @@ start_services() {
     
     # Start workers
     log_info "Starting 2 worker processes..."
+    rm -f /tmp/cipherflare_workers.pid # Ensure a clean PID file for workers
     for i in {1..2}; do
         log_info "Starting worker $i..."
         
@@ -287,14 +291,14 @@ check_status() {
     fi
     
     # Check Docker Elasticsearch
-    if docker ps 2>/dev/null | grep -q elasticsearch; then
-        log_success "Elasticsearch: Running (Docker)"
+    if podman ps 2>/dev/null | grep -q elasticsearch; then
+        log_success "Elasticsearch: Running (Podman)"
     else
         log_error "Elasticsearch: Not running"
     fi
     
     # Check API
-    if curl -s http://0.0.0.0:8000/docs > /dev/null 2>&1; then
+    if nc -zvw1 127.0.0.1 8000 &>/dev/null; then
         log_success "API Server: Running on port 8000"
     else
         log_error "API Server: Not responding"
@@ -309,7 +313,11 @@ check_status() {
                 ((RUNNING++))
             fi
         done
-        log_success "Workers: $RUNNING running"
+        if [ "$RUNNING" -gt 0 ]; then
+            log_success "Workers: $RUNNING running"
+        else
+            log_error "Workers: 0 running (check logs for errors)"
+        fi
     else
         log_warn "Workers: No PID file found"
     fi
