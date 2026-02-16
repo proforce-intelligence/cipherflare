@@ -449,7 +449,7 @@ async def get_role_users_activities(
 
 @router.get("/allUsers")
 async def get_all_users(
-    current_user: User = Depends(require_role(Role.super_admin)),  # Super admin only
+    current_user: User = Depends(require_role(Role.super_admin)),
     page: int = Query(1, ge=1),
     limit: int = Query(20, ge=1, le=100),
     search: Optional[str] = Query(None),
@@ -461,31 +461,42 @@ async def get_all_users(
     query = select(User)
 
     if search:
-        query = query.where(
-            or_(
-                User.username.ilike(f"%{search}%"),
-            )
-        )
+        query = query.where(User.username.ilike(f"%{search}%"))
 
-    total_result = await db.execute(select(select(User).subquery().count()))
-    total = total_result.scalar() or 0
+    # Correct count
+    total = await db.scalar(
+        select(func.count()).select_from(query.subquery())
+    )
 
     result = await db.execute(
-        query.offset(offset).limit(limit).order_by(User.created_at.desc())
+        query.offset(offset)
+             .limit(limit)
+             .order_by(User.created_at.desc())
     )
     users = result.scalars().all()
 
+    # Safe serialization: exclude hashed_password
+    safe_users = [
+        {
+            "id": u.id,
+            "username": u.username,
+            "role": u.role.value if hasattr(u.role, "value") else u.role,
+            "is_active": u.is_active,
+            "created_at": u.created_at.isoformat() if u.created_at else None,
+           
+        }
+        for u in users
+    ]
+
     return {
-        "data": [u.__dict__ for u in users],
+        "data": safe_users,
         "pagination": {
-            "total": total,
+            "total": total or 0,
             "page": page,
             "limit": limit,
             "totalPages": (total + limit - 1) // limit if total else 0
         }
     }
-
-
 @router.get("/role_users")
 async def get_my_users(
     current_user: User = Depends(require_role(Role.admin)),

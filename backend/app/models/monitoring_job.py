@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, String, Integer, DateTime, UUID, Text, Enum as SQLEnum, Boolean
+from sqlalchemy import Column, String, Integer, DateTime, UUID, Text, Enum as SQLEnum, Boolean, UniqueConstraint
 from sqlalchemy.orm import declarative_base
 import uuid
 import enum
@@ -17,6 +17,9 @@ class MonitoringJob(Base):
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), nullable=False, index=True)
+    
+    # Unique title per user (required)
+    title = Column(String(120), nullable=False, index=True)
     
     # Target configuration
     target_url = Column(String(512), nullable=False, index=True)
@@ -43,3 +46,8 @@ class MonitoringJob(Base):
     
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Unique constraint: one user cannot have two jobs with the same title
+    __table_args__ = (
+        UniqueConstraint('user_id', 'title', name='uix_user_title'),
+    )

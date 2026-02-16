@@ -202,16 +202,17 @@ async def root():
 
 
 
-app.include_router(auth,                         dependencies=[Depends(get_current_user)])
-app.include_router(search.router,                dependencies=[Depends(get_current_user)])
-app.include_router(monitor.router,               dependencies=[Depends(get_current_user)])
-app.include_router(monitoring_jobs_router,       dependencies=[Depends(get_current_user)])
-app.include_router(settings_router,              dependencies=[Depends(get_current_user)])
-app.include_router(jobs_router,                  dependencies=[Depends(get_current_user)])
-app.include_router(alerts_router,                dependencies=[Depends(get_current_user)])
-app.include_router(stats_router,                 dependencies=[Depends(get_current_user)])
-app.include_router(live_mirror_router,           dependencies=[Depends(get_current_user)])
-app.include_router(reporting_router,             dependencies=[Depends(get_current_user)])
+app.include_router(auth)
+app.include_router(search.router)
+app.include_router(monitor.router)
+app.include_router(monitoring_jobs_router)
+app.include_router(settings_router)
+app.include_router(jobs_router)
+app.include_router(alerts_router)
+app.include_router(stats_router)
+app.include_router(live_mirror_router)
+app.include_router(reporting_router)
+
 
 # ────────────────────────────────────────────────────────────────
 # Custom OpenAPI schema
