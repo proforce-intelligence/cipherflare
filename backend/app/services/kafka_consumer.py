@@ -59,13 +59,22 @@ class KafkaConsumer:
                 try:
                     job_id = msg.value.get('job_id', 'unknown')
                     logger.info(f"[Message from {msg.topic}: {job_id}")
-                    await message_handler(msg.topic, msg.value)
+                    # Use asyncio.create_task to allow concurrent processing of multiple jobs
+                    # The message_handler itself should manage concurrency limits (e.g. via Semaphore)
+                    asyncio.create_task(self._safe_handle(message_handler, msg.topic, msg.value))
                 except Exception as e:
                     logger.error(f"[!] Message processing failed: {e}", exc_info=True)
                     continue
         except Exception as e:
             logger.error(f"[!] Consumer loop crashed: {e}", exc_info=True)
             raise
+
+    async def _safe_handle(self, handler: Callable, topic: str, value: dict):
+        """Wrapper to handle exceptions in background tasks"""
+        try:
+            await handler(topic, value)
+        except Exception as e:
+            logger.error(f"[!] Background task failed for job {value.get('job_id')}: {e}", exc_info=True)
 
     async def close(self):
         if self.consumer:

@@ -71,6 +71,10 @@ class DarkWebWorker:
         self.alert_sender = AlertSender()
         self.output_base = OUTPUT_BASE
         self.output_base.mkdir(parents=True, exist_ok=True)
+        # Limit concurrent investigations to prevent overwhelming the system (CPU/Memory)
+        max_concurrent = int(os.getenv("MAX_CONCURRENT_JOBS", "3"))
+        self.semaphore = asyncio.Semaphore(max_concurrent)
+        logger.info(f"[*] DarkWebWorker initialized with max_concurrent_jobs={max_concurrent}")
     
     async def check_duplicate_and_get_alert_triggers(
         self,
@@ -216,19 +220,22 @@ class DarkWebWorker:
             return None
     
     async def process_message(self, topic: str, message: dict):
-        """Route message to appropriate handler"""
+        """Route message to appropriate handler with concurrency control"""
         try:
             job_id = message.get("job_id")
             job_type = message.get("job_type")
             
-            logger.info(f"[→] Processing {job_type} job: {job_id}")
+            logger.info(f"[→] Queuing {job_type} job: {job_id} (Waiting for semaphore slot...)")
             
-            if job_type == "ad_hoc":
-                await self.handle_ad_hoc(job_id, message)
-            elif job_type == "monitor":
-                await self.handle_monitor(job_id, message)
-            else:
-                logger.warning(f"Unknown job type: {job_type}")
+            async with self.semaphore:
+                logger.info(f"[→] Processing {job_type} job: {job_id}")
+                
+                if job_type == "ad_hoc":
+                    await self.handle_ad_hoc(job_id, message)
+                elif job_type == "monitor":
+                    await self.handle_monitor(job_id, message)
+                else:
+                    logger.warning(f"Unknown job type: {job_type}")
         
         except Exception as e:
             logger.error(f"[!] Message processing error: {e}")
