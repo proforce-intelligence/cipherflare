@@ -189,9 +189,14 @@ _scheduler: Optional[MonitoringScheduler] = None
 _status_consumer: Optional[StatusConsumer] = None
 
 @app.on_event("startup")
-async def startup():
-    # ... your existing startup code remains unchanged ...
-    pass
+async def startup_event():
+    logger.info("[Startup] Initializing database tables...")
+    try:
+        await init_db()
+        logger.info("[Database] ✓ Tables created / verified successfully")
+    except Exception as e:
+        logger.error("[Database] Table creation failed", exc_info=True)
+        # raise   # ← uncomment in dev to fail fast
 
 @app.on_event("shutdown")
 async def shutdown():
