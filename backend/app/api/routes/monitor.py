@@ -7,9 +7,10 @@ from app.api.deps import get_current_user
 from app.models.alert import Alert
 from app.models.monitoring_result import MonitoringResult
 from app.services.crypto_utils import encrypt_credential  # Added encryption import
+from app.services.scheduler import MonitoringScheduler
 import logging
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Optional
 
 logger = logging.getLogger(__name__)
@@ -17,8 +18,15 @@ router = APIRouter(prefix="/api/v1", tags=["monitoring"])
 
 # Global Kafka producer (reused across requests)
 _kafka_producer: Optional[KafkaProducer] = None
+_scheduler: Optional[MonitoringScheduler] = None
+
+def set_scheduler(scheduler: MonitoringScheduler):
+    """Set the global scheduler instance"""
+    global _scheduler
+    _scheduler = scheduler
 
 async def get_kafka() -> KafkaProducer:
+    # ... (rest of get_kafka unchanged)
     """Lazy-load and reuse KafkaProducer instance"""
     global _kafka_producer
     if _kafka_producer is None:
@@ -53,7 +61,9 @@ async def setup_target_monitoring(
     Setup continuous monitoring of a specific .onion URL
     Supports optional authentication for sites requiring login
     """
-    user_id = current_user.get("sub")
+    # Fix: current_user is a User object, not a dict
+    user_id = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
+    
     if not user_id:
         raise HTTPException(status_code=401, detail="Authentication required")
     
@@ -96,6 +106,36 @@ async def setup_target_monitoring(
     await kafka.produce("monitor_jobs", payload)
     logger.info(f"[Monitor] Queued monitor job {job_id} for {url} (auth: {bool(username)})")
 
+    # NEW: Create MonitoringJob record so it shows in the frontend
+    from app.models.monitoring_job import MonitoringJob, MonitoringJobStatus
+    try:
+        new_monitor = MonitoringJob(
+            id=uuid.UUID(job_id),
+            user_id=_get_user_uuid(user_id),
+            target_url=url.strip(),
+            interval_hours=interval_hours,
+            auth_username_encrypted=encrypted_username,
+            auth_password_encrypted=encrypted_password,
+            login_path=login_path,
+            username_selector=username_selector,
+            password_selector=password_selector,
+            submit_selector=submit_selector,
+            status=MonitoringJobStatus.ACTIVE,
+            next_run_at=datetime.utcnow() + timedelta(hours=interval_hours)
+        )
+        db.add(new_monitor)
+        await db.commit()
+        
+        # Also schedule it in the running scheduler
+        if _scheduler:
+            await _scheduler.schedule_job(new_monitor)
+            
+        logger.info(f"[Monitor] Saved and scheduled monitoring job {job_id}")
+    except Exception as e:
+        logger.error(f"[Monitor] Failed to save monitoring job to DB: {e}")
+        # We don't fail the request because Kafka message is already sent
+        # but the UI might not show it until next run or at all.
+
     return {
         "success": True,
         "job_id": job_id,
@@ -133,7 +173,8 @@ async def setup_alert(
     """
     Create a real-time alert for high-risk findings
     """
-    user_id_str = current_user.get("sub")
+    # Fix: User object access
+    user_id_str = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
     if not user_id_str:
         raise HTTPException(status_code=401, detail="Authentication required")
     
@@ -184,7 +225,8 @@ async def get_user_alerts(
     db: AsyncSession = Depends(get_db)
 ):
     """Get all active alerts for current user"""
-    user_id_str = current_user.get("sub")
+    # Fix: User object access
+    user_id_str = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
     if not user_id_str:
         raise HTTPException(status_code=401, detail="Authentication required")
 
@@ -224,7 +266,8 @@ async def delete_alert(
 ):
     """Delete (deactivate) an alert"""
     try:
-        user_id_str = current_user.get("sub")
+        # Fix: User object access
+        user_id_str = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
         if not user_id_str:
             raise HTTPException(status_code=401, detail="Authentication required")
 
@@ -263,7 +306,8 @@ async def get_monitoring_results(
     current_user: dict = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    user_id_str = current_user.get("sub")
+    # Fix: User object access
+    user_id_str = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
     if not user_id_str:
         raise HTTPException(status_code=401, detail="Authentication required")
 
@@ -343,7 +387,8 @@ async def get_monitoring_result_detail(
     current_user: dict = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    user_id_str = current_user.get("sub")
+    # Fix: User object access
+    user_id_str = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
     if not user_id_str:
         raise HTTPException(status_code=401, detail="Authentication required")
 
@@ -418,7 +463,8 @@ async def get_monitoring_stats(
     db: AsyncSession = Depends(get_db)
 ):
     """Get monitoring statistics for current user"""
-    user_id_str = current_user.get("sub")
+    # Fix: User object access
+    user_id_str = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
     if not user_id_str:
         raise HTTPException(status_code=401, detail="Authentication required")
 
@@ -464,3 +510,52 @@ async def get_monitoring_stats(
     except Exception as e:
         logger.error(f"[Monitoring] Stats failed: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch stats")
+
+@router.get("/monitoring/jobs/{job_id}/results")
+async def get_job_specific_results(
+    job_id: str,
+    limit: int = Query(50, ge=1, le=500),
+    offset: int = Query(0, ge=0),
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get results for a specific monitoring job"""
+    # Fix: User object access
+    user_id_str = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
+    if not user_id_str:
+        raise HTTPException(status_code=401, detail="Authentication required")
+
+    user_id = _get_user_uuid(user_id_str)
+
+    try:
+        job_uuid = uuid.UUID(job_id)
+        
+        query = select(MonitoringResult).where(
+            MonitoringResult.monitor_job_id == job_uuid,
+            MonitoringResult.user_id == user_id
+        ).order_by(MonitoringResult.created_at.desc()).limit(limit).offset(offset)
+        
+        result = await db.execute(query)
+        rows = result.scalars().all()
+        
+        return {
+            "success": True,
+            "results": [
+                {
+                    "id": str(r.id),
+                    "target_url": r.target_url,
+                    "title": r.title,
+                    "text_excerpt": r.text_excerpt,
+                    "risk_level": r.risk_level,
+                    "risk_score": r.risk_score,
+                    "is_duplicate": r.is_duplicate,
+                    "alerts_triggered": r.alerts_triggered or [],
+                    "detected_at": r.detected_at.isoformat() if r.detected_at else None,
+                    "created_at": r.created_at.isoformat()
+                }
+                for r in rows
+            ]
+        }
+    except Exception as e:
+        logger.error(f"[Monitoring] Get job results failed: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch job results")

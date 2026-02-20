@@ -45,12 +45,12 @@ class MonitoringScheduler:
             logger.info(f"[Scheduler] Loading {len(jobs)} active monitoring jobs")
             
             for job in jobs:
-                await self.schedule_job(job)
+                await self.schedule_job(job, initial_jitter=True)
         
         except Exception as e:
             logger.error(f"[Scheduler] Failed to load jobs: {e}")
     
-    async def schedule_job(self, monitoring_job: MonitoringJob):
+    async def schedule_job(self, monitoring_job: MonitoringJob, initial_jitter: bool = False):
         """Schedule a single monitoring job"""
         try:
             job_key = f"monitor_{monitoring_job.id}"
@@ -59,10 +59,17 @@ class MonitoringScheduler:
             if self.scheduler.get_job(job_key):
                 self.scheduler.remove_job(job_key)
             
+            # If jitter is requested (e.g. on startup), start the first run at a random time within 30 mins
+            start_date = None
+            if initial_jitter:
+                jitter_minutes = random.randint(1, 30)
+                start_date = datetime.now() + timedelta(minutes=jitter_minutes)
+                logger.info(f"[Scheduler] Jittering job {monitoring_job.id}: starting in {jitter_minutes} mins")
+
             # Add new job
             self.scheduler.add_job(
                 self.run_monitoring_job,
-                trigger=IntervalTrigger(hours=monitoring_job.interval_hours),
+                trigger=IntervalTrigger(hours=monitoring_job.interval_hours, start_date=start_date),
                 id=job_key,
                 args=[monitoring_job.id, monitoring_job.target_url, monitoring_job.user_id],
                 name=f"Monitor {monitoring_job.target_url}"

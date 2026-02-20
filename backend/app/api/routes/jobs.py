@@ -330,13 +330,74 @@ async def get_job_results(
         logger.error(f"[Jobs] Get results failed: {e}")
         raise HTTPException(status_code=500, detail="Failed to get job results")
 
+@router.post("/jobs/{job_id}/pause")
+async def pause_job(
+    job_id: str,
+    db: AsyncSession = Depends(get_db)
+):
+    """Pause a running or queued job"""
+    try:
+        job_uuid = uuid.UUID(job_id)
+        result = await db.execute(select(Job).where(Job.id == job_uuid))
+        job = result.scalar_one_or_none()
+        
+        if not job:
+            raise HTTPException(status_code=404, detail="Job not found")
+        
+        if job.status not in [JobStatus.QUEUED, JobStatus.PROCESSING]:
+            raise HTTPException(status_code=400, detail=f"Cannot pause job in {job.status} state")
+            
+        job.status = JobStatus.PAUSED
+        await db.commit()
+        return {"success": True, "message": "Job paused"}
+    except Exception as e:
+        logger.error(f"Pause failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/jobs/{job_id}/resume")
+async def resume_job(
+    job_id: str,
+    db: AsyncSession = Depends(get_db),
+    kafka: KafkaProducer = Depends(get_kafka)
+):
+    """Resume a paused job"""
+    try:
+        job_uuid = uuid.UUID(job_id)
+        result = await db.execute(select(Job).where(Job.id == job_uuid))
+        job = result.scalar_one_or_none()
+        
+        if not job:
+            raise HTTPException(status_code=404, detail="Job not found")
+        
+        if job.status != JobStatus.PAUSED:
+            raise HTTPException(status_code=400, detail="Only paused jobs can be resumed")
+            
+        job.status = JobStatus.QUEUED
+        await db.commit()
+        
+        # Re-queue to Kafka
+        job_payload = {
+            "job_id": str(job.id),
+            "keyword": job.keyword,
+            "max_results": job.max_results,
+            "user_id": str(job.user_id) if job.user_id else None,
+            "job_type": "ad_hoc",
+            "is_resume": True
+        }
+        await kafka.produce("ad_hoc_jobs", job_payload)
+        
+        return {"success": True, "message": "Job resumed and re-queued"}
+    except Exception as e:
+        logger.error(f"Resume failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.delete("/jobs/{job_id}")
 async def delete_job(
     job_id: str,
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Delete a job (only if completed or failed)
+    Delete a job. If active, it signals the worker to stop by setting status to DELETED.
     """
     try:
         try:
@@ -352,11 +413,15 @@ async def delete_job(
         if not job:
             raise HTTPException(status_code=404, detail="Job not found")
         
-        if job.status in [JobStatus.QUEUED, JobStatus.PROCESSING]:
-            raise HTTPException(
-                status_code=400, 
-                detail="Cannot delete active job. Please wait for completion."
-            )
+        # If job is active, we set it to DELETED so worker stops.
+        # It will be physically deleted from DB later or handled by cleanup task.
+        if job.status in [JobStatus.QUEUED, JobStatus.PROCESSING, JobStatus.PAUSED]:
+            job.status = JobStatus.DELETED
+            await db.commit()
+            return {
+                "success": True,
+                "message": f"Job {job_id} marked for deletion. Worker will stop processing it."
+            }
         
         await db.delete(job)
         await db.commit()

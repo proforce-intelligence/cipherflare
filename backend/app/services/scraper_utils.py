@@ -88,27 +88,31 @@ TRUSTED_DOMAINS = {
     "torbayb6ojqskcclob22hnlcwpouc4vtmksdhwirqvtf3zdc3zezskid.onion",
     "3bbad7fauom4d6sgppalyqddsqbf5u5p56b5k5uk2zxsy3d6ey2jobad.onion",
 }
-# ILLEGAL_CP_KEYWORDS = [
-#     "child", "pedo", "pthc", "loli", "toddler", "rape", "torture", "abuse",
-#     "kids", "underage", "hebe", "cp ", "jailbait", "pedo hub", "abyss", "baby"
-# ]
 
 ILLEGAL_CP_KEYWORDS = [
     "child", "pedo", "pthc", "loli", "toddler", "rape", "torture", "abuse",
     "kids", "underage", "hebe", "pedo hub", "abyss", "baby",
-    "incest", "teen", "lolita", "shota", "underage" # Added more terms
+    "incest", "teen", "lolita", "shota", "underage"
 ]
-
-# SCAM_KEYWORDS = [
-#     "buy ", "sell ", "shop", "store", "market", "escrow", "vendor", "deposit",
-#     "fullz", "cvv", "dumps", "rdp", "socks5", "smtp", "free ", "bonus", "gift",
-#     "telegram:", "discord:", "100% success", "guaranteed", "verified vendor"
-# ]
 
 SCAM_KEYWORDS = [
      "100% success", "guaranteed", "verified vendor",
-     "scam", "fraud", "carding", "stolen", "dumps", "cc", "cvv", "fullz", # Added more terms
-     "telegram:", "discord:", "whatsapp:" # Communication channels often used by scammers
+     "scam", "fraud", "carding", "stolen", "dumps", "cc", "cvv", "fullz",
+     "telegram:", "discord:", "whatsapp:"
+]
+
+# NEW: Explicit junk and porn filtering
+JUNK_LINK_PATTERNS = [
+    '/ads/', '/click', '/adinfo', '/advertise', '/stats', '/search', 
+    '/cgi-bin/', '/submit', '/about', '/contact', '/feedback', '/random',
+    '/faq', '/static/', '/css/', '/js/', '/img/', 'login', 'register',
+    'signup', 'password', 'reset'
+]
+
+PORN_KEYWORDS = [
+    "porn", "xxx", "video", "incubator", "sex", "tube", "hub", "brazzers",
+    "naked", "hot", "girl", "boy", "erotic", "nude", "hardcore", "milf",
+    "escort", "webcam", "webcamming", "chaturbate", "bongacams"
 ]
 
 # ================================
@@ -274,6 +278,8 @@ def categorize_result(url: str, title: str = "", snippet: str = "") -> str:
         return "blocked_illegal"
     if domain in TRUSTED_DOMAINS:
         return "trusted_forum"
+    if any(kw in text for kw in PORN_KEYWORDS):
+        return "blocked_porn"
     if any(kw in text for kw in SCAM_KEYWORDS):
         return "likely_scam"
     return "unknown_potential"
@@ -284,12 +290,19 @@ def categorize_result(url: str, title: str = "", snippet: str = "") -> str:
 def extract_onion_links(html: str, base_url: str) -> List[str]:
     links = set()
     soup = BeautifulSoup(html, "html.parser")
+    engine_domain = urlparse(base_url).netloc.lower()
 
     # Standard <a href>
     for a in soup.find_all("a", href=True):
         href = a["href"].strip()
         full = urljoin(base_url, href)
         if ".onion" in full and validate_onion_url(full):
+            # FILTER: Skip internal engine links and common junk
+            parsed_full = urlparse(full)
+            if parsed_full.netloc.lower() == engine_domain:
+                continue
+            if any(p in full.lower() for p in JUNK_LINK_PATTERNS):
+                continue
             links.add(full)
 
     # JS / data / onclick
@@ -304,6 +317,12 @@ def extract_onion_links(html: str, base_url: str) -> List[str]:
             if not url.startswith("http"):
                 url = "http://" + url
             if validate_onion_url(url):
+                # FILTER: Skip internal engine links and common junk
+                parsed_u = urlparse(url)
+                if parsed_u.netloc.lower() == engine_domain:
+                    continue
+                if any(p in url.lower() for p in JUNK_LINK_PATTERNS):
+                    continue
                 links.add(url)
 
     # Final aggressive regex
@@ -311,6 +330,12 @@ def extract_onion_links(html: str, base_url: str) -> List[str]:
     for u in aggressive:
         clean = u.split()[0].split('<')[0].split('"')[0].split("'")[0]
         if validate_onion_url(clean):
+            # FILTER: Skip internal engine links and common junk
+            parsed_c = urlparse(clean)
+            if parsed_c.netloc.lower() == engine_domain:
+                continue
+            if any(p in clean.lower() for p in JUNK_LINK_PATTERNS):
+                continue
             links.add(clean)
 
     return list(links)
@@ -440,7 +465,8 @@ async def darkweb_search_ultimate(
     ) as client:
 
         all_results = []
-        seen = set()
+        seen_urls = set()
+        seen_domains = set()
 
         for i, engine in enumerate(ENGINES):
             if len(all_results) >= max_results * 2:
@@ -451,11 +477,24 @@ async def darkweb_search_ultimate(
 
             results = await fetch_engine_results(client, engine, keyword)
             for r in results:
-                if r["url"] not in seen:
-                    seen.add(r["url"])
+                url = r["url"]
+                domain = urlparse(url).netloc.lower()
+                
+                # RELEVANCE FILTER: Drop junk/porn immediately
+                category = categorize_result(url)
+                if category in ["blocked_illegal", "blocked_porn"]:
+                    continue
+
+                if url not in seen_urls:
+                    # Domain-level throttling: avoid grabbing 100 pages from same host in discovery
+                    domain_count = sum(1 for res in all_results if urlparse(res["url"]).netloc.lower() == domain)
+                    if domain_count > 5: # Max 5 links per domain in discovery phase
+                        continue
+
+                    seen_urls.add(url)
                     all_results.append(r)
 
-            await asyncio.sleep(random.uniform(9, 20))
+            await asyncio.sleep(random.uniform(2, 5)) # Reduced delay slightly for performance
 
         # Sort: trusted first
         all_results.sort(key=lambda x: (x["category"] == "trusted_forum", 1, 0), reverse=True)
@@ -485,7 +524,7 @@ async def darkweb_search_ultimate(
             "keyword": keyword,
             "total_engines": len(ENGINES),
             "discovered": len(all_results),
-            "unique_onions": len(seen),
+            "unique_onions": len(seen_urls),
             "analyzed": len(analyzed),
             "output_dir": str(base_dir),
             "generated_at": datetime.now().isoformat()

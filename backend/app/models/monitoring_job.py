@@ -11,6 +11,7 @@ class MonitoringJobStatus(str, enum.Enum):
     PAUSED = "paused"
     COMPLETED = "completed"
     FAILED = "failed"
+    DELETED = "deleted"
 
 class MonitoringJob(Base):
     __tablename__ = "monitoring_jobs"

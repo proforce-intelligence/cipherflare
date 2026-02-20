@@ -36,6 +36,8 @@ from app.services.crypto_utils import decrypt_credential  # Added decryption imp
 from app.database.database import AsyncSessionLocal
 from app.models.alert import Alert
 from app.models.monitoring_result import MonitoringResult
+from app.models.job import Job, JobStatus
+from app.models.monitoring_job import MonitoringJob, MonitoringJobStatus
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -71,10 +73,30 @@ class DarkWebWorker:
         self.alert_sender = AlertSender()
         self.output_base = OUTPUT_BASE
         self.output_base.mkdir(parents=True, exist_ok=True)
-        # Limit concurrent investigations to prevent overwhelming the system (CPU/Memory)
-        max_concurrent = int(os.getenv("MAX_CONCURRENT_JOBS", "3"))
+        # Increased concurrent investigations to 30 as requested
+        max_concurrent = int(os.getenv("MAX_CONCURRENT_JOBS", "30"))
         self.semaphore = asyncio.Semaphore(max_concurrent)
         logger.info(f"[*] DarkWebWorker initialized with max_concurrent_jobs={max_concurrent}")
+    
+    async def is_job_active(self, job_id: str, monitor_job_id: str = None) -> bool:
+        """Check if job is still active (not paused or deleted)"""
+        try:
+            async with AsyncSessionLocal() as db:
+                if monitor_job_id:
+                    m_uuid = uuid.UUID(monitor_job_id) if not isinstance(monitor_job_id, uuid.UUID) else monitor_job_id
+                    stmt = select(MonitoringJob.status).where(MonitoringJob.id == m_uuid)
+                    result = await db.execute(stmt)
+                    status = result.scalar()
+                    return status == MonitoringJobStatus.ACTIVE
+                else:
+                    j_uuid = uuid.UUID(job_id) if not isinstance(job_id, uuid.UUID) else job_id
+                    stmt = select(Job.status).where(Job.id == j_uuid)
+                    result = await db.execute(stmt)
+                    status = result.scalar()
+                    return status == JobStatus.PROCESSING or status == JobStatus.QUEUED
+        except Exception as e:
+            logger.error(f"Error checking job activity for {job_id}: {e}")
+            return True # Default to active on error
     
     async def check_duplicate_and_get_alert_triggers(
         self,
@@ -304,6 +326,11 @@ class DarkWebWorker:
             async with async_playwright() as pw:
                 for idx, link in enumerate(links_to_scrape, 1):
                     try:
+                        # NEW: Check if job was paused or deleted
+                        if not await self.is_job_active(job_id):
+                            logger.info(f"[!] Job {job_id} is no longer active (PAUSED or DELETED). Aborting...")
+                            break
+
                         await random_delay(2, 6)
 
                         logger.info(f"[+] Scraping ({idx}/{total_links}): {link}")
@@ -398,6 +425,11 @@ class DarkWebWorker:
             return
 
         try:
+            # NEW: Check if job is active before starting
+            if not await self.is_job_active(job_id, monitor_job_id):
+                logger.info(f"[Monitor] Job {job_id} is not active. Aborting.")
+                return
+
             logger.info(f"[Monitor] Starting scrape for: {url} (auth: {has_auth})")
 
             async with async_playwright() as pw:
@@ -464,6 +496,12 @@ class DarkWebWorker:
                         finding, [{"id": str(a.id), "keyword": a.keyword, "risk_level_threshold": a.risk_level_threshold, "notification_type": a.notification_type, "notification_endpoint": a.notification_endpoint} for a in active_alerts], user_id
                     )
                     
+                    # FINAL CHECK: Before saving to DB
+                    if not await self.is_job_active(job_id, monitor_job_id):
+                        logger.info(f"[Monitor] Job {job_id} was deactivated during scrape. Dropping results.")
+                        await browser.close()
+                        return
+
                     await self.save_monitoring_result(
                         finding,
                         is_duplicate,

@@ -36,16 +36,11 @@ async def search_dark_web(
     max_results: Optional[int] = Query(None, ge=1, le=10000),
     include_summary: bool = Query(False),
     model_choice: str = Query("gemini-2.5-flash", description="LLM model: gemini-2.5-flash (default), gpt-5-mini, claude-sonnet-4-5, etc."),
-    pgp_verify: bool = Query(False, description="Verify .onion site legitimacy via PGP")
+    pgp_verify: bool = Query(False, description="Verify .onion site legitimacy via PGP"),
+    db: AsyncSession = Depends(get_db)
 ):
     """
     Hybrid search: returns pre-indexed findings instantly + queues fresh scrape
-    Query Parameters:
-        - keyword: Search term (required)
-        - max_results: Max results to return (1-10000, default None for unlimited scraping)
-        - include_summary: If true, generates LLM-based summary of findings
-        - model_choice: LLM model to use (gemini-2.5-flash is default)
-        - pgp_verify: If true, verifies .onion site legitimacy via PGP
     """
     try:
         user_id = None
@@ -59,8 +54,22 @@ async def search_dark_web(
             min_relevance=0.5
         )
         
-        # Step 2: Queue fresh scrape job to Kafka (non-blocking, optional)
+        # Step 2: Create job record in DB so we can track it
         job_id = str(uuid.uuid4())
+        
+        new_job = Job(
+            id=uuid.UUID(job_id),
+            user_id=None,
+            job_type="ad_hoc",
+            status=JobStatus.QUEUED,
+            keyword=keyword,
+            max_results=max_results or 100,
+            payload=None
+        )
+        db.add(new_job)
+        await db.commit()
+        
+        # Step 3: Queue fresh scrape job to Kafka
         kafka = get_kafka()
         
         job_payload = {

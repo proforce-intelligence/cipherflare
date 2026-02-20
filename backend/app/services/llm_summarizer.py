@@ -59,7 +59,7 @@ URL: {url}
 Title: {title}
 Risk Level: {risk_level}
 Threat Indicators: {', '.join(threat_indicators) if threat_indicators else 'None'}
-Content: {text_excerpt[:500]}
+Content: {text_excerpt[:20000]}
 ---"""
             content_chunks.append(chunk)
         

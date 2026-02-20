@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Search, Download, Eye } from "lucide-react"
+import { Search, Download, Eye, Pause, Play, Trash2 } from "lucide-react"
 import { SearchJobForm } from "@/components/search-job-form"
 import { JobProgressTracker } from "@/components/job-progress-tracker"
 import { useJobs } from "@/hooks/use-api"
@@ -20,12 +20,44 @@ export default function InvestigationsPage() {
   const [results, setResults] = useState<any>(null)
   const [loadingResults, setLoadingResults] = useState(false)
   const [previewModal, setPreviewModal] = useState<{ type: "screenshot" | "text"; url: string } | null>(null)
-  const { jobs, isLoading } = useJobs()
+  const { jobs, isLoading, refresh } = useJobs()
 
   const handleJobCreated = (jobId: string) => {
     setActiveJobId(jobId)
     setShowForm(false)
+    refresh()
     toast.success("Search job started! Tracking progress...")
+  }
+
+  const handleToggleStatus = async (e: React.MouseEvent, job: Job) => {
+    e.stopPropagation()
+    try {
+      if (job.status === "processing" || job.status === "queued") {
+        await apiClient.pauseJob(job.job_id)
+        toast.success("Investigation paused")
+      } else if (job.status === "paused") {
+        await apiClient.resumeJob(job.job_id)
+        toast.success("Investigation resumed")
+      }
+      refresh()
+    } catch (error) {
+      toast.error("Failed to toggle status")
+    }
+  }
+
+  const handleDelete = async (e: React.MouseEvent, jobId: string) => {
+    e.stopPropagation()
+    try {
+      await apiClient.deleteJob(jobId)
+      toast.success("Job deleted successfully")
+      if (selectedJob?.job_id === jobId) {
+        setSelectedJob(null)
+        setResults(null)
+      }
+      refresh()
+    } catch (error) {
+      toast.error("Failed to delete job")
+    }
   }
 
   const handleJobComplete = (job: Job) => {
@@ -180,17 +212,39 @@ ${results.summary || "No summary available"}
                           className={`text-xs font-bold px-2 py-1 rounded ${
                             job.status === "completed"
                               ? "bg-green-500/20 text-green-400"
-                              : job.status === "running"
+                              : job.status === "running" || job.status === "processing"
                                 ? "bg-blue-500/20 text-blue-400"
                                 : job.status === "failed"
                                   ? "bg-red-500/20 text-red-400"
-                                  : "bg-yellow-500/20 text-yellow-400"
+                                  : job.status === "paused"
+                                    ? "bg-yellow-500/20 text-yellow-400"
+                                    : "bg-neutral-500/20 text-neutral-400"
                           }`}
                         >
                           {job.status.toUpperCase()}
                         </span>
                       </div>
                       <p className="text-sm text-white mt-1">Query: {job.query}</p>
+                    </div>
+                    <div className="flex gap-1">
+                      {["queued", "processing", "paused"].includes(job.status) && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => handleToggleStatus(e, job)}
+                          className="h-8 w-8 text-neutral-400 hover:text-orange-500"
+                        >
+                          {job.status === "paused" ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+                        </Button>
+                      )}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => handleDelete(e, job.job_id)}
+                        className="h-8 w-8 text-neutral-400 hover:text-red-500"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
 

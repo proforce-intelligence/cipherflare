@@ -15,6 +15,8 @@ class JobStatus(str, enum.Enum):
     PROCESSING = "PROCESSING"
     COMPLETED = "COMPLETED"
     FAILED = "FAILED"
+    PAUSED = "PAUSED"
+    DELETED = "DELETED"
 
 class Job(Base):
     __tablename__ = "jobs"

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { CheckCircle2, XCircle, Loader2, Clock, AlertCircle, X, Pause } from "lucide-react"
 import { toast } from "sonner"
 import { formatDistanceToNow } from "date-fns"
-import { useMonitoringJobs } from "@/hooks/use-api"
+import { useMonitoringJobs, useMonitoringResults } from "@/hooks/use-api"
 
 interface MonitorProgressTrackerProps {
   jobId: string
@@ -17,6 +17,7 @@ interface MonitorProgressTrackerProps {
 
 export function MonitorProgressTracker({ jobId, onClose }: MonitorProgressTrackerProps) {
   const { jobs, isLoading, error } = useMonitoringJobs()
+  const { results, isLoading: isLoadingResults } = useMonitoringResults(jobId)
   const job = jobs?.find((j) => j.id === jobId)
 
   useEffect(() => {
@@ -197,6 +198,60 @@ export function MonitorProgressTracker({ jobId, onClose }: MonitorProgressTracke
             <p className="text-sm text-yellow-400">Monitoring paused - resume to continue checks</p>
           </div>
         )}
+
+        {/* Results Section */}
+        <div className="pt-4 border-t border-neutral-800">
+          <h4 className="text-sm font-semibold text-neutral-300 mb-3 flex items-center justify-between">
+            Recent Findings
+            <Badge variant="outline" className="text-[10px] uppercase font-mono">
+              {results?.length || 0} Total
+            </Badge>
+          </h4>
+          
+          {isLoadingResults ? (
+            <div className="flex justify-center py-4">
+              <Loader2 className="h-4 w-4 animate-spin text-orange-500" />
+            </div>
+          ) : results && results.length > 0 ? (
+            <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+              {results.map((res: any) => (
+                <div key={res.id} className="p-3 bg-neutral-800/30 border border-neutral-700/50 rounded-lg hover:border-orange-500/30 transition-colors">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <span className="text-xs font-medium text-white line-clamp-1">{res.title || "Untitled Finding"}</span>
+                    <Badge className={`text-[10px] h-4 px-1 ${
+                      res.risk_level === 'critical' ? 'bg-red-500/20 text-red-400' :
+                      res.risk_level === 'high' ? 'bg-orange-500/20 text-orange-400' :
+                      res.risk_level === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                      'bg-green-500/20 text-green-400'
+                    }`}>
+                      {res.risk_level?.toUpperCase()}
+                    </Badge>
+                  </div>
+                  <p className="text-[10px] text-neutral-500 font-mono mb-2 truncate">{res.target_url}</p>
+                  <p className="text-[11px] text-neutral-400 line-clamp-2 mb-2 italic">
+                    "{res.text_excerpt?.substring(0, 150)}..."
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-neutral-600">
+                      {res.detected_at ? formatDistanceToNow(new Date(res.detected_at), { addSuffix: true }) : 'Just now'}
+                    </span>
+                    {res.alerts_triggered?.length > 0 && (
+                      <span className="text-[10px] text-yellow-500 flex items-center gap-1">
+                        <AlertCircle className="w-2 h-2" />
+                        {res.alerts_triggered.length} Alerts
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-6 border border-dashed border-neutral-800 rounded-lg">
+              <Clock className="h-6 w-6 text-neutral-700 mx-auto mb-2" />
+              <p className="text-[11px] text-neutral-500">No findings yet from this monitor.</p>
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   )

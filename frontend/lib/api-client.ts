@@ -263,6 +263,18 @@ class ApiClient {
     })
   }
 
+  async pauseJob(jobId: string): Promise<void> {
+    return this.request<void>(`/api/v1/jobs/${jobId}/pause`, {
+      method: "POST",
+    })
+  }
+
+  async resumeJob(jobId: string): Promise<void> {
+    return this.request<void>(`/api/v1/jobs/${jobId}/resume`, {
+      method: "POST",
+    })
+  }
+
   // Alerts
   async getAlerts(unreadOnly = false): Promise<Alert[]> {
     const query = unreadOnly ? "?status=unread" : "?status=all"
@@ -354,7 +366,8 @@ class ApiClient {
   }
 
   async getMonitoringJobs(): Promise<MonitoringJob[]> {
-    return this.request<MonitoringJob[]>("/api/v1/monitoring/jobs")
+    const response = await this.request<any>("/api/v1/monitoring/jobs")
+    return Array.isArray(response) ? response : (response.jobs || [])
   }
 
   async updateMonitoringJob(jobId: string, data: Partial<MonitoringJob>): Promise<MonitoringJob> {
@@ -371,7 +384,8 @@ class ApiClient {
   }
 
   async getMonitoringResults(jobId: string): Promise<any[]> {
-    return this.request<any[]>(`/api/v1/monitoring/jobs/${jobId}/results`)
+    const response = await this.request<{ success: boolean; results: any[] }>(`/api/v1/monitoring/jobs/${jobId}/results`)
+    return response.results || []
   }
 
   async getAvailableModels(): Promise<string[]> {

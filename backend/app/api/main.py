@@ -184,16 +184,39 @@ def custom_openapi():
 
 app.openapi = custom_openapi
 
-# Global services (unchanged)
+# Global services
 _scheduler: Optional[MonitoringScheduler] = None
 _status_consumer: Optional[StatusConsumer] = None
 
 @app.on_event("startup")
 async def startup():
-    # ... your existing startup code remains unchanged ...
-    pass
+    global _scheduler, _status_consumer
+    
+    # Initialize database
+    await init_db()
+    logger.info("[✓] Database initialized")
+    
+    # Start Status Consumer in background
+    _status_consumer = StatusConsumer()
+    asyncio.create_task(_status_consumer.start())
+    logger.info("[✓] Status Consumer started in background")
+    
+    # Initialize and start Monitoring Scheduler
+    _scheduler = MonitoringScheduler()
+    await _scheduler.initialize()
+    await _scheduler.start()
+    
+    # Set scheduler in routes
+    set_scheduler(_scheduler)
+    # Also set in monitor router if needed
+    monitor.set_scheduler(_scheduler)
+    
+    logger.info("[✓] Monitoring Scheduler started")
 
 @app.on_event("shutdown")
 async def shutdown():
-    # ... your existing shutdown code remains unchanged ...
-    pass
+    if _scheduler:
+        await _scheduler.shutdown()
+    if _status_consumer:
+        await _status_consumer.stop()
+    logger.info("[✓] Services shutdown complete")
