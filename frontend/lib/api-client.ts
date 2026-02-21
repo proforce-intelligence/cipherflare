@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://0.0.0.0:8000"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 
 // Types
 export interface SearchParams {
@@ -449,6 +449,36 @@ class ApiClient {
     })
   }
 
+  async interactWithOnion(url: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const response = await this.request<{
+        success: boolean;
+        message: string;
+        error?: string;
+      }>("/api/v1/interact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url }),
+      });
+
+      if (!response.success) {
+        throw new Error(response.error || "Failed to launch Tor Browser");
+      }
+
+      return {
+        success: true,
+        message: response.message || "Tor Browser launched successfully",
+      };
+    } catch (err: any) {
+      console.error("Interact failed:", err);
+      return {
+        success: false,
+        message: err.message || "Could not open in Tor Browser",
+      };
+    }
+  }
   async getMonitoringJob(jobId: string): Promise<MonitoringJob> {
     const response = await this.request<{ success: boolean; job: any }>(`/api/v1/monitoring/jobs/${jobId}`)
     return response.job

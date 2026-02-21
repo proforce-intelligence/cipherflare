@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { Monitor, Play, Loader2, ExternalLink } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Monitor, Play, Loader2, ExternalLink, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
@@ -17,6 +17,7 @@ export default function LiveMirrorPage() {
       sessionId: string
       targetUrl: string
       startedAt: string
+      isInteracting?: boolean  // per-session loading state
     }>
   >([])
   const [selectedSession, setSelectedSession] = useState<{
@@ -25,24 +26,20 @@ export default function LiveMirrorPage() {
   } | null>(null)
 
   const handleStartSession = async () => {
-    if (!targetUrl.trim()) {
-      toast.error("Please enter a .onion URL")
-      return
-    }
-
-    if (!targetUrl.endsWith(".onion") && !targetUrl.includes(".onion/")) {
-      toast.error("Only .onion URLs are supported")
+    if (!targetUrl.trim() || !targetUrl.includes(".onion")) {
+      toast.error("Valid .onion URL required")
       return
     }
 
     setIsStarting(true)
     try {
-      const session = await apiClient.startLiveMirror(targetUrl, false)
+      const session = await apiClient.startLiveMirror(targetUrl.trim(), false)
 
       const newSession = {
         sessionId: session.session_id,
         targetUrl: session.target_url,
         startedAt: new Date().toISOString(),
+        isInteracting: false,
       }
 
       setActiveSessions((prev) => [...prev, newSession])
@@ -54,8 +51,8 @@ export default function LiveMirrorPage() {
       toast.success("Live mirror session started")
       setTargetUrl("")
     } catch (error) {
-      console.error("Failed to start live mirror:", error)
-      toast.error("Failed to start live mirror session")
+      console.error("Failed to start session:", error)
+      toast.error("Failed to start session")
     } finally {
       setIsStarting(false)
     }
@@ -70,10 +67,60 @@ export default function LiveMirrorPage() {
         setSelectedSession(null)
       }
 
-      toast.success("Session closed")
+      toast.success("Session closed (Tor Browser should close soon)")
     } catch (error) {
       console.error("Failed to close session:", error)
       toast.error("Failed to close session")
+    }
+  }
+
+  const handleInteract = async (sessionId: string, url: string) => {
+    if (!url || !sessionId) {
+      toast.error("Invalid session")
+      return
+    }
+
+    // Set loading state for this specific session only
+    setActiveSessions((prev) =>
+      prev.map((s) =>
+        s.sessionId === sessionId ? { ...s, isInteracting: true } : s
+      )
+    )
+
+    try {
+      const response = await fetch("/api/v1/monitor/interact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ 
+          url,
+          session_id: sessionId   // Required for backend to track & auto-close Tor
+        }),
+      })
+
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => "Unknown error")
+        throw new Error(`HTTP ${response.status}: ${errorText}`)
+      }
+
+      const data = await response.json()
+
+      if (data.success) {
+        toast.success(data.message || "Tor Browser launched!")
+      } else {
+        toast.error(data.error || "Failed to launch Tor Browser")
+      }
+    } catch (err: any) {
+      console.error("Interact error:", err)
+      toast.error(err.message || "Could not launch Tor Browser")
+    } finally {
+      // Reset loading state for this session
+      setActiveSessions((prev) =>
+        prev.map((s) =>
+          s.sessionId === sessionId ? { ...s, isInteracting: false } : s
+        )
+      )
     }
   }
 
@@ -142,7 +189,9 @@ export default function LiveMirrorPage() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
-                    <span className="text-white font-medium">{session.targetUrl}</span>
+                    <span className="text-white font-medium truncate max-w-[300px]">
+                      {session.targetUrl}
+                    </span>
                   </div>
                   <div className="text-xs text-neutral-500 mt-1">
                     Started: {new Date(session.startedAt).toLocaleTimeString()}
@@ -153,17 +202,23 @@ export default function LiveMirrorPage() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() =>
-                      setSelectedSession({
-                        sessionId: session.sessionId,
-                        targetUrl: session.targetUrl,
-                      })
-                    }
+                    onClick={() => handleInteract(session.sessionId, session.targetUrl)}
+                    disabled={session.isInteracting}  // per-session disable
                     className="border-orange-500/50 text-orange-500 hover:bg-orange-500/10"
                   >
-                    <ExternalLink className="w-4 h-4 mr-1" />
-                    View
+                    {session.isInteracting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                        Opening...
+                      </>
+                    ) : (
+                      <>
+                        <ExternalLink className="w-4 h-4 mr-1" />
+                        Interact
+                      </>
+                    )}
                   </Button>
+
                   <Button
                     size="sm"
                     variant="outline"
