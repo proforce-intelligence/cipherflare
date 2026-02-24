@@ -193,8 +193,13 @@ async def startup():
     global _scheduler, _status_consumer
     
     # Initialize database
-    await init_db()
-    logger.info("[✓] Database initialized")
+    logger.info("[Startup] Initializing database tables...")
+    try:
+        await init_db()
+        logger.info("[Database] ✓ Tables created / verified successfully")
+    except Exception as e:
+        logger.error("[Database] Table creation failed", exc_info=True)
+        # raise   # ← uncomment in dev to fail fast
     
     # Start Status Consumer in background
     _status_consumer = StatusConsumer()

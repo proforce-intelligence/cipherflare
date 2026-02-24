@@ -34,6 +34,12 @@ from app.services.deduplication import DeduplicationService
 from app.services.alert_sender import AlertSender
 from app.services.crypto_utils import decrypt_credential  # Added decryption import
 from app.database.database import AsyncSessionLocal
+from app.services.llm_summarizer import (
+    refine_query,
+    filter_results,
+    generate_findings_summary
+)
+from app.services.vision_service import vision_service
 from app.models.alert import Alert
 from app.models.monitoring_result import MonitoringResult
 from app.models.job import Job, JobStatus
@@ -263,7 +269,7 @@ class DarkWebWorker:
             logger.error(f"[!] Message processing error: {e}")
 
     async def handle_ad_hoc(self, job_id: str, payload: dict):
-        """Handle ad-hoc search job"""
+        """Handle ad-hoc search job with AI-powered refinement and reporting"""
         keyword = payload.get("keyword").strip() if payload.get("keyword") else None
         max_results = payload.get("max_results")
         user_id = payload.get("user_id")
@@ -273,18 +279,22 @@ class DarkWebWorker:
             return
 
         try:
+            # 1. AI Query Refinement
+            await self.status_producer.send_status(job_id, "PROCESSING", {"status_message": "Refining search query with AI..."})
+            refined_keyword = await refine_query(keyword)
+            logger.info(f"[*] Original query: '{keyword}' | AI Refined: '{refined_keyword}'")
+            
             discovery_max = max_results + 100 if max_results else 900
-            logger.info(f"[*] Starting ad-hoc discovery for keyword: '{keyword}' (unlimited scrape mode)" if not max_results else f"[*] Starting ad-hoc discovery for keyword: '{keyword}' (max: {max_results})")
+            logger.info(f"[*] Starting discovery for: '{refined_keyword}'")
 
-            # === FIXED: Run discovery and load results from disk ===
+            # === Discovery Phase ===
             try:
                 output_dir = await search_ahmia(
-                    keyword=keyword,
+                    keyword=refined_keyword,
                     max_results=discovery_max,
                     rotate_identity=True,
                     deep_analyze=False
                 )
-                logger.info(f"[*] Discovery phase completed → results in {output_dir}")
             except Exception as e:
                 raise RuntimeError(f"Discovery engine failed: {e}")
 
@@ -295,18 +305,27 @@ class DarkWebWorker:
             with open(raw_json_path, "r", encoding="utf-8") as f:
                 discovered = json.load(f)
 
-            valid_links = {
-                item["url"]: item for item in discovered
-                if item.get("category") != "blocked_illegal"
-            }.values()
+            # Initial safety filter
+            valid_results_list = [
+                item for item in discovered
+                if item.get("category") not in ["blocked_illegal", "blocked_porn"]
+            ]
+            
+            logger.info(f"[*] Found {len(valid_results_list)} initial results")
 
-            onion_links = [item["url"] for item in valid_links]
-            logger.info(f"[*] Found {len(onion_links)} valid .onion links to scrape")
+            # 2. AI Result Filtering (Select the best ones to scrape)
+            if len(valid_results_list) > 10:
+                await self.status_producer.send_status(job_id, "PROCESSING", {"status_message": "Prioritizing relevant links with AI..."})
+                filtered_results = await filter_results(keyword, valid_results_list, top_k=max_results or 20)
+                onion_links = [item["url"] for item in filtered_results]
+                logger.info(f"[*] AI prioritized {len(onion_links)} most relevant links")
+            else:
+                onion_links = [item["url"] for item in valid_results_list]
 
             if not onion_links:
                 await self.status_producer.send_status(job_id, "COMPLETED", {
                     "findings_count": 0,
-                    "reason": "No valid links after filtering"
+                    "reason": "No relevant links found for the query"
                 })
                 return
 
@@ -314,29 +333,27 @@ class DarkWebWorker:
             session_dir.mkdir(parents=True, exist_ok=True)
 
             findings = []
-            links_to_scrape = onion_links if not max_results else onion_links[:max_results]
+            links_to_scrape = onion_links
             total_links = len(links_to_scrape)
             
             await self.status_producer.send_status(job_id, "PROCESSING", {
                 "sites_scraped": 0,
                 "total_sites": total_links,
-                "progress": 0
+                "progress": 0,
+                "status_message": f"Scraping {total_links} prioritized sites..."
             })
             
             async with async_playwright() as pw:
                 for idx, link in enumerate(links_to_scrape, 1):
                     try:
-                        # NEW: Check if job was paused or deleted
                         if not await self.is_job_active(job_id):
-                            logger.info(f"[!] Job {job_id} is no longer active (PAUSED or DELETED). Aborting...")
+                            logger.info(f"[!] Job {job_id} inactive. Aborting...")
                             break
 
-                        await random_delay(2, 6)
-
+                        await random_delay(1, 3)
                         logger.info(f"[+] Scraping ({idx}/{total_links}): {link}")
 
                         if not validate_onion_url(link):
-                            logger.warning(f"[!] Invalid .onion URL, skipping: {link}")
                             continue
 
                         meta = await self.scrape_onion_page(pw, link, session_dir, keyword)
@@ -352,6 +369,9 @@ class DarkWebWorker:
                                 "url": link,
                                 "title": meta.get("title"),
                                 "text_excerpt": meta.get("text_excerpt"),
+                                "visual_summary": meta.get("visual_summary"),
+                                "ocr_text": meta.get("ocr_text"),
+                                "visual_entities": meta.get("visual_entities"),
                                 "description": meta.get("meta_description"),
                                 "risk_level": risk_level,
                                 "risk_score": risk_score,
@@ -374,7 +394,6 @@ class DarkWebWorker:
 
                             await self.es_client.index_finding(finding)
                             findings.append(finding)
-                            logger.info(f"[Success] Indexed: {link} | Risk: {risk_level} | Score: {risk_score:.1f}")
 
                         progress = int((idx / total_links) * 100)
                         await self.status_producer.send_status(job_id, "PROCESSING", {
@@ -384,21 +403,39 @@ class DarkWebWorker:
                             "progress": progress
                         })
 
-                        await random_delay(1, 4)
-
                     except Exception as e:
-                        logger.error(f"[!] Failed to scrape {link}: {e}")
+                        logger.error(f"[!] Scrape failed {link}: {e}")
                         continue
 
-            logger.info(f"[Success] Ad-hoc job {job_id} completed → {len(findings)} findings indexed")
+            # 3. AI Intelligence Report Generation
+            report_data = None
+            if findings:
+                await self.status_producer.send_status(job_id, "PROCESSING", {
+                    "progress": 95,
+                    "status_message": "Generating final AI Intelligence Report..."
+                })
+                report_type = payload.get("report_type", "threat_intel")
+                report_data = await generate_findings_summary(keyword, findings, preset=report_type)
+                if report_data:
+                    # Save report to session directory
+                    with open(session_dir / "AI_REPORT.json", "w", encoding="utf-8") as f:
+                        json.dump(report_data, f, indent=2)
+                    with open(session_dir / "INTELLIGENCE_REPORT.md", "w", encoding="utf-8") as f:
+                        f.write(report_data.get("summary", ""))
+                    logger.info(f"[*] AI Report generated and saved to {session_dir}")
+
             await self.status_producer.send_status(job_id, "COMPLETED", {
                 "findings_count": len(findings),
-                "discovered_count": len(onion_links),
+                "discovered_count": len(discovered),
                 "session_dir": str(session_dir),
+                "ai_report": report_data.get("summary") if report_data else None,
                 "sites_scraped": total_links,
-                "total_sites": total_links,
                 "progress": 100
             })
+
+        except Exception as e:
+            logger.error(f"[Failed] Job {job_id}: {e}")
+            await self.status_producer.send_status(job_id, "FAILED", {"error": str(e)})
 
         except Exception as e:
             logger.error(f"[Failed] Ad-hoc job {job_id} failed: {e}")
@@ -473,6 +510,9 @@ class DarkWebWorker:
                         "url": url,
                         "title": meta.get("title"),
                         "text_excerpt": meta.get("text_excerpt"),
+                        "visual_summary": meta.get("visual_summary"),
+                        "ocr_text": meta.get("ocr_text"),
+                        "visual_entities": meta.get("visual_entities"),
                         "risk_level": risk_level,
                         "risk_score": risk_score,
                         "threat_indicators": threat_indicators,
@@ -522,7 +562,7 @@ class DarkWebWorker:
         except Exception as e:
             logger.error(f"[Monitor] Failed: {e}")
             await self.status_producer.send_status(job_id, "FAILED", {"error": str(e)})
-    
+
     async def scrape_onion_page(self, playwright, url: str, out_dir: Path, keyword: str = ""):
         """Scrape .onion URL and return metadata — Now captures FULL page text with no limits"""
         browser = await playwright.chromium.launch(
@@ -572,12 +612,23 @@ class DarkWebWorker:
                 meta["raw_html_file"] = str(html_path)
             
             # Take screenshot
+            shot_path = site_dir / f"{safe_name}.png"
             try:
-                shot_path = site_dir / f"{safe_name}.png"
-                await page.screenshot(path=str(shot_path), full_page=True)
+                await page.screenshot(path=str(shot_path), full_page=False) # Visual AI works better with viewable area
                 meta["screenshot_file"] = str(shot_path)
+                
+                # --- NEW: Visual Analysis ---
+                logger.info(f"[*] Running Vision-AI analysis on screenshot...")
+                vision_result = await vision_service.analyze_screenshot(str(shot_path), keyword)
+                if vision_result.get("success"):
+                    meta["visual_summary"] = vision_result.get("visual_summary")
+                    meta["ocr_text"] = vision_result.get("ocr_text")
+                    meta["visual_entities"] = vision_result.get("visual_entities")
+                    # Append OCR text to text_excerpt to make it searchable
+                    if meta["ocr_text"]:
+                        meta["text_excerpt"] += "\n[Visual-OCR Content]: " + meta["ocr_text"]
             except Exception as e:
-                logger.warning(f"Screenshot failed: {e}")
+                logger.warning(f"Screenshot/Vision failed: {e}")
             
             # Save FULL visible text to .txt file
             if visible_text.strip():

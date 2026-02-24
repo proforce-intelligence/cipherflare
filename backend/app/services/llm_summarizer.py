@@ -9,23 +9,199 @@ import re
 logger = logging.getLogger(__name__)
 
 
+async def refine_query(
+    query: str,
+    model_choice: str = "gemini-2.5-flash"
+) -> str:
+    """
+    Refine user query for better dark web search results.
+    """
+    try:
+        llm = get_llm(model_choice)
+        
+        system_prompt = """
+        You are a Cybercrime Threat Intelligence Expert. Your task is to refine the provided user query that needs to be sent to darkweb search engines. 
+        
+        Rules:
+        1. Analyze the user query and think about how it can be improved to use as search engine query
+        2. Refine the user query by adding or removing words so that it returns the best result from dark web search engines
+        3. Don't use any logical operators (AND, OR, etc.)
+        4. Keep the final refined query limited to 5 words or less
+        5. Output just the user query and nothing else
+        """
+        
+        prompt_template = ChatPromptTemplate([
+            ("system", system_prompt),
+            ("user", "{query}")
+        ])
+        
+        chain = prompt_template | llm | StrOutputParser()
+        refined = chain.invoke({"query": query})
+        
+        # Clean up the output (sometimes LLMs add quotes or extra spaces)
+        refined = refined.strip().strip('"').strip("'")
+        # Ensure it's not too long
+        words = refined.split()
+        if len(words) > 6:
+            refined = " ".join(words[:6])
+            
+        logger.info(f"Refined query: '{query}' -> '{refined}'")
+        return refined
+    except Exception as e:
+        logger.error(f"Query refinement failed: {e}")
+        return query
+
+
+async def filter_results(
+    query: str,
+    results: List[Dict],
+    model_choice: str = "gemini-2.5-flash",
+    top_k: int = 50
+) -> List[Dict]:
+    """
+    Use LLM to select the most relevant search results.
+    """
+    if not results:
+        return []
+    
+    try:
+        llm = get_llm(model_choice)
+        
+        system_prompt = f"""
+        You are a Cybercrime Threat Intelligence Expert. You are given a dark web search query and a list of search results in the form of ID, URL, Title, and Snippet. 
+        Your task is to select the Top {top_k} relevant results that best match the search query. 
+        Focus on relevance: if a user is searching for "guns in Togo", prioritize results mentioning Togo, firearms, weapons, or regional security.
+        
+        Rules:
+        1. Output ONLY a comma-separated list of IDs (e.g., 1, 5, 12) that best match the input query.
+        2. Do not include any other text.
+        3. Select at most {top_k} IDs.
+        """
+        
+        # Format results for LLM
+        formatted_results = []
+        for i, res in enumerate(results):
+            url = res.get("url", "")
+            title = res.get("title", "No Title")
+            snippet = res.get("snippet", "") or res.get("description", "")
+            # Truncate to save tokens
+            title = (title[:60] + "..") if len(title) > 60 else title
+            snippet = (snippet[:160] + "..") if len(snippet) > 160 else snippet
+            formatted_results.append(f"ID: {i+1} | Title: {title} | Snippet: {snippet} | URL: {url}")
+            
+        results_str = "\n".join(formatted_results)
+        
+        prompt_template = ChatPromptTemplate([
+            ("system", system_prompt.format(top_k=top_k)),
+            ("user", "Search Query: {query}\n\nSearch Results:\n{results}")
+        ])
+        
+        chain = prompt_template | llm | StrOutputParser()
+        response = chain.invoke({"query": query, "results": results_str})
+        
+        # Parse IDs from response
+        import re
+        ids = [int(x) for x in re.findall(r"\d+", response)]
+        
+        filtered = []
+        seen_ids = set()
+        for idx in ids:
+            if 1 <= idx <= len(results) and idx not in seen_ids:
+                filtered.append(results[idx-1])
+                seen_ids.add(idx)
+                if len(filtered) >= top_k:
+                    break
+        
+        if not filtered:
+            logger.warning("LLM filtering returned no results or failed to parse. Using top_k fallback.")
+            return results[:top_k]
+            
+        logger.info(f"Filtered {len(results)} results down to {len(filtered)}")
+        return filtered
+        
+    except Exception as e:
+        logger.error(f"Result filtering failed: {e}")
+        return results[:top_k]
+
+
+PRESET_PROMPTS = {
+    "threat_intel": """
+    You are an Cybercrime Threat Intelligence Expert tasked with generating context-based technical investigative insights from dark web osint search engine results.
+
+    Rules:
+    1. Analyze the Darkweb OSINT data provided using links and their raw text.
+    2. Output the Source Links referenced for the analysis.
+    3. Provide a detailed, contextual, evidence-based technical analysis of the data.
+    4. Provide intelligence artifacts along with their context visible in the data.
+    5. The artifacts can include indicators like name, email, phone, cryptocurrency addresses, domains, darkweb markets, forum names, threat actor information, malware names, TTPs, etc.
+    6. Generate 3-5 key insights based on the data.
+    7. Each insight should be specific, actionable, context-based, and data-driven.
+    8. Include suggested next steps and queries for investigating more on the topic.
+    9. Be objective and analytical in your assessment.
+    10. Ignore not safe for work texts from the analysis
+
+    Output Format:
+    ---
+    **Input Query:** {query}
+
+    **Source Links Referenced for Analysis:**
+    [List all source links used]
+
+    **Investigation Artifacts:**
+    [Detailed list of identified artifacts with context]
+
+    **Key Insights:**
+    [3-5 numbered insights]
+
+    **Next Steps:**
+    [Investigative recommendations and follow-up queries]
+    ---
+    """,
+    "ransomware_malware": """
+    You are a Malware and Ransomware Intelligence Expert tasked with analyzing dark web data for malware-related threats.
+
+    Rules:
+    1. Analyze the Darkweb OSINT data provided using links and their raw text.
+    2. Output the Source Links referenced for the analysis.
+    3. Focus specifically on ransomware groups, malware families, exploit kits, and attack infrastructure.
+    4. Identify malware indicators: file hashes, C2 domains/IPs, staging URLs, payload names, and obfuscation techniques.
+    5. Map TTPs to MITRE ATT&CK where possible.
+    6. Identify victim organizations, sectors, or geographies mentioned.
+    7. Generate 3-5 key insights focused on threat actor behavior and malware evolution.
+    8. Include suggested next steps for containment, detection, and further hunting.
+    9. Be objective and analytical.
+
+    Output Format:
+    ---
+    **Input Query:** {query}
+
+    **Source Links Referenced for Analysis:**
+    [List links]
+
+    **Malware / Ransomware Indicators:**
+    [hashes, C2s, payload names, TTPs]
+
+    **Threat Actor Profile:**
+    [group name, aliases, known victims, sector targeting]
+
+    **Key Insights:**
+    [3-5 insights]
+
+    **Next Steps:**
+    [hunting queries, detection rules, further investigation]
+    ---
+    """,
+}
+
 async def generate_findings_summary(
     query: str,
     findings: List[Dict],
-    model_choice: str = None,  # Made optional to use default
-    pgp_verify: bool = False  # Add PGP verification flag
+    model_choice: str = None,
+    pgp_verify: bool = False,
+    preset: str = "threat_intel"
 ) -> Optional[Dict]:
     """
     Generate an LLM-based summary of dark web findings with intelligence artifacts and insights.
-    
-    Args:
-        query: Original search query
-        findings: List of finding dictionaries with URL and content
-        model_choice: LLM model to use (defaults to gemini-2.5-flash)
-        pgp_verify: Whether to verify .onion site legitimacy via PGP
-        
-    Returns:
-        Dictionary with summary, artifacts, insights, pgp_verification, and next steps
     """
     if not findings:
         logger.warning("No findings provided for summary generation")
@@ -35,6 +211,7 @@ async def generate_findings_summary(
         model_choice = "gemini-2.5-flash"
     
     try:
+        logger.info(f"Generating summary for query '{query}' using {model_choice}...")
         llm = get_llm(model_choice)
         
         # Format findings content for LLM analysis
@@ -42,69 +219,52 @@ async def generate_findings_summary(
         source_links = []
         onion_urls = []
         
-        for finding in findings[:15]:  # Limit to top 15 findings to avoid token limits
+        for finding in findings[:15]:
             url = finding.get("url", "")
             title = finding.get("title", "")
-            text_excerpt = finding.get("text_excerpt", "")
+            # Use OCR text if available, fallback to excerpt
+            text_content = finding.get("ocr_text", "")
+            if finding.get("text_excerpt"):
+                text_content += "\n" + finding.get("text_excerpt")
+            
             risk_level = finding.get("risk_level", "unknown")
             threat_indicators = finding.get("threat_indicators", [])
             
             source_links.append(url)
-            
             if ".onion" in url:
                 onion_urls.append(url)
             
-            chunk = f"""
-URL: {url}
-Title: {title}
-Risk Level: {risk_level}
-Threat Indicators: {', '.join(threat_indicators) if threat_indicators else 'None'}
-Content: {text_excerpt[:20000]}
----"""
+            chunk = f"URL: {url}\nTitle: {title}\nRisk: {risk_level}\nIndicators: {', '.join(threat_indicators)}\nContent: {text_content[:2500]}\n---"
             content_chunks.append(chunk)
         
         combined_content = "\n".join(content_chunks)
         
-        system_prompt = """You are an expert Cybercrime Threat Intelligence Analyst. Your task is to analyze dark web OSINT search results and provide actionable intelligence.
-
-CRITICAL RULES:
-1. Analyze ONLY the provided data - do not make assumptions
-2. Extract concrete indicators: names, emails, phone numbers, crypto addresses, domains, forum usernames, threat actor IDs, malware names
-3. Output Source Links: ALL URLs you referenced for analysis
-4. Generate 3-5 KEY INSIGHTS that are specific, evidence-based, and actionable
-5. Each insight must cite data from the findings
-6. Identify TTPs (Tactics, Techniques, Procedures) if visible
-7. Suggest next investigation steps and follow-up search queries
-8. Flag illegal content explicitly - do NOT analyze illegal marketplaces or services in detail
-9. Be objective and analytical
-
-OUTPUT FORMAT:
----
-**Input Query:** [query here]
-
-**Source Links Referenced for Analysis:**
-[List all URLs analyzed]
-
-**Investigation Artifacts:**
-[Extract and categorize all indicators found]
-
-**Key Insights:**
-[Numbered insights with evidence]
-
-**Threat Assessment Summary:**
-[1-2 paragraph technical assessment]
-
-**Recommended Next Steps:**
-[Specific follow-up queries and investigation paths]
----"""
+        system_prompt_text = PRESET_PROMPTS.get(preset, PRESET_PROMPTS["threat_intel"])
 
         prompt_template = ChatPromptTemplate([
-            ("system", system_prompt),
-            ("user", f"Query: {query}\n\nFindings Data:\n{combined_content}")
+            ("system", system_prompt_text),
+            ("user", "Findings Data:\n{combined_content}")
         ])
         
         chain = prompt_template | llm | StrOutputParser()
-        summary_text = chain.invoke({})
+        
+        try:
+            summary_text = await chain.ainvoke({
+                "query": query,
+                "combined_content": combined_content
+            })
+        except Exception as e:
+            if "gemini-2.5" in model_choice:
+                logger.warning(f"Gemini 2.5 failed, falling back to 1.5: {e}")
+                # Fallback to 1.5-flash if 2.5 is not available
+                llm_fallback = get_llm("gemini-1.5-flash")
+                chain_fallback = prompt_template | llm_fallback | StrOutputParser()
+                summary_text = await chain_fallback.ainvoke({
+                    "query": query,
+                    "combined_content": combined_content
+                })
+            else:
+                raise e
         
         logger.info(f"Successfully generated summary for query: {query}")
         

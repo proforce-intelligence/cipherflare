@@ -416,7 +416,7 @@ async def get_my_users(
 async def get_admin_logs(
     admin_id: str,
     current_user: User = Depends(require_role(Role.super_admin)),  # Super admin only
-    log_type: str = Query("activities", regex="^(login|activities)$"),
+    log_type: str = Query("activities", pattern="^(login|activities)$"),
     db: AsyncSession = Depends(get_db),
 ):
     """Super admin only: Get logs/activities of a specific admin + their role users"""
@@ -449,7 +449,7 @@ async def get_admin_logs(
 async def get_user_logs(
     user_id: str,
     current_user: User = Depends(require_role(Role.admin)),
-    log_type: str = Query("activities", regex="^(login|activities)$"),
+    log_type: str = Query("activities", pattern="^(login|activities)$"),
     db: AsyncSession = Depends(get_db),
 ):
     """Admin: Get logs of a specific role user under them; Super admin can see any"""

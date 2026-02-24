@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Shield, AlertTriangle, Info, ExternalLink, FileText, ImageIcon, Download } from "lucide-react"
+import { Shield, AlertTriangle, Info, ExternalLink, FileText, ImageIcon, Download, Sparkles, Network, Eye } from "lucide-react"
 
 interface Finding {
+  id?: string
   url: string
   title: string
   category: string
@@ -16,6 +17,9 @@ interface Finding {
   risk_score: number
   threats: string[]
   text_excerpt?: string
+  visual_summary?: string
+  ocr_text?: string
+  visual_entities?: string[]
   screenshot_path?: string
   text_path?: string
   html_path?: string
@@ -24,10 +28,13 @@ interface Finding {
 interface ResultsViewerProps {
   findings: Finding[]
   jobId?: string
+  summary?: string
+  onViewGraph?: (jobId: string) => void
 }
 
-export function ResultsViewer({ findings, jobId }: ResultsViewerProps) {
+export function ResultsViewer({ findings, jobId, summary, onViewGraph }: ResultsViewerProps) {
   const [selectedFinding, setSelectedFinding] = useState<Finding | null>(null)
+  // ... (getRiskColor, getRiskIcon, handleDownloadFile)
 
   const getRiskColor = (risk: string) => {
     switch (risk.toLowerCase()) {
@@ -68,9 +75,36 @@ export function ResultsViewer({ findings, jobId }: ResultsViewerProps) {
 
   return (
     <div className="space-y-4">
+      {summary && (
+        <Card className="border-primary/50 bg-primary/5">
+          <CardHeader className="flex flex-row items-center gap-2">
+            <Sparkles className="h-5 w-5 text-primary" />
+            <div>
+              <CardTitle>AI Intelligence Report</CardTitle>
+              <CardDescription>Automated summary and threat assessment</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="prose prose-sm dark:prose-invert max-w-none">
+              <p className="text-sm whitespace-pre-wrap leading-relaxed">
+                {summary}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Search Results</h2>
-        <Badge variant="outline">{findings.length} findings</Badge>
+        <div className="flex items-center gap-2">
+          {jobId && onViewGraph && (
+            <Button variant="outline" size="sm" onClick={() => onViewGraph(jobId)}>
+              <Network className="h-4 w-4 mr-2" />
+              View Network Map
+            </Button>
+          )}
+          <Badge variant="outline">{findings.length} findings</Badge>
+        </div>
       </div>
 
       <div className="grid gap-4">
@@ -188,10 +222,42 @@ export function ResultsViewer({ findings, jobId }: ResultsViewerProps) {
                           </div>
                         )}
 
-                        {finding.text_excerpt && (
+                        {selectedFinding?.visual_summary && (
+                          <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
+                            <h4 className="font-semibold mb-2 flex items-center gap-2">
+                              <Eye className="h-4 w-4 text-primary" />
+                              Visual AI Summary
+                            </h4>
+                            <p className="text-sm italic">{selectedFinding.visual_summary}</p>
+                          </div>
+                        )}
+
+                        {selectedFinding?.visual_entities && selectedFinding.visual_entities.length > 0 && (
+                          <div>
+                            <h4 className="font-semibold mb-2">Detected Entities (Image-OCR)</h4>
+                            <div className="flex flex-wrap gap-2">
+                              {selectedFinding.visual_entities.map((entity, i) => (
+                                <Badge key={i} variant="secondary">
+                                  {entity}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {selectedFinding?.ocr_text && (
+                          <div>
+                            <h4 className="font-semibold mb-2">OCR Captured Text</h4>
+                            <ScrollArea className="h-32 rounded border p-2">
+                              <p className="text-xs font-mono whitespace-pre-wrap">{selectedFinding.ocr_text}</p>
+                            </ScrollArea>
+                          </div>
+                        )}
+
+                        {selectedFinding?.text_excerpt && (
                           <div>
                             <h4 className="font-semibold mb-2">Content Preview</h4>
-                            <p className="text-sm text-muted-foreground whitespace-pre-wrap">{finding.text_excerpt}</p>
+                            <p className="text-sm text-muted-foreground whitespace-pre-wrap">{selectedFinding.text_excerpt}</p>
                           </div>
                         )}
                       </div>

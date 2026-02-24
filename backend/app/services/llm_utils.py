@@ -60,6 +60,14 @@ _llm_config_map = {
         'class': ChatOpenAI,
         'constructor_params': {'model_name': 'gpt-5-mini'} 
     },
+    'gpt-4o': {
+        'class': ChatOpenAI,
+        'constructor_params': {'model_name': 'gpt-4o'} 
+    },
+    'gpt-4o-mini': {
+        'class': ChatOpenAI,
+        'constructor_params': {'model_name': 'gpt-4o-mini'} 
+    },
     'gpt-5-nano': { 
         'class': ChatOpenAI,
         'constructor_params': {'model_name': 'gpt-5-nano'} 
@@ -71,6 +79,14 @@ _llm_config_map = {
     'claude-sonnet-4-0': {
         'class': ChatAnthropic,
         'constructor_params': {'model': 'claude-sonnet-4-0'}
+    },
+    'gemini-1.5-flash': {
+        'class': ChatGoogleGenerativeAI,
+        'constructor_params': {'model': 'gemini-1.5-flash', 'google_api_key': GOOGLE_API_KEY}
+    },
+    'gemini-1.5-pro': {
+        'class': ChatGoogleGenerativeAI,
+        'constructor_params': {'model': 'gemini-1.5-pro', 'google_api_key': GOOGLE_API_KEY}
     },
     'gemini-2.5-flash': {
         'class': ChatGoogleGenerativeAI,

@@ -12,6 +12,7 @@ export interface SearchParams {
   include_summary?: boolean
   model_choice?: string
   pgp_verify?: boolean
+  report_type?: "threat_intel" | "ransomware_malware"
 }
 
 export interface Job {
@@ -200,6 +201,7 @@ class ApiClient {
     if (params.include_summary) queryParams.append("include_summary", "true")
     if (params.model_choice) queryParams.append("model_choice", params.model_choice)
     if (params.pgp_verify) queryParams.append("pgp_verify", "true")
+    if (params.report_type) queryParams.append("report_type", params.report_type)
 
     const authToken = this._getAuthToken();
     return this.request<Job>(`/api/v1/jobs/search?${queryParams.toString()}`, {

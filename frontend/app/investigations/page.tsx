@@ -3,15 +3,17 @@
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Search, Download, Eye, Pause, Play, Trash2 } from "lucide-react"
+import { Search, Download, Eye, Pause, Play, Trash2, RefreshCw } from "lucide-react"
 import { SearchJobForm } from "@/components/search-job-form"
 import { JobProgressTracker } from "@/components/job-progress-tracker"
+import { NetworkGraph } from "@/components/network-graph"
 import { useJobs } from "@/hooks/use-api"
 import { apiClient } from "@/lib/api-client"
 import { formatDistanceToNow } from "date-fns"
 import { toast } from "sonner"
 import type { Job } from "@/lib/api-client"
-import { Loader2 } from "lucide-react" // Import Loader2 here
+import { Loader2, Network } from "lucide-react"
+import Markdown from "react-markdown"
 
 export default function InvestigationsPage() {
   const [showForm, setShowForm] = useState(false)
@@ -19,6 +21,7 @@ export default function InvestigationsPage() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null)
   const [results, setResults] = useState<any>(null)
   const [loadingResults, setLoadingResults] = useState(false)
+  const [showGraph, setShowGraph] = useState(false)
   const [previewModal, setPreviewModal] = useState<{ type: "screenshot" | "text"; url: string } | null>(null)
   const { jobs, isLoading, refresh } = useJobs()
 
@@ -69,19 +72,23 @@ export default function InvestigationsPage() {
     if (selectedJob?.job_id === job.job_id) {
       setSelectedJob(null)
       setResults(null)
+      setShowGraph(false)
       return
     }
 
     setSelectedJob(job)
     setLoadingResults(true)
+    setShowGraph(false)
 
     try {
       const jobResults = await apiClient.getJobResults(job.job_id, {
-        include_summary: false, // Don't auto-generate summary
+        include_summary: false,
       })
-      setResults(jobResults)
+      // Ensure results object has findings array even if empty
+      setResults(jobResults || { findings: [] })
     } catch (error) {
       toast.error("Failed to load results")
+      setResults({ findings: [] })
       console.error(error)
     } finally {
       setLoadingResults(false)
@@ -281,7 +288,27 @@ ${results.summary || "No summary available"}
                 SEARCH RESULTS - {selectedJob.job_name}
               </CardTitle>
               <div className="flex gap-2">
-                {results && results.findings && results.findings.length > 0 && !results.summary && (
+                <Button 
+                  onClick={() => selectedJob && handleViewJobResults(selectedJob)} 
+                  variant="outline" 
+                  size="sm"
+                  title="Refresh results from server"
+                >
+                  <RefreshCw className={`w-4 h-4 ${loadingResults ? 'animate-spin' : ''}`} />
+                </Button>
+                
+                {selectedJob && (
+                  <Button
+                    onClick={() => setShowGraph(!showGraph)}
+                    className="bg-purple-500 hover:bg-purple-600 text-white"
+                    size="sm"
+                  >
+                    <Network className="w-4 h-4 mr-2" />
+                    {showGraph ? "Show Results List" : "View Network Map"}
+                  </Button>
+                )}
+
+                {selectedJob && !results?.summary && (
                   <Button
                     onClick={handleGenerateSummary}
                     disabled={loadingResults}
@@ -291,6 +318,7 @@ ${results.summary || "No summary available"}
                     {loadingResults ? <Loader2 className="w-4 h-4 animate-spin" /> : "Generate AI Summary"}
                   </Button>
                 )}
+
                 <Button
                   onClick={handleExportResults}
                   disabled={!results || !results.findings || results.findings.length === 0}
@@ -311,16 +339,22 @@ ${results.summary || "No summary available"}
               <div className="flex justify-center py-8">
                 <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
               </div>
+            ) : showGraph && selectedJob ? (
+              <NetworkGraph jobId={selectedJob.job_id} onClose={() => setShowGraph(false)} />
             ) : results && results.findings && results.findings.length > 0 ? (
               <>
                 {results.summary && (
-                  <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
-                    <h4 className="text-sm font-semibold text-blue-400 mb-2">AI SUMMARY</h4>
-                    <p className="text-sm text-neutral-300 whitespace-pre-wrap">
-                      {typeof results.summary === "string"
-                        ? results.summary
-                        : results.summary?.summary || JSON.stringify(results.summary, null, 2)}
-                    </p>
+                  <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-6">
+                    <h4 className="text-sm font-semibold text-blue-400 mb-4 border-b border-blue-500/20 pb-2 uppercase tracking-widest">
+                      AI Intelligence Report
+                    </h4>
+                    <div className="prose prose-sm prose-invert max-w-none text-neutral-300 prose-headings:text-blue-400 prose-strong:text-white prose-a:text-orange-400">
+                      <Markdown>
+                        {typeof results.summary === "string"
+                          ? results.summary
+                          : results.summary?.summary || JSON.stringify(results.summary, null, 2)}
+                      </Markdown>
+                    </div>
                     {results.summary?.pgp_verification_results &&
                       results.summary.pgp_verification_results.length > 0 && (
                         <div className="mt-4 pt-4 border-t border-blue-500/20">
@@ -365,10 +399,29 @@ ${results.summary || "No summary available"}
                         )}
                       </div>
                       <p className="text-xs text-neutral-400 mb-2 font-mono break-all">{result.url}</p>
-                      <p className="text-sm text-neutral-300 mb-3">
-                        {result.text_excerpt?.substring(0, 300)}
-                        {result.text_excerpt && result.text_excerpt.length > 300 && "..."}
-                      </p>
+
+                      {result.visual_summary && (
+                        <div className="mb-3 p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg">
+                          <p className="text-xs font-semibold text-purple-400 flex items-center gap-1 mb-1">
+                            <Eye className="w-3 h-3" /> VISUAL AI SUMMARY
+                          </p>
+                          <p className="text-sm text-neutral-200 italic">{result.visual_summary}</p>
+                        </div>
+                      )}
+
+                      {result.ocr_text ? (
+                        <div className="mb-3">
+                          <p className="text-xs font-semibold text-orange-500/70 mb-1 tracking-widest uppercase">Captured Intelligence (OCR)</p>
+                          <p className="text-sm text-neutral-300 bg-black/20 p-3 rounded border border-neutral-800 leading-relaxed">
+                            {result.ocr_text}
+                          </p>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-neutral-300 mb-3 leading-relaxed">
+                          {result.text_excerpt?.substring(0, 500)}
+                          {result.text_excerpt && result.text_excerpt.length > 500 && "..."}
+                        </p>
+                      )}
 
                       <div className="flex items-center gap-4 mb-3">
                         {result.screenshot_file && (

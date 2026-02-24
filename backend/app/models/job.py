@@ -37,6 +37,7 @@ class Job(Base):
     # Results
     findings_count = Column(Integer, default=0)
     error_message = Column(Text, nullable=True)
+    ai_report = Column(Text, nullable=True)  # Stores the LLM-generated intelligence report
     
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
     started_at = Column(DateTime, nullable=True)

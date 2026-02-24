@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ULTIMATE DARK WEB MULTI-ENGINE OSINT COLLECTOR — DECEMBER 2025 EDITION
+ULTIMATE DARK WEB MULTI-ENGINE OSINT COLLECTOR — FEBRUARY 2026 EDITION
 → 24 working search engines
-→ Full safety filters (blocks child abuse material)
+→ Full safety filters (blocks child abuse material, scams, extreme porn)
 → Deep content analysis + crypto/PGP/email extraction
 → Risk scoring + sentiment + keyword context
 → Tor circuit rotation
 → Async + thread-safe
-→ Perfect JSON output
-
-Author: Bughacker
+→ High-relevance extraction (captures snippets for AI filtering)
 """
 
 import asyncio
@@ -26,7 +24,6 @@ from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Any, Tuple, Optional
 from urllib.parse import quote_plus, urlparse, urljoin
-import random
 import httpx
 from bs4 import BeautifulSoup
 
@@ -41,25 +38,26 @@ except ImportError:
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)-8s | %(message)s",
-    datefmt="%H:%M%S"
+    datefmt="%H:%M:%S"
 )
 logger = logging.getLogger("DarkWebOSINT_ULTIMATE")
 
 
 # ================================
-# 24 WORKING DARK WEB SEARCH ENGINES — DECEMBER 2025
+# 24 WORKING DARK WEB SEARCH ENGINES — 2026
 # ================================
 ENGINES = [
-    # Original 7 — proven stable
+    # Original stable engines
     {"name": "Torch",      "url": "http://xmh57jrknzkhv6y3ls3ubitzfqnkrwxhopf5aygthi7d6rplyvk3noyd.onion/cgi-bin/omega/omega", "method": "POST", "data": {"P": "{q}", "DEFAULTOP": "and"}},
     {"name": "Tor66",      "url": "http://tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion/search?q={q}"},
     {"name": "Excavator",  "url": "http://2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion/search?query={q}"},
     {"name": "AbleOnion",  "url": "http://notbumpz34bgbz4yfdigxvd6vzwtxc3zpt5imukgl6bvip2nikdmdaad.onion/search?q={q}"},
-    # {"name": "Ahmia",      "url": "http://juhanurmihxlp77nkq76byazcldy2hlmovfu2epvl5ankdibsot4csyd.onion/search/?q={q}"},
+    {"name": "Ahmia",      "url": "http://juhanurmihxlp77nkq76byazcldy2hlmovfu2epvl5ankdibsot4csyd.onion/search/?q={q}"},
     {"name": "Haystak",    "url": "http://haystak5njsmn2hqkewecpaxetahtwhsbsa64jom2k22z5afxhnpxfid.onion/search.php?q={q}"},
     {"name": "DuckDuckGo", "url": "http://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/?q={q}"},
-
-    # New 17 — maximum coverage
+    {"name": "OnionLand",  "url": "http://3bbad7fauom4d6sgppalyqddsqbf5u5p56b5k5uk2zxsy3d6ey2jobad.onion/search?q={q}"},
+    
+    # Coverage expansion
     {"name": "DarkHunt",      "url": "http://darkhuntyla64h75a3re5e2l3367lqn7ltmdzpgmr6b4nbz3q2iaxrid.onion/search?q={q}"},
     {"name": "Torgle",        "url": "http://iy3544gmoeclh5de6gez2256v6pjh4omhpqdh2wpeeppjtvqmjhkfwad.onion/torgle/?query={q}"},
     {"name": "Amnesia",       "url": "http://amnesia7u5odx5xbwtpnqk3edybgud5bmiagu75bnqx2crntw5kry7ad.onion/search?query={q}"},
@@ -101,7 +99,6 @@ SCAM_KEYWORDS = [
      "telegram:", "discord:", "whatsapp:"
 ]
 
-# NEW: Explicit junk and porn filtering
 JUNK_LINK_PATTERNS = [
     '/ads/', '/click', '/adinfo', '/advertise', '/stats', '/search', 
     '/cgi-bin/', '/submit', '/about', '/contact', '/feedback', '/random',
@@ -122,7 +119,7 @@ EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", re.I)
 PGP_RE = re.compile(r"-----BEGIN PGP PUBLIC KEY BLOCK-----.*?-----END PGP PUBLIC KEY BLOCK-----", re.S)
 BTC_RE = re.compile(r"\b([13][a-km-zA-HJ-NP-Z1-9]{25,34})\b")
 ETH_RE = re.compile(r"\b(0x[a-fA-F0-9]{40})\b")
-XMR_RE = re.compile(r"\b4[0-9A-Za-z]{90,110}\b}")
+XMR_RE = re.compile(r"\b4[0-9A-Za-z]{90,110}\b")
 
 # ================================
 # UTILS
@@ -154,8 +151,8 @@ def find_keyword_context(text: str, keyword: str, window: int = 160) -> List[str
     if not keyword or not text: return []
     k = keyword.lower()
     excerpts = []
-    # Use individual words for context as well, to provide more hits
-    keyword_words = [w for w in keyword.lower().split() if w]
+    keyword_words = [w for w in keyword.lower().split() if len(w) > 2]
+    
     for word in keyword_words:
         for m in re.finditer(re.escape(word), text.lower()):
             start = max(0, m.start() - window)
@@ -165,7 +162,6 @@ def find_keyword_context(text: str, keyword: str, window: int = 160) -> List[str
             highlighted = re.sub(f'({re.escape(word)})', r'**\1**', context, flags=re.IGNORECASE)
             excerpts.append(highlighted)
     
-    # Also include exact phrase matches
     if keyword and any(re.finditer(re.escape(k), text.lower())):
          for m in re.finditer(re.escape(k), text.lower()):
             start = max(0, m.start() - window)
@@ -183,7 +179,6 @@ def find_keyword_context(text: str, keyword: str, window: int = 160) -> List[str
             unique.append(e)
             seen.add(key)
     return unique[:5]
-
 
 def calculate_enhanced_risk_score(meta: dict, keyword: str = "") -> Tuple[str, float, List[str]]:
     entities = meta.get("entities", {})
@@ -214,18 +209,17 @@ def calculate_enhanced_risk_score(meta: dict, keyword: str = "") -> Tuple[str, f
     if matches:
         risk_score += min(matches * 8, 40)
 
-    # More aggressive critical content detection
     critical_keywords = [
         r'\b(child|cp|pedo|loli|gore|snuff|torture|rape|abuse|exploit)\b',
         r'\b(zero.?day|0day|rat|botnet|exploit.?kit|malware|phishing|carding)\b',
         r'\b(hitman|murder|assassin)\b'
     ]
     if any(re.search(p, content, re.I) for p in critical_keywords):
-        risk_score += 60 # Significantly higher score for critical content
+        risk_score += 60
         indicators.append("CRITICAL CONTENT DETECTED - HIGH SEVERITY")
 
-    if any(re.search(p, title, re.I) for p in [r'\b(child|cp|pedo|loli)\b']): # Explicit child abuse in title
-        risk_score += 80 # Max score
+    if any(re.search(p, title, re.I) for p in [r'\b(child|cp|pedo|loli)\b']):
+        risk_score += 80
         indicators.append("CRITICAL CONTENT DETECTED - EXTREME SEVERITY")
 
     risk_score = max(0, min(risk_score, 100))
@@ -256,18 +250,13 @@ async def rotate_tor_identity():
     if not STEM_AVAILABLE:
         return
     try:
-        host = os.getenv("TOR_CONTROL_HOST", "127.0.0.1")
-        port = int(os.getenv("TOR_CONTROL_PORT", "9051"))
-        password = os.getenv("TOR_CONTROL_PASS", "")
-        
-        with Controller.from_port(address=host, port=port) as c:
-            if password:
-                c.authenticate(password=password)
-            else:
-                c.authenticate()  # Fallback to CookieAuthentication if no password
-            c.signal(Signal.NEWNYM)
-        await asyncio.sleep(12)
-        logger.info("New Tor circuit created")
+        from app.services.tor_manager import TorManager
+        tm = TorManager()
+        success, msg = await tm.rotate_identity()
+        if success:
+            logger.info(f"New Tor circuit created: {msg}")
+        else:
+            logger.warning(f"Failed to rotate Tor identity: {msg}")
     except Exception as e:
         logger.warning(f"Failed to rotate Tor identity: {e}")
 
@@ -285,60 +274,68 @@ def categorize_result(url: str, title: str = "", snippet: str = "") -> str:
     return "unknown_potential"
 
 # ================================
-# SMART LINK EXTRACTOR
+# ENHANCED LINK & METADATA EXTRACTOR
 # ================================
-def extract_onion_links(html: str, base_url: str) -> List[str]:
-    links = set()
+def extract_engine_results(html: str, base_url: str, engine_name: str) -> List[Dict]:
+    results = []
     soup = BeautifulSoup(html, "html.parser")
     engine_domain = urlparse(base_url).netloc.lower()
 
-    # Standard <a href>
-    for a in soup.find_all("a", href=True):
-        href = a["href"].strip()
-        full = urljoin(base_url, href)
-        if ".onion" in full and validate_onion_url(full):
-            # FILTER: Skip internal engine links and common junk
-            parsed_full = urlparse(full)
-            if parsed_full.netloc.lower() == engine_domain:
-                continue
-            if any(p in full.lower() for p in JUNK_LINK_PATTERNS):
-                continue
-            links.add(full)
+    # Try to find common result containers
+    # (Adapted from darkweb.py and ahmia-crawler logic)
+    
+    if engine_name == "Ahmia":
+        # Ahmia uses <li> with class 'result'
+        for li in soup.find_all("li", class_="result"):
+            a = li.find("a", href=True)
+            p = li.find("p")
+            if a and ".onion" in a["href"]:
+                url = a["href"].split("&redirect_url=")[-1] if "&redirect_url=" in a["href"] else a["href"]
+                if validate_onion_url(url):
+                    results.append({
+                        "url": url,
+                        "title": a.get_text(strip=True),
+                        "snippet": p.get_text(strip=True) if p else ""
+                    })
 
-    # JS / data / onclick
-    patterns = [
-        r'["\']((?:http://|https://)?[a-z2-7]{16,56}\.onion[^\s<>"\']{0,400})["\']',
-        r'window\.location\s*=\s*["\']([^"\']*\.onion[^"\']*)["\']',
-        r'href\s*=\s*["\']([^"\']*\.onion[^"\']*)["\']'
-    ]
-    for pat in patterns:
-        for m in re.finditer(pat, html, re.I):
-            url = m.group(1)
-            if not url.startswith("http"):
-                url = "http://" + url
-            if validate_onion_url(url):
-                # FILTER: Skip internal engine links and common junk
-                parsed_u = urlparse(url)
-                if parsed_u.netloc.lower() == engine_domain:
+    elif engine_name == "Tor66":
+        # Tor66 uses <a> followed by <p>
+        for a in soup.find_all("a", href=True):
+            if ".onion" in a["href"] and urlparse(a["href"]).netloc != engine_domain:
+                p = a.find_next("p")
+                if validate_onion_url(a["href"]):
+                    results.append({
+                        "url": a["href"],
+                        "title": a.get_text(strip=True),
+                        "snippet": p.get_text(strip=True) if p else ""
+                    })
+    
+    # Generic Fallback if specific parser not implemented
+    if not results:
+        for a in soup.find_all("a", href=True):
+            href = a["href"].strip()
+            full = urljoin(base_url, href)
+            if ".onion" in full and validate_onion_url(full):
+                parsed_full = urlparse(full)
+                if parsed_full.netloc.lower() == engine_domain:
                     continue
-                if any(p in url.lower() for p in JUNK_LINK_PATTERNS):
+                if any(p in full.lower() for p in JUNK_LINK_PATTERNS):
                     continue
-                links.add(url)
+                
+                # Try to find a snippet
+                snippet = ""
+                parent = a.parent
+                if parent:
+                    # Look for sibling or parent text that might be a snippet
+                    snippet = parent.get_text(strip=True).replace(a.get_text(strip=True), "")[:200]
 
-    # Final aggressive regex
-    aggressive = re.findall(r'(https?://[a-z2-7]{16,56}\.onion[^\s<>"\']{0,500})', html, re.I)
-    for u in aggressive:
-        clean = u.split()[0].split('<')[0].split('"')[0].split("'")[0]
-        if validate_onion_url(clean):
-            # FILTER: Skip internal engine links and common junk
-            parsed_c = urlparse(clean)
-            if parsed_c.netloc.lower() == engine_domain:
-                continue
-            if any(p in clean.lower() for p in JUNK_LINK_PATTERNS):
-                continue
-            links.add(clean)
+                results.append({
+                    "url": full,
+                    "title": a.get_text(strip=True) or "No Title",
+                    "snippet": snippet
+                })
 
-    return list(links)
+    return results
 
 # ================================
 # ENGINE FETCHER
@@ -362,34 +359,35 @@ async def fetch_engine_results(client: httpx.AsyncClient, engine: dict, keyword:
         if resp.status_code != 200:
             return []
 
-        onion_urls = extract_onion_links(resp.text, str(resp.url))
+        discovered = extract_engine_results(resp.text, str(resp.url), engine["name"])
 
-        results = []
-        for link in onion_urls:
-            logger.info(f"Discovered URL: {link} from {engine['name']}") # Added logging statement
-            category = categorize_result(link)
+        final_results = []
+        for item in discovered:
+            url = item["url"]
+            category = categorize_result(url, item["title"], item["snippet"])
             if category == "blocked_illegal":
-                logger.warning(f"BLOCKED ILLEGAL: {link} ({engine['name']})")
+                logger.warning(f"BLOCKED ILLEGAL: {url} ({engine['name']})")
                 continue
 
-            results.append({
+            final_results.append({
                 "id": str(uuid.uuid4()),
-                "url": link,
-                "title": f"Hidden Service — {engine['name']}",
+                "url": url,
+                "title": item["title"],
+                "snippet": item["snippet"],
                 "engine": engine["name"],
                 "category": category,
                 "discovered_at": datetime.now().isoformat()
             })
 
-        logger.info(f"{engine['name']:15} → {len(results):3} results")
-        return results
+        logger.info(f"{engine['name']:15} → {len(final_results):3} results")
+        return final_results
 
     except Exception as e:
         logger.debug(f"{engine['name']} failed: {e}")
         return []
 
 # ================================
-# DEEP ANALYZER (unchanged)
+# DEEP ANALYZER
 # ================================
 async def fetch_and_analyze(client: httpx.AsyncClient, result: Dict, keyword: str) -> Optional[Dict]:
     url = result["url"]
@@ -431,7 +429,7 @@ async def fetch_and_analyze(client: httpx.AsyncClient, result: Dict, keyword: st
         return None
 
 # ================================
-# MAIN FUNCTION
+# MAIN SEARCH FUNCTION
 # ================================
 async def darkweb_search_ultimate(
     keyword: str,
@@ -439,25 +437,21 @@ async def darkweb_search_ultimate(
     rotate_identity: bool = True,
     deep_analyze: bool = True
 ) -> Path:
+    if rotate_identity:
+        await rotate_tor_identity()
+        
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     base_dir = Path("darkweb_results_ultimate") / f"{sanitize_filename(keyword)}_{timestamp}"
     base_dir.mkdir(parents=True, exist_ok=True)
 
     headers = {"User-Agent": random.choice([
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 14.7; rv:137.0) Gecko/20100101 Firefox/137.0",
-    "Mozilla/5.0 (X11; Linux i686; rv:137.0) Gecko/20100101 Firefox/137.0",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_7_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 Edg/135.0.3179.54",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 Edg/135.0.3179.54"
-])}
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:137.0) Gecko/20100101 Firefox/137.0",
+        "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0"
+    ])}
 
-    limits = httpx.Limits(max_keepalive_connections=15, max_connections=40)
+    limits = httpx.Limits(max_keepalive_connections=20, max_connections=50)
     async with httpx.AsyncClient(
-        proxy="socks5h://127.0.0.1:9050",
+        proxy=f"socks5h://{os.getenv('TOR_SOCKS', '127.0.0.1:9050')}",
         headers=headers,
         timeout=60.0,
         limits=limits,
@@ -466,37 +460,33 @@ async def darkweb_search_ultimate(
 
         all_results = []
         seen_urls = set()
-        seen_domains = set()
-
-        for i, engine in enumerate(ENGINES):
-            if len(all_results) >= max_results * 2:
-                break
-
-            if rotate_identity and i > 0 and i % 3 == 0:
-                await rotate_tor_identity()
-
-            results = await fetch_engine_results(client, engine, keyword)
+        
+        semaphore = asyncio.Semaphore(8)
+        
+        async def bounded_fetch(engine):
+            async with semaphore:
+                return await fetch_engine_results(client, engine, keyword)
+        
+        logger.info(f"[*] Starting concurrent discovery across {len(ENGINES)} engines...")
+        engine_tasks = [bounded_fetch(e) for e in ENGINES]
+        engine_results = await asyncio.gather(*engine_tasks)
+        
+        for results in engine_results:
             for r in results:
                 url = r["url"]
                 domain = urlparse(url).netloc.lower()
                 
-                # RELEVANCE FILTER: Drop junk/porn immediately
-                category = categorize_result(url)
-                if category in ["blocked_illegal", "blocked_porn"]:
+                if r["category"] in ["blocked_illegal", "blocked_porn"]:
                     continue
 
                 if url not in seen_urls:
-                    # Domain-level throttling: avoid grabbing 100 pages from same host in discovery
                     domain_count = sum(1 for res in all_results if urlparse(res["url"]).netloc.lower() == domain)
-                    if domain_count > 5: # Max 5 links per domain in discovery phase
+                    if domain_count > 8:
                         continue
 
                     seen_urls.add(url)
                     all_results.append(r)
 
-            await asyncio.sleep(random.uniform(2, 5)) # Reduced delay slightly for performance
-
-        # Sort: trusted first
         all_results.sort(key=lambda x: (x["category"] == "trusted_forum", 1, 0), reverse=True)
 
         raw_path = base_dir / "0_discovered_raw.json"
@@ -506,7 +496,7 @@ async def darkweb_search_ultimate(
         analyzed = []
         if deep_analyze and all_results:
             logger.info(f"Starting deep analysis on up to {max_results} URLs...")
-            semaphore = asyncio.Semaphore(12)
+            semaphore = asyncio.Semaphore(15)
 
             async def bounded_analyze(res):
                 async with semaphore:
@@ -532,37 +522,10 @@ async def darkweb_search_ultimate(
         with open(base_dir / "SUMMARY.json", "w") as f:
             json.dump(summary, f, indent=2)
 
-        logger.info(f"ULTIMATE RUN COMPLETE — {len(final_data)} results → {base_dir}")
         return base_dir
 
-
-async def random_delay(min_sec: float = 1.0, max_sec: float = 4.0) -> None:
-    """Async sleep with random delay to avoid detection"""
+async def random_delay(min_sec: float = 1.0, max_sec: float = 3.0) -> None:
     await asyncio.sleep(random.uniform(min_sec, max_sec))
 
-# TEMPORARY — Remove in Q1 2026
+# Aliases for compatibility
 search_ahmia = darkweb_search_ultimate
-
-
-# ================================
-# CLI
-# ================================
-if __name__ == "__main__":
-    import argparse
-    parser = argparse.ArgumentParser(description="Dark Web OSINT ULTIMATE — 24 Engines 2025")
-    parser.add_argument("keyword", help="Search keyword or phrase")
-    parser.add_argument("--max", type=int, default=800, help="Max results (default: 800)")
-    parser.add_argument("--no-rotate", action="store_true", help="Disable Tor circuit rotation")
-    parser.add_argument("--no-analyze", action="store_true", help="Skip deep content analysis")
-    args = parser.parse_args()
-
-    print("\n" + "═" * 90)
-    print(" DARK WEB OSINT ULTIMATE 2025 — 24 ENGINES — MAX COVERAGE + MAX SAFETY ")
-    print("═" * 90 + "\n")
-
-    asyncio.run(darkweb_search_ultimate(
-        keyword=args.keyword,
-        max_results=args.max,
-        rotate_identity=not args.no_rotate,
-        deep_analyze=not args.no_analyze
-    ))

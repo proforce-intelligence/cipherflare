@@ -28,6 +28,7 @@ export function SearchJobForm({ onJobCreated }: SearchJobFormProps) {
     include_summary: true,
     model_choice: "gemini-2.5-flash",
     pgp_verify: true,
+    report_type: "threat_intel",
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,6 +57,7 @@ export function SearchJobForm({ onJobCreated }: SearchJobFormProps) {
         include_summary: true,
         model_choice: "gemini-2.5-flash",
         pgp_verify: true,
+        report_type: "threat_intel",
       })
 
       onJobCreated?.(response.job_id)
@@ -154,6 +156,22 @@ export function SearchJobForm({ onJobCreated }: SearchJobFormProps) {
                   <SelectItem value="gemini-2.5-flash">Gemini 2.5 Flash (Default)</SelectItem>
                   <SelectItem value="gpt-5-mini">GPT-5 Mini</SelectItem>
                   <SelectItem value="claude-sonnet-4-5">Claude Sonnet 4.5</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="report_type">Intelligence Report Type</Label>
+              <Select
+                value={formData.report_type}
+                onValueChange={(value) => setFormData({ ...formData, report_type: value as any })}
+              >
+                <SelectTrigger id="report_type">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="threat_intel">General Threat Intel</SelectItem>
+                  <SelectItem value="ransomware_malware">Malware & Ransomware</SelectItem>
                 </SelectContent>
               </Select>
             </div>

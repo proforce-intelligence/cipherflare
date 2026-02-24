@@ -114,15 +114,34 @@ async def search_dark_web(
         logger.error(f"Search failed: {str(e)}")
         return JSONResponse(content={"error": f"Search failed: {str(e)}"}, status_code=500)
 
-@router.get("/findings/job/{job_id}")
-async def get_findings_for_job(
-    job_id: str,
-    offset: int = Query(0, ge=0),
-    limit: int = Query(20, ge=1, le=100),
-    include_summary: bool = Query(False),
-    model_choice: str = Query("gemini-2.5-flash", description="LLM model to use"),
-    pgp_verify: bool = Query(False, description="Verify .onion site legitimacy via PGP")
-):
+from app.services.graph_service import graph_service
+
+@router.get("/network/{job_id}")
+async def get_job_network_graph(job_id: str):
+    """
+    Generate a network graph of shared entities for a specific job.
+    This allows visual link analysis across dark web findings.
+    """
+    try:
+        es = get_es()
+        findings = await es.search_by_job_id(job_id)
+        
+        if not findings:
+            return JSONResponse(
+                content={"error": "No findings found for this job"},
+                status_code=404
+            )
+        
+        graph_data = graph_service.build_network_graph(findings)
+        
+        return JSONResponse(content={
+            "success": True,
+            "job_id": job_id,
+            "graph": graph_data
+        }, status_code=200)
+    except Exception as e:
+        logger.error(f"Network graph generation failed: {str(e)}")
+        return JSONResponse(content={"error": f"Failed to generate graph: {str(e)}"}, status_code=500)
     """
     Get findings for a specific job (as they are indexed in real-time)
     """

@@ -12,6 +12,7 @@ from app.services.kafka_producer import KafkaProducer
 from app.services.es_client import ESClient
 import logging
 import uuid
+import json
 from typing import Optional
 from datetime import datetime, timedelta
 
@@ -55,6 +56,7 @@ async def create_search_job(
     include_summary: bool = Query(False),
     model_choice: str = Query("gemini-2.5-flash"),
     pgp_verify: bool = Query(False),
+    report_type: str = Query("threat_intel"),
     db: AsyncSession = Depends(get_db),
     kafka: KafkaProducer = Depends(get_kafka)
 ):
@@ -78,7 +80,7 @@ async def create_search_job(
             status=JobStatus.QUEUED,
             keyword=keyword,
             max_results=max_results,
-            payload=None  # Could store additional config as JSON
+            payload=json.dumps({"report_type": report_type}) if report_type else None
         )
         
         db.add(job)
@@ -95,6 +97,7 @@ async def create_search_job(
             "include_summary": include_summary,
             "model_choice": model_choice,
             "pgp_verify": pgp_verify,
+            "report_type": report_type,
             "user_id": user_id,
             "timestamp": datetime.utcnow().isoformat(),
             "job_type": "ad_hoc"
@@ -257,7 +260,8 @@ async def get_job_status(
                 "started_at": job.started_at.isoformat() if job.started_at else None,
                 "completed_at": job.completed_at.isoformat() if job.completed_at else None,
                 "duration_seconds": duration,
-                "error_message": job.error_message
+                "error_message": job.error_message,
+                "ai_report": job.ai_report
             }
         }
         
@@ -302,15 +306,17 @@ async def get_job_results(
         total = len(findings)
         paginated = findings[offset:offset+limit]
         
-        # Generate summary if requested
-        summary = None
-        if include_summary and findings:
+        # Get summary: prefer stored ai_report, fallback to generating new one if requested
+        summary = job.ai_report
+        if not summary and include_summary and findings:
             from app.services.llm_summarizer import generate_findings_summary
-            summary = await generate_findings_summary(
+            summary_data = await generate_findings_summary(
                 job.keyword or job_id,
                 findings,
                 model_choice=model_choice
             )
+            if summary_data and summary_data.get("success"):
+                summary = summary_data.get("summary")
         
         return {
             "success": True,

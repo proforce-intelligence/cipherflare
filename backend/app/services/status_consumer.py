@@ -67,6 +67,8 @@ class StatusConsumer:
                         job.max_results = details["total_sites"]  # Update total sites
                     if "error" in details:
                         job.error_message = details["error"]
+                    if "ai_report" in details:
+                        job.ai_report = details["ai_report"]
                 
                 await db.commit()
                 

@@ -132,7 +132,7 @@ class ESClient:
 
             # Add user filter if provided
             if user_id:
-                query["bool"]["filter"].append({"term": {"user_id": user_id}})
+                query["bool"]["filter"].append({"term": {"user_id.keyword": user_id}})
 
             result = self.client.search(
                 index=self.index_name,
@@ -157,7 +157,7 @@ class ESClient:
         try:
             result = self.client.search(
                 index=self.index_name,
-                query={"term": {"job_id": job_id}},
+                query={"term": {"job_id.keyword": job_id}},
                 size=10000  # Increased to allow more findings
             )
 
@@ -177,19 +177,19 @@ class ESClient:
         try:
             agg_query = {
                 "risk_distribution": {
-                    "terms": {"field": "risk_level"}
+                    "terms": {"field": "risk_level.keyword"}
                 },
                 "top_keywords": {
-                    "terms": {"field": "keywords_found", "size": 10}
+                    "terms": {"field": "keywords_found.keyword", "size": 10}
                 },
                 "threat_sentiment_dist": {
-                    "terms": {"field": "threat_sentiment"}
+                    "terms": {"field": "threat_sentiment.keyword"}
                 }
             }
 
             filter_clause = []
             if user_id:
-                filter_clause.append({"term": {"user_id": user_id}})
+                filter_clause.append({"term": {"user_id.keyword": user_id}})
 
             query = {"match_all": {}} if not filter_clause else {"bool": {"filter": filter_clause}}
 

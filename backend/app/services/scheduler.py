@@ -1,5 +1,6 @@
 import logging
 import asyncio
+import random
 from datetime import datetime, timedelta
 from typing import Optional
 import os
@@ -80,27 +81,44 @@ class MonitoringScheduler:
         except Exception as e:
             logger.error(f"[Scheduler] Failed to schedule job {monitoring_job.id}: {e}")
     
+    def _to_uuid(self, val):
+        """Convert a string or UUID to a UUID object"""
+        if val is None:
+            return None
+        if isinstance(val, uuid.UUID):
+            return val
+        try:
+            return uuid.UUID(val)
+        except (ValueError, TypeError):
+            # Fallback for weird cases, though ideally we only get hex strings
+            return val
+
     async def run_monitoring_job(self, job_id: str, url: str, user_id: str):
         """Execute monitoring job"""
         try:
             if not self.kafka_producer:
                 raise Exception("Kafka producer not initialized")
             
+            # Ensure we use strings for the Kafka payload
+            job_id_str = str(job_id)
+            user_id_str = str(user_id)
+            
             monitor_payload = {
                 "job_id": str(uuid.uuid4()),
                 "job_type": "monitor",
                 "target_url": url,
-                "monitor_job_id": job_id,
-                "user_id": user_id,
+                "monitor_job_id": job_id_str,
+                "user_id": user_id_str,
                 "created_at": datetime.utcnow().isoformat()
             }
             
             await self.kafka_producer.produce("monitor_jobs", monitor_payload)
             
-            # Update last_run_at in database
+            # Update last_run_at in database - ensure job_id is UUID object
+            job_uuid = self._to_uuid(job_id)
             async with AsyncSessionLocal() as db:
                 result = await db.execute(
-                    select(MonitoringJob).where(MonitoringJob.id == job_id)
+                    select(MonitoringJob).where(MonitoringJob.id == job_uuid)
                 )
                 job = result.scalar_one_or_none()
                 
@@ -109,17 +127,20 @@ class MonitoringScheduler:
                     job.total_checks += 1
                     await db.commit()
             
-            logger.info(f"[Scheduler] Executed monitoring job {job_id} for {url}")
+            logger.info(f"[Scheduler] Executed monitoring job {job_id_str} for {url}")
         
         except Exception as e:
             logger.error(f"[Scheduler] Failed to execute job {job_id}: {e}")
     
     async def add_monitoring_job(self, url: str, user_id: str, interval_hours: int = 6) -> MonitoringJob:
+        # ... (rest of add_monitoring_job unchanged)
         """Create and schedule a new monitoring job"""
         try:
             async with AsyncSessionLocal() as db:
+                # user_id might be a string from API, model expects UUID
+                user_uuid = self._to_uuid(user_id)
                 job = MonitoringJob(
-                    user_id=user_id,
+                    user_id=user_uuid,
                     target_url=url,
                     interval_hours=interval_hours,
                     status=MonitoringJobStatus.ACTIVE,
@@ -144,9 +165,10 @@ class MonitoringScheduler:
     async def pause_job(self, job_id: str):
         """Pause a monitoring job"""
         try:
+            job_uuid = self._to_uuid(job_id)
             async with AsyncSessionLocal() as db:
                 result = await db.execute(
-                    select(MonitoringJob).where(MonitoringJob.id == job_id)
+                    select(MonitoringJob).where(MonitoringJob.id == job_uuid)
                 )
                 job = result.scalar_one_or_none()
                 
@@ -166,9 +188,10 @@ class MonitoringScheduler:
     async def resume_job(self, job_id: str):
         """Resume a paused monitoring job"""
         try:
+            job_uuid = self._to_uuid(job_id)
             async with AsyncSessionLocal() as db:
                 result = await db.execute(
-                    select(MonitoringJob).where(MonitoringJob.id == job_id)
+                    select(MonitoringJob).where(MonitoringJob.id == job_uuid)
                 )
                 job = result.scalar_one_or_none()
                 
@@ -177,8 +200,9 @@ class MonitoringScheduler:
                     await db.commit()
             
             # Re-schedule
-            await self.schedule_job(job)
-            logger.info(f"[Scheduler] Resumed job {job_id}")
+            if job:
+                await self.schedule_job(job)
+                logger.info(f"[Scheduler] Resumed job {job_id}")
         
         except Exception as e:
             logger.error(f"[Scheduler] Failed to resume job: {e}")
@@ -186,9 +210,10 @@ class MonitoringScheduler:
     async def delete_job(self, job_id: str):
         """Delete a monitoring job"""
         try:
+            job_uuid = self._to_uuid(job_id)
             async with AsyncSessionLocal() as db:
                 result = await db.execute(
-                    select(MonitoringJob).where(MonitoringJob.id == job_id)
+                    select(MonitoringJob).where(MonitoringJob.id == job_uuid)
                 )
                 job = result.scalar_one_or_none()
                 
