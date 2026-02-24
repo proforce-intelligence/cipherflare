@@ -421,8 +421,7 @@
 #         
 # 
 #    
-"""
-Live Mirror Manager - Manages active browser sessions for live mirroring
+"""Live Mirror Manager - Manages active browser sessions for live mirroring
 with history, diff & AI-powered content analysis
 """
 
@@ -789,4 +788,5 @@ class LiveMirrorManager:
 # Note: execute_action seems to be defined outside any class.
 # If this is meant to be a method of LiveMirrorSession, move it inside:
 # async def execute_action(self, action: dict) -> bool:
-#     ...
+#     ...eminent@eminent-OMEN-25L-Desktop-GT11-1xxx:~/Downloads/cipherflare/backend/app$ 
+
