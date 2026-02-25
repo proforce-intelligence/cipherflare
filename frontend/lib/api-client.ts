@@ -134,6 +134,22 @@ export interface AlertConfig {
   slack_webhook?: string
 }
 
+export interface Report {
+  id: string
+  code: string
+  title: string
+  type: string
+  type_display?: string
+  date: string
+  size: string
+  status: string
+  progress: number
+  threats: number
+  indicators: number
+  download_url?: string
+  error?: string
+}
+
 class ApiClient {
   // Added token parameter for authentication and improved error logging
   private _getAuthToken(): string | null {
@@ -468,6 +484,89 @@ class ApiClient {
   async getMonitoringJob(jobId: string): Promise<MonitoringJob> {
     const response = await this.request<{ success: boolean; job: any }>(`/api/v1/monitoring/jobs/${jobId}`)
     return response.job
+  }
+
+  // Reporting
+  async generateReport(params: {
+    report_type: string
+    report_title: str
+    job_id?: string
+    job_name?: string
+    keyword?: string
+    monitor_title?: string
+    date_from?: string
+    date_to?: string
+    model_choice?: string
+  }): Promise<{ success: boolean; report_id: string; message: string }> {
+    const queryParams = new URLSearchParams()
+    queryParams.append("report_type", params.report_type)
+    queryParams.append("report_title", params.report_title)
+    if (params.job_id) queryParams.append("job_id", params.job_id)
+    if (params.job_name) queryParams.append("job_name", params.job_name)
+    if (params.keyword) queryParams.append("keyword", params.keyword)
+    if (params.monitor_title) queryParams.append("monitor_title", params.monitor_title)
+    if (params.date_from) queryParams.append("date_from", params.date_from)
+    if (params.date_to) queryParams.append("date_to", params.date_to)
+    if (params.model_choice) queryParams.append("model_choice", params.model_choice)
+
+    return this.request<{ success: boolean; report_id: string; message: string }>(
+      `/api/v1/reports/generate-targeted?${queryParams.toString()}`,
+      { method: "POST" }
+    )
+  }
+
+  async listReports(page = 1, page_size = 10): Promise<{ reports: Report[]; total: number }> {
+    const response = await this.request<{ success: boolean; reports: any[]; pagination: any }>(
+      `/api/v1/reports?page=${page}&page_size=${page_size}`
+    )
+    return {
+      reports: response.reports,
+      total: response.pagination.total
+    }
+  }
+
+  async getReportStatus(reportId: string): Promise<Report> {
+    const response = await this.request<{ success: boolean } & any>(`/api/v1/reports/${reportId}/status`)
+    return response
+  }
+
+  async deleteReport(reportId: string): Promise<void> {
+    await this.request<void>(`/api/v1/reports/${reportId}`, { method: "DELETE" })
+  }
+
+  // Wallets
+  async getTrackedWallets(filters?: { watchlist_only?: boolean; currency?: string }): Promise<{ wallets: any[]; total: number }> {
+    const queryParams = new URLSearchParams()
+    if (filters?.watchlist_only) queryParams.append("watchlist_only", "true")
+    if (filters?.currency) queryParams.append("currency", filters.currency)
+    
+    return this.request<{ success: boolean; wallets: any[]; total: number }>(`/api/v1/wallets?${queryParams.toString()}`)
+  }
+
+  async analyzeWallet(address: string): Promise<any> {
+    return this.request<any>(`/api/v1/wallets/analyze/${address}`)
+  }
+
+  async lookupTransaction(txHash: string): Promise<any> {
+    return this.request<any>(`/api/v1/wallets/transaction/${txHash}`)
+  }
+
+  async addWalletToTrack(address: string, currency: string, label?: string, isWatchlist = false): Promise<any> {
+    const queryParams = new URLSearchParams()
+    queryParams.append("address", address)
+    queryParams.append("currency", currency)
+    if (label) queryParams.append("label", label)
+    if (isWatchlist) queryParams.append("is_watchlist", "true")
+    
+    return this.request<any>(`/api/v1/wallets?${queryParams.toString()}`, { method: "POST" })
+  }
+
+  async getWalletDetails(walletId: string): Promise<any> {
+    return this.request<any>(`/api/v1/wallets/${walletId}`)
+  }
+
+  async stopTrackingWallet(walletId: string): Promise<void> {
+    await this.request<void>(`/api/v1/wallets/${walletId}`, { method: "DELETE" })
   }
 }
 

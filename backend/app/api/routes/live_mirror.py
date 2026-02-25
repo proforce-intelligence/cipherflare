@@ -427,9 +427,9 @@ async def start_live_mirror(
     try:
         # No user_id anymore — sessions are anonymous
         session_id = await manager.create_session(
-            user_id=None,           # no ownership
-            url=url,
-            javascript_enabled=javascript_enabled
+            None,           # user_id
+            url,            # target_url
+            javascript_enabled
         )
 
         if not session_id:

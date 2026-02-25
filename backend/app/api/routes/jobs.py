@@ -49,7 +49,7 @@ def _get_user_uuid(user_id_str: str) -> uuid.UUID:
 @router.post("/jobs/search")
 async def create_search_job(
     keyword: str = Query(..., min_length=1, max_length=255),
-    job_name: Optional[str] = Query(None, description="Human-readable job name"),
+    job_name: str = Query(..., min_length=3, max_length=100, description="Investigation title"),
     max_results: int = Query(100, ge=1, le=10000),
     depth: int = Query(2, ge=1, le=5, description="Crawl depth (1-5)"),
     timeout_seconds: int = Query(30, ge=10, le=300, description="Per-page timeout"),
@@ -76,6 +76,7 @@ async def create_search_job(
         job = Job(
             id=uuid.UUID(job_id),
             user_id=_get_user_uuid(user_id) if user_id else None,
+            job_name=job_name, # Save the required title
             job_type=JobType.AD_HOC,
             status=JobStatus.QUEUED,
             keyword=keyword,

@@ -8,6 +8,7 @@ import logging
 import uuid
 import json
 import base64
+import os
 from datetime import datetime, timezone
 from typing import Dict, Optional, List, Any
 
@@ -132,9 +133,12 @@ Page content:
 """
 
         try:
+            # Create a specific client for this request to use the correct host
+            client = ollama.Client(host="http://127.0.0.1:1234")
+            
             # Run Ollama in a thread (non-blocking)
             response = await asyncio.to_thread(
-                ollama.generate,
+                client.generate,
                 model="llama3.1:8b",
                 prompt=prompt,
                 options={"temperature": 0.0, "num_predict": 1024}  # zero temp + more tokens

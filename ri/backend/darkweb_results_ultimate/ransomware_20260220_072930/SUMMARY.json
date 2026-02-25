@@ -1,0 +1,9 @@
+{
+  "keyword": "ransomware",
+  "total_engines": 21,
+  "discovered": 142,
+  "unique_onions": 142,
+  "analyzed": 0,
+  "output_dir": "darkweb_results_ultimate/ransomware_20260220_072930",
+  "generated_at": "2026-02-20T07:33:14.685903"
+}

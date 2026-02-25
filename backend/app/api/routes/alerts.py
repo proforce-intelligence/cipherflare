@@ -68,7 +68,7 @@ async def get_dashboard_alerts(
                 "type": "threat_detected",
                 "title": f"Threat Detected: {r.title or 'Unknown'}",
                 "message": r.text_excerpt[:200] if r.text_excerpt else "No description available",
-                "severity": r.risk_level if r.risk_level in ["info", "warning", "error", "success"] else "info",
+                "severity": str(r.risk_level).lower() if r.risk_level else "info",
                 "created_at": r.created_at.isoformat(),
                 "read": False,  # Could add read status to model
                 "data": {
@@ -99,7 +99,7 @@ async def get_dashboard_alerts(
         }
         
     except Exception as e:
-        logger.error(f"[Alerts] Dashboard fetch failed: {e}")
+        logger.error(f"[Alerts] Dashboard fetch failed: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to fetch alerts")
 
 @router.get("/alerts")
@@ -130,7 +130,7 @@ async def get_alerts_simple(
                 "type": "threat_detected",
                 "title": f"Threat Detected: {r.title or 'Unknown'}",
                 "message": r.text_excerpt[:200] if r.text_excerpt else "No description available",
-                "severity": r.risk_level if r.risk_level in ["info", "warning", "error", "success"] else "info",
+                "severity": str(r.risk_level).lower() if r.risk_level else "info",
                 "created_at": r.created_at.isoformat(),
                 "read": False,
                 "data": {

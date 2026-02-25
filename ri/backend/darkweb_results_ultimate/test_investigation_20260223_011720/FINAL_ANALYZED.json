@@ -1,0 +1,434 @@
+[
+  {
+    "id": "c834b7a6-577d-4537-ab74-98664d8f1bac",
+    "url": "http://nl27ft5cl6ilhiiqnumtrhbgy576qz6oe3qyirdf23kf5dhs2g75cjid.onion/",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:18:07.887595"
+  },
+  {
+    "id": "e94daee7-4e37-4546-8e5f-60e1ad8b812e",
+    "url": "http://torbayeyly5crpxzc5tebuuzedkettvo3cds2wwcz2dmskzhi2chfhad.onion/",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:18:07.887635"
+  },
+  {
+    "id": "ea26c8c7-6ae2-4dd2-b0eb-9188d8a0f0e8",
+    "url": "http://pekdflnb5ho3f3fanijvl23tfekgezincynirsoqnvb37bndfcqpysid.onion/?ref=SJz9t7",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:18:07.887660"
+  },
+  {
+    "id": "0ebba6a4-f4ad-4ec9-b7e3-03087012b38b",
+    "url": "http://afajj7x4zfl2d3fc2u7uzxp4iwf4r2kucr5on24xk2hwrssoj7yivhid.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:18:07.887680"
+  },
+  {
+    "id": "4961dc07-2294-4252-ade0-18a6b16cd248",
+    "url": "http://brutalse3fte6y4d6auvcfmt2fplgkiyky3ydn52d6nxlxwvkfse4pyd.onion/?clickid=excavator_bottom",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:18:07.887700"
+  },
+  {
+    "id": "916485e5-9827-470f-9948-250bf6f3bc18",
+    "url": "http://deepma62yqdoqb5ywsvn25xjivdpqm5mdt26i37g7owfhzuuvqeghfyd.onion/",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:18:07.887743"
+  },
+  {
+    "id": "02eddc55-d61b-4a53-892a-ec2187fcb2f7",
+    "url": "http://beehivetdfhdnerexzsoiztklhmeecg2hjjzdsrwn3r2skfgpwrw2vqd.onion/",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:18:07.887760"
+  },
+  {
+    "id": "6406c1a2-d760-411a-88aa-fb06bff3d74d",
+    "url": "http://glownewsw77dxv7aac3jocxvf7s5f4wvsz5bfltuij2sskxex6zo45id.onion",
+    "title": "Hidden Service — Excavator",
+    "engine": "Excavator",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:18:07.887810"
+  },
+  {
+    "id": "afb471a3-0664-474f-a7fa-f4cac3a5418b",
+    "url": "http://admate3wrcqo2qeuok36b4wncwv7k6deei6riq2w62s36htgyahsaaqd.onion/api/get-banner/15kTIRlnTGsOeqiyYKribRu0OLN88KpTTfaxr8F9rsVsLLHBSC/type/468-60/count/4",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:19:38.133034"
+  },
+  {
+    "id": "31ef88a2-783c-4bcd-ba48-b0d7827689c8",
+    "url": "http://j77vay55or2d4xztgqwagodilnzrrjhbbhbkwaho2f3sthfangkyfhqd.onion/",
+    "title": "Hidden Service — Torgle",
+    "engine": "Torgle",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:19:38.133065"
+  },
+  {
+    "id": "7720f155-1607-48e4-ac6e-00e879f60d74",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=12",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:20:00.430275"
+  },
+  {
+    "id": "5a934d8a-d769-4dc1-bb26-b4b7a130e2e9",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=1",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:20:00.430307"
+  },
+  {
+    "id": "62ecefb9-882f-443e-9fb7-2358e70dc1f2",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:20:00.430332"
+  },
+  {
+    "id": "833f5a22-5f51-44dc-88f2-e84f43ec7ea8",
+    "url": "http://hologram6d4agtfbwkdtruigzo3l6wztcz5rg27rmh54qatyinqmzgid.onion",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:20:00.430351"
+  },
+  {
+    "id": "457b9c55-1e41-4bee-8b08-36877703efdf",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=8",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:20:00.430367"
+  },
+  {
+    "id": "9dadb6d3-95ac-4747-907d-614c92c7204d",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=4",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:20:00.430382"
+  },
+  {
+    "id": "5f407f6c-f2d9-4c0b-9eef-199c4f4419e3",
+    "url": "http://stealth5wfeiuvmtgd2s3m2nx2bb3ywdo2yiklof77xf6emkwjqo53yd.onion",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:20:00.430399"
+  },
+  {
+    "id": "f7f8d3cd-12ba-491d-8f0c-bde6bb5befbf",
+    "url": "http://nexus3xpq52kd7fnobiwwndytystymajamfwoawhppn2wqgqetoucoyd.onion/?cat=3",
+    "title": "Hidden Service — Amnesia",
+    "engine": "Amnesia",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:20:00.430415"
+  },
+  {
+    "id": "adc4f5e9-19f0-4565-9f14-3330e6ea0938",
+    "url": "http://torlib7fmhyvfv2k7s77xigdds3rosio6k6bxnn256xmtzlbgyizduqd.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.536758"
+  },
+  {
+    "id": "e15f0d80-4007-4671-9a44-299d557907fa",
+    "url": "http://b7ehf7dabxevdsm5szkn2jecnliwzoxlsn4lijxqxikrlykbbsfrqfad.onion/",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.536791"
+  },
+  {
+    "id": "a1b93a55-3336-4207-9b9c-49edd1298e04",
+    "url": "http://vipemp3gg44fg3j4cvbjioevtd2b3o46cyyqdck6lt3y5grhkvanw3ad.onion/",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.536814"
+  },
+  {
+    "id": "1b0344d3-c69b-4429-9a11-802005af1083",
+    "url": "http://d7tk2l5vopdgqq3xcjdsnhj44fgqmx5isxoybqkn2b2jmvefvrmcduid.onion/",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.536834"
+  },
+  {
+    "id": "393d1826-60e3-48c8-b08b-3dc8934b2d7d",
+    "url": "http://tornetupfu7gcgidt33ftnungxzyfq2pygui5qdoyss34xbgx2qruzid.onion/",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.536852"
+  },
+  {
+    "id": "881246cf-87a5-44d7-ac25-4284dbbcf61f",
+    "url": "http://tormarksq5pj5sbdxilm24xpjupsn6t5ntz2gsiiy4xufukna5eno7id.onion/",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.536870"
+  },
+  {
+    "id": "158d69e1-be64-4a9d-bfdc-ae2626769afd",
+    "url": "http://h56izbbvplxoedu7rnqyzgqkkxrriqhoq6kl4g3xx2mjwauxdpyuhlqd.onion/",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.536887"
+  },
+  {
+    "id": "eafb4da0-cc73-446b-af12-c32bb46a0b84",
+    "url": "http://darkbayx7a4sosoo4hqvoljqelgkusjlrqmt237ls6hndbplmel55oad.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.536904"
+  },
+  {
+    "id": "63a3249f-691d-498c-8e81-30fe2888b463",
+    "url": "http://catalogpwwlccc5nyp3m3xng6pdx3rdcknul57x6raxwf4enpw3nymqd.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "likely_scam",
+    "discovered_at": "2026-02-23T01:22:21.536920"
+  },
+  {
+    "id": "c121f731-9513-4e01-9eb4-992c76393f62",
+    "url": "http://rdkxshe5os7izuqdnbgshhmpunlgwcgwpvkhpguecuen6tfngcqvwnyd.onion/",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.536937"
+  },
+  {
+    "id": "acd1e1ea-8f63-4d67-9db1-f92165a98092",
+    "url": "http://catalogpwwlccc5nyp3m3xng6pdx3rdcknul57x6raxwf4enpw3nymqd.onion/add-link",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "likely_scam",
+    "discovered_at": "2026-02-23T01:22:21.536954"
+  },
+  {
+    "id": "1d4e30c1-8259-45bb-99a4-6a7d67489477",
+    "url": "http://megalzwink435kangsseahebpbp3teedi4jjt64ne2g6d3oqy3qlweid.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.536970"
+  },
+  {
+    "id": "ad39f84b-a276-451a-b615-c26ed32bce86",
+    "url": "http://astrlw2q62ptpmsxe5spavnbryk5h2fzicpvgbkijqhwye66dsixpzyd.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.536987"
+  },
+  {
+    "id": "b5d28438-98c5-4362-82fc-be5e1e49697d",
+    "url": "http://deepweb4wt3m4dhutpxpe7d7wxdftfdf4hhag4sizgon6th5lcefloid.onion/",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537002"
+  },
+  {
+    "id": "69581328-6d43-4fed-8c1e-c1c0dd5b31c1",
+    "url": "http://gunsiqvaicyzyq7xqm2c3xshl6pjegtxjf3m3ldms2fo52lqvrmvbyyd.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537016"
+  },
+  {
+    "id": "b13b317d-4660-4fc4-97a4-d365473021cf",
+    "url": "http://wfhk7qy6ycihylvls7xrmlyp3elin3k6ezyee4ovp3oj2wudrhmhgwid.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537031"
+  },
+  {
+    "id": "d8109c29-146a-47a8-9a57-c55e00de18e9",
+    "url": "http://iqosv7ozbt23jfbv22annsw6bqsvcjncmpmqtbfjy6d5s4e66qku3sad.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537046"
+  },
+  {
+    "id": "1adfd9b8-a75d-4c90-9221-08cb2b2b77e7",
+    "url": "http://walletdhjtlu7wkzwhlkgdtl45glxx3olfwywpt7cv33q67aotajdmad.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537065"
+  },
+  {
+    "id": "adb60da8-25fa-474e-88a3-a32e51cb9ea2",
+    "url": "http://hsssfzzzxboe66mtswcrhxpzlmiejv246pun3ttasg3x4y6xayjag5id.onion/",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537082"
+  },
+  {
+    "id": "9b7eb661-f905-4d3e-9225-0d52b0b15273",
+    "url": "http://money76mmbh7dnuq6en3b6d7hmvm4fuolkser2ui7u46ib2utrjnw4ad.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537097"
+  },
+  {
+    "id": "96a3c778-fec7-43b5-9fdc-c41ecf56834e",
+    "url": "http://drugsednqhasbyoyg2oekzbnllbujro54zrogqbf3p6e7qflxti5eeqd.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537111"
+  },
+  {
+    "id": "07d29cc9-129b-47fa-b7ca-13ea90b8a9ed",
+    "url": "http://scoobyzz6hl76y3q3fqb6tlosn7xvtqt7krnqqbdpuqpcevi6kvttmyd.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537126"
+  },
+  {
+    "id": "63b2c731-41b5-43e1-8550-232fc247fed0",
+    "url": "http://verifiedxsnrtudwbixrlyslghypa7jo2zydnubi24h7sjrijgoj73yd.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537141"
+  },
+  {
+    "id": "f16587af-8a0f-40aa-b66e-ad3d8c5ad780",
+    "url": "http://shop6bpuax4uk53slpyt56bhl43f2cefpcejwyrbtvcfugujldt3eyqd.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537156"
+  },
+  {
+    "id": "ada09747-d84e-45a1-bc50-654d8bf0d7c3",
+    "url": "http://ru7qxkdg6ne5knoxxplgvhrc4l3zdl4f3sl2uibejzjt5zwmqxi5ckyd.onion/",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537174"
+  },
+  {
+    "id": "4fda52b8-b0d4-4147-8a30-571d939d4ca7",
+    "url": "http://muwgjdckwwmhyi7lj73dspumrxmzuzjvujmtmyrhhbjrgswcakobtfad.onion/",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537189"
+  },
+  {
+    "id": "0267b402-d24f-4d33-8fc9-8f4427ada650",
+    "url": "http://buyreal2xipzjhjfhyztle35dknfexgqrpq4dmzvkc575kzi3vr6bmid.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537204"
+  },
+  {
+    "id": "0cde4752-f12d-43c0-b290-88a11aa627a9",
+    "url": "http://fixedb4cmkjnxokoduugqyob7j3c5bzm3anh7j5nmchks3qhv3f2mnqd.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537218"
+  },
+  {
+    "id": "fae9062e-fa26-41d5-99c9-b00eef48499b",
+    "url": "http://wiki2zkamfya6mnyvk4aom4yjyi2kwsz7et3e4wnikcrypqv63rsskid.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537231"
+  },
+  {
+    "id": "08140acc-7d44-4a3b-b2de-8f9b48f78549",
+    "url": "http://leaksndi6i6m2ji6ozulqe4imlrqn6wrgjlhxe25vremvr3aymm4aaid.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537246"
+  },
+  {
+    "id": "85a04017-1747-4d79-9f49-c9e39ed4a804",
+    "url": "http://muaw5mpgden7ubj55ettmdh6vmk3kpob5lyd2t47ius2lom3bltgs5qd.onion",
+    "title": "Hidden Service — FindTor",
+    "engine": "FindTor",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:21.537261"
+  },
+  {
+    "id": "33bdc678-c8ee-4a44-9dbd-5238f0e97d7b",
+    "url": "http://shadowm4vpk2xffxqx5ngu5ckrq63oraoyb6hs7w23ypzckmgnqyeaad.onion/",
+    "title": "Hidden Service — Onionway",
+    "engine": "Onionway",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:30.909413"
+  },
+  {
+    "id": "fb46d1e2-4641-48ce-ad33-6e5a1a82f655",
+    "url": "http://goldm6qrdsaw6jk6bixvhsikhpydthdcy7arwailr6yjuakqa6m7hsid.onion/",
+    "title": "Hidden Service — Onionway",
+    "engine": "Onionway",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:30.909441"
+  },
+  {
+    "id": "d93e6813-ebfb-425f-b240-17bbfa2614c2",
+    "url": "http://wikiw2godl6vm5amb4sij47rwynnrmqenwddykzt3fwpbx6p34sgb7yd.onion/",
+    "title": "Hidden Service — Onionway",
+    "engine": "Onionway",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:30.909461"
+  },
+  {
+    "id": "fb3c4d7f-ff24-4e05-bf9a-d50d6cfa1df0",
+    "url": "http://agc3xxwxguyyppdwn5h5nqr3mwxzwindlvf4zlc45hy74r67bjx6luyd.onion/",
+    "title": "Hidden Service — Onionway",
+    "engine": "Onionway",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:30.909478"
+  },
+  {
+    "id": "f95a9e21-4513-4276-9f2d-5b2784a9c03c",
+    "url": "http://5u56fjmxu63xcmbk.onion/",
+    "title": "Hidden Service — OSS",
+    "engine": "OSS",
+    "category": "unknown_potential",
+    "discovered_at": "2026-02-23T01:22:38.659131"
+  }
+]

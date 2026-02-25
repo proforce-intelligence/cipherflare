@@ -1,7 +1,7 @@
 # app/services/report_llm.py
 """
 Dedicated LLM service for generating threat intelligence reports
-Using local OpenAI-compatible server at http://127.0.0.1:1234/v1
+Using local OpenAI-compatible server at http://127.0.0.1:1234
 """
 
 import logging
@@ -18,8 +18,8 @@ from langchain_openai import ChatOpenAI
 logger = logging.getLogger(__name__)
 
 # Your local server endpoint
-LOCAL_LLM_BASE_URL = "http://127.0.0.1:1234/v1"
-LOCAL_LLM_API_KEY = "lm-studio"  # dummy key — most local servers accept anything
+LOCAL_LLM_BASE_URL = "http://127.0.0.1:1234"
+LOCAL_LLM_API_KEY = "not-needed"
 
 # ────────────────────────────────────────────────
 #               Report-specific prompts

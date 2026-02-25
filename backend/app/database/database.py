@@ -63,6 +63,7 @@ async def init_db():
     from app.models.monitoring_result import Base as MonitoringResultBase
     from app.models.monitoring_job import Base as MonitoringJobBase
     from app.models.report import Base as ReportBase
+    from app.models.wallet import Base as WalletBase
     
     async with engine.begin() as conn:
         await conn.run_sync(UserBase.metadata.create_all)
@@ -71,6 +72,7 @@ async def init_db():
         await conn.run_sync(MonitoringResultBase.metadata.create_all)
         await conn.run_sync(MonitoringJobBase.metadata.create_all)
         await conn.run_sync(ReportBase.metadata.create_all)
+        await conn.run_sync(WalletBase.metadata.create_all)
 
 @asynccontextmanager
 async def get_db_context():

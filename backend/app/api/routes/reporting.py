@@ -509,7 +509,7 @@
 #         await db.refresh(report)
 # 
 #     # Build share URL (replace with your actual domain in production)
-#     base_url = "http://localhost:8000"  # ← change to your real domain!
+#     base_url = "http://0.0.0.0:8000"  # ← change to your real domain!
 #     share_url = f"{base_url}/api/v1/reports/shared/{report.share_token}"
 # 
 #     return {
@@ -609,7 +609,7 @@
 #     is_generating = report.status == ReportStatus.GENERATING
 # 
 #     # Build action URLs
-#     base_url = "http://localhost:8000"  # ← Replace with your actual domain in production
+#     base_url = "http://0.0.0.0:8000"  # ← Replace with your actual domain in production
 #     action_urls = {
 #         "download": f"/api/v1/reports/{report_id}/download" if is_ready else None,
 #         "preview": f"/api/v1/reports/{report_id}/preview" if is_ready else None,
@@ -802,12 +802,13 @@ from fastapi import (
     HTTPException,
     Query,
     Response,
+    Request,
     Depends,
 )
 from fastapi.responses import FileResponse, HTMLResponse
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, or_, delete
+from sqlalchemy import select, or_, delete, func
 from typing import Optional
 from datetime import datetime
 import uuid
@@ -834,11 +835,13 @@ async def generate_targeted_report(
     background_tasks: BackgroundTasks,
     report_type: ReportType = Query(..., description="Type of report"),
     report_title: str = Query(..., min_length=5, description="Title for this report"),
-    job_name: Optional[str] = Query(None, description="Job name / keyword from search jobs"),
+    job_id: Optional[str] = Query(None, description="Specific job ID to report on"),
+    job_name: Optional[str] = Query(None, description="Search by investigation title"),
+    keyword: Optional[str] = Query(None, description="Search by keyword across all jobs"),
     monitor_title: Optional[str] = Query(None, description="Title from monitoring jobs"),
     date_from: Optional[str] = Query(None, description="Start date (YYYY-MM-DD)"),
     date_to: Optional[str] = Query(None, description="End date (YYYY-MM-DD)"),
-    model_choice: str = Query("llama3.1", description="Ollama model name"),
+    model_choice: str = Query("llama3.1", description="LLM model name"),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -847,19 +850,21 @@ async def generate_targeted_report(
     if not report_title.strip():
         raise HTTPException(status_code=400, detail="Report title is required")
 
-    if not job_name and not monitor_title:
+    if not any([job_id, job_name, keyword, monitor_title]):
         raise HTTPException(
             status_code=400,
-            detail="Provide at least one of: job_name or monitor_title"
+            detail="Provide at least one filter: job_id, job_name, keyword, or monitor_title"
         )
 
     report = Report(
-        user_id=None,  # no user association anymore
+        user_id="anonymous",
         title=report_title.strip(),
         report_type=report_type,
         status=ReportStatus.GENERATING,
         filters={
+            "job_id": job_id,
             "job_name": job_name,
+            "keyword": keyword,
             "monitor_title": monitor_title,
             "date_from": date_from,
             "date_to": date_to,
@@ -910,17 +915,23 @@ async def create_targeted_report_task(report_id: str, db: AsyncSession):
 
         filters = report.filters or {}
 
-        # 1. Search jobs by job_name / keyword
-        if filters.get("job_name"):
+        # 1. Search jobs by ID, Title, or Keyword
+        if filters.get("job_id"):
+            search_job_ids = [filters["job_id"]]
+        elif filters.get("job_name"):
             job_name = filters["job_name"].strip()
             search_result = await db.execute(
                 select(Job.id)
-                .where(Job.user_id == report.user_id)
                 .where(Job.job_type == JobType.AD_HOC)
-                .where(or_(
-                    Job.keyword.ilike(f"%{job_name}%"),
-                    Job.payload.ilike(f"%{job_name}%")  # fallback if job_name stored in payload
-                ))
+                .where(Job.job_name == job_name)
+            )
+            search_job_ids = [str(row[0]) for row in search_result.all()]
+        elif filters.get("keyword"):
+            kw = filters["keyword"].strip()
+            search_result = await db.execute(
+                select(Job.id)
+                .where(Job.job_type == JobType.AD_HOC)
+                .where(Job.keyword.ilike(f"%{kw}%"))
             )
             search_job_ids = [str(row[0]) for row in search_result.all()]
 
@@ -929,13 +940,12 @@ async def create_targeted_report_task(report_id: str, db: AsyncSession):
             monitor_title = filters["monitor_title"].strip()
             monitor_result = await db.execute(
                 select(MonitoringJob.id)
-                .where(MonitoringJob.user_id == report.user_id)
                 .where(MonitoringJob.title == monitor_title)
             )
             monitor_job_ids = [str(row[0]) for row in monitor_result.all()]
 
         if not search_job_ids and not monitor_job_ids:
-            raise ValueError("No matching jobs found for the given job_name or monitor_title")
+            raise ValueError("No matching jobs found for the given criteria (ID, Title, Keyword, or Monitor Title)")
 
         report.progress = 10
         await db.commit()
@@ -1182,6 +1192,7 @@ async def preview_report(
 @router.post("/reports/{report_id}/share")
 async def share_report(
     report_id: str,
+    request: Request,
     expires_in_hours: int = Query(24, ge=1, le=168),
     db: AsyncSession = Depends(get_db)
 ):
@@ -1205,7 +1216,7 @@ async def share_report(
     report.is_publicly_shared = True
     await db.commit()
 
-    base_url = "http://192.168.1.100:8000"  # change in production
+    base_url = str(request.base_url).rstrip("/")
     share_url = f"{base_url}/api/v1/reports/shared/{report.share_token}"
 
     return {
@@ -1278,6 +1289,7 @@ async def view_shared_report(
 @router.get("/reports/{report_id}")
 async def get_report_details(
     report_id: str,
+    request: Request,
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -1300,7 +1312,7 @@ async def get_report_details(
     is_failed = report.status == ReportStatus.FAILED
     is_generating = report.status == ReportStatus.GENERATING
 
-    base_url = "http://192.168.1.100:8000"  # change in production
+    base_url = str(request.base_url).rstrip("/")
     action_urls = {
         "download": f"/api/v1/reports/{report_id}/download" if is_ready else None,
         "preview": f"/api/v1/reports/{report_id}/preview" if is_ready else None,
@@ -1360,8 +1372,8 @@ async def get_report_details(
             "id": str(report.id),
             "code": report_code,
             "title": report.title,
-            "type": report.report_type.value,
-            "type_display": report.report_type.value.replace("_", " ").title(),
+            "type": report.report_type.value if hasattr(report.report_type, "value") else report.report_type,
+            "type_display": (report.report_type.value if hasattr(report.report_type, "value") else str(report.report_type)).replace("_", " ").title(),
             "status": report.status.value,
             "progress": report.progress or 0,
             "is_ready": is_ready,

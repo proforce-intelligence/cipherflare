@@ -36,6 +36,7 @@ from app.api.routes.alerts import router as alerts_router
 from app.api.routes.stats import router as stats_router
 from app.api.routes.live_mirror import router as live_mirror_router
 from app.api.routes.reporting import router as reporting_router
+from app.api.routes.wallets import router as wallets_router
 
 from app.services.scheduler import MonitoringScheduler
 from app.services.status_consumer import StatusConsumer
@@ -58,9 +59,11 @@ app.add_middleware(
         "http://localhost:4000",
         "http://127.0.0.1:3000",
         "http://127.0.0.1:4000",
+        "http://192.168.1.175:4000", # Specific host IP
         "http://192.168.1.175:4000",
-        "http://192.168.1.222:3000",
-        
+        "http://192.168.1.222:3000", # Another device
+        "http://192.168.1.222:4000",
+        "*" # Allow all origins for easier network access in dev
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -68,12 +71,13 @@ app.add_middleware(
 )
 
 # Static files mount
-OUTPUT_BASE = Path(os.getenv("OUTPUT_BASE", "./dark_web_results"))
-if OUTPUT_BASE.exists():
-    app.mount("/files", StaticFiles(directory=str(OUTPUT_BASE)), name="files")
-    logger.info(f"[✓] Mounted /files directory: {OUTPUT_BASE}")
-else:
-    logger.warning(f"[!] Output directory not found: {OUTPUT_BASE}")
+# We handle this via app.api.routes.files to provide better path resolution
+# OUTPUT_BASE = Path(os.getenv("OUTPUT_BASE", "./dark_web_results"))
+# if OUTPUT_BASE.exists():
+#     app.mount("/files", StaticFiles(directory=str(OUTPUT_BASE)), name="files")
+#     logger.info(f"[✓] Mounted /files directory: {OUTPUT_BASE}")
+# else:
+#     logger.warning(f"[!] Output directory not found: {OUTPUT_BASE}")
 
 # ────────────────────────────────────────────────────────────────
 # PUBLIC ENDPOINTS (no authentication required)
@@ -207,6 +211,7 @@ app.include_router(alerts_router)
 app.include_router(stats_router)
 app.include_router(live_mirror_router)
 app.include_router(reporting_router)
+app.include_router(wallets_router)
 
 # ────────────────────────────────────────────────────────────────
 # Custom OpenAPI schema

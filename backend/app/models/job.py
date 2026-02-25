@@ -23,6 +23,7 @@ class Job(Base):
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), nullable=True, index=True)  # Can be null for unauthenticated requests
+    job_name = Column(String(255), nullable=True, index=True) # The Investigation Title
     job_type = Column(SQLEnum(JobType), nullable=False, index=True)
     status = Column(SQLEnum(JobStatus), default=JobStatus.QUEUED, nullable=False, index=True)
     

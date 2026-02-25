@@ -11,7 +11,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.database import AsyncSessionLocal
 from app.models.monitoring_job import MonitoringJob, MonitoringJobStatus
+from app.models.wallet import TrackedWallet
 from app.services.kafka_producer import KafkaProducer
+from app.services.blockchain_service import blockchain_service
 import uuid
 
 logger = logging.getLogger(__name__)
@@ -27,10 +29,50 @@ class MonitoringScheduler:
         try:
             self.kafka_producer = KafkaProducer(self.bootstrap_servers)
             await self.kafka_producer.connect()
+            
+            # Add crypto wallet monitoring task (every 30 mins)
+            self.scheduler.add_job(
+                self.monitor_crypto_wallets,
+                trigger=IntervalTrigger(minutes=30),
+                id="crypto_wallet_monitor",
+                name="Watchlist Wallet Monitoring"
+            )
+            
             logger.info("[Scheduler] Initialized")
         except Exception as e:
             logger.error(f"[Scheduler] Initialization failed: {e}")
             raise
+
+    async def monitor_crypto_wallets(self):
+        """Periodically check balances of watchlist wallets and alert on changes"""
+        try:
+            async with AsyncSessionLocal() as db:
+                result = await db.execute(
+                    select(TrackedWallet).where(TrackedWallet.is_watchlist == True)
+                )
+                wallets = result.scalars().all()
+                
+                for wallet in wallets:
+                    chain = blockchain_service.identify_address_type(wallet.address)
+                    if not chain: continue
+                    
+                    details = await blockchain_service.get_address_details(chain, wallet.address)
+                    if "error" in details: continue
+                    
+                    new_balance = str(details.get("balance", "0"))
+                    
+                    # Check if balance changed
+                    if wallet.cached_balance and wallet.cached_balance != new_balance:
+                        logger.info(f"[Wallet Monitor] Change detected for {wallet.address}: {wallet.cached_balance} -> {new_balance}")
+                        # Here we would trigger a real alert
+                    
+                    wallet.cached_balance = new_balance
+                    wallet.cached_usd_value = str(details.get("balance_usd", "0"))
+                    wallet.last_balance_check = datetime.utcnow()
+                
+                await db.commit()
+        except Exception as e:
+            logger.error(f"[Wallet Monitor] Task failed: {e}")
     
     async def load_active_jobs(self):
         """Load active monitoring jobs and schedule them"""

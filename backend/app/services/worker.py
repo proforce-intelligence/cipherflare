@@ -97,6 +97,44 @@ class DarkWebWorker:
         max_concurrent = int(os.getenv("MAX_CONCURRENT_JOBS", "30"))
         self.semaphore = asyncio.Semaphore(max_concurrent)
         logger.info(f"[*] DarkWebWorker initialized with max_concurrent_jobs={max_concurrent}")
+
+    async def auto_discover_wallets(self, entities: dict, source_url: str, job_id: str):
+        """Automatically save discovered crypto wallets to the database"""
+        from app.models.wallet import TrackedWallet
+        
+        discovered = []
+        if entities.get("btc_addresses"):
+            discovered.extend([(addr, "BTC") for addr in entities["btc_addresses"]])
+        if entities.get("eth_addresses"):
+            discovered.extend([(addr, "ETH") for addr in entities["eth_addresses"]])
+        if entities.get("xmr_addresses"):
+            discovered.extend([(addr, "XMR") for addr in entities["xmr_addresses"]])
+            
+        if not discovered:
+            return
+
+        async with AsyncSessionLocal() as db:
+            for address, currency in discovered:
+                try:
+                    # Check if exists
+                    result = await db.execute(select(TrackedWallet).where(TrackedWallet.address == address))
+                    if result.scalar_one_or_none():
+                        continue
+                        
+                    new_wallet = TrackedWallet(
+                        address=address,
+                        currency=currency,
+                        label=f"Auto-discovered: {address[:8]}",
+                        source_job_id=uuid.UUID(job_id),
+                        source_url=source_url,
+                        risk_level="low"
+                    )
+                    db.add(new_wallet)
+                    logger.info(f"[Wallet] Auto-discovered new {currency} address: {address}")
+                except Exception as e:
+                    logger.error(f"Error saving auto-discovered wallet {address}: {e}")
+            
+            await db.commit()
     
     async def is_job_active(self, job_id: str, monitor_job_id: str = None) -> bool:
         """Check if job is still active (not paused or deleted)"""
@@ -408,6 +446,10 @@ class DarkWebWorker:
 
                             await self.es_client.index_finding(finding)
                             findings.append(finding)
+                            
+                            # Auto-discover wallets from this finding
+                            if entities:
+                                await self.auto_discover_wallets(entities, link, job_id)
 
                         progress = int((idx / total_links) * 100)
                         await self.status_producer.send_status(job_id, "PROCESSING", {
