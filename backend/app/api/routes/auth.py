@@ -2,9 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Response, Request, Query, Body
 from fastapi.security import OAuth2PasswordRequestForm
 
-from fastapi import APIRouter, Depends, HTTPException, status, Response, Request, Query, Body
-from fastapi.security import OAuth2PasswordRequestForm
-
+from datetime import timedelta
 from sqlalchemy import select, func, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional, Dict, Any
@@ -13,11 +11,19 @@ from app.core.security import (
     verify_password,
     create_token,
     get_current_user,
+    oauth2_scheme,
+    get_password_hash,
     require_role,
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    REFRESH_TOKEN_EXPIRE_DAYS,
 )
 from app.database.database import get_db
 from app.models.user import User, AuditLog, LoginLog
 from app.core.roles import Role
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/auth", tags=["auth"])
 
@@ -137,13 +143,35 @@ async def refresh_token(
     refresh_token: str = Body(..., embed=True),  # send as JSON: {"refresh_token": "..."}
     db: AsyncSession = Depends(get_db),
 ):
-    """
-    Bypassed refresh token endpoint: always returns a dummy access token.
-    """
+    credentials_exception = HTTPException(
+        status_code=401,
+        detail="Invalid refresh token"
+    )
+
+    try:
+        payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id: str = payload.get("sub")
+        if user_id is None or payload.get("type") != "refresh":
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+
+    result = await db.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
+    if not user or not user.is_active:
+        raise credentials_exception
+
+    new_access_token = create_token(
+        subject=str(user.id),
+        role=user.role.value,
+        expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
+        token_type="access",
+    )
+
     return {
-        "access_token": create_token(subject="dummy_user_id", role="super_admin", token_type="access"),
+        "access_token": new_access_token,
         "token_type": "bearer",
-        "expires_in": 3600 # 1 hour dummy expiry
+        "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60
     }
 
 @router.get("/profile")
@@ -173,35 +201,121 @@ async def logout(response: Response):
 
 @router.post("/admin")
 async def create_admin(
-    username: str = Query(..., min_length=3, max_length=50, description="Unique username for the new admin"),
-    password: str = Query(..., min_length=8, description="Password for the new admin (min 8 chars)"),
-    current_user: User = Depends(require_role(Role.super_admin)),  # Authentication bypassed, always returns dummy user
+    username: str = Query(
+        ..., min_length=3, max_length=50, description="Unique username for the new admin"
+    ),
+    password: str = Query(
+        ..., min_length=8, description="Password for the new admin (min 8 chars)"
+    ),
+    current_user: User = Depends(require_role(Role.super_admin)),
     db: AsyncSession = Depends(get_db),
+    request: Request = None,                    # ← added to access client IP
 ):
     """
-    Bypassed create admin endpoint: always returns success.
+    Create a new admin account - ONLY super_admin is allowed to perform this action.
+    
+    - Username must be unique
+    - Password must be at least 8 characters
+    - The new admin will have no parent (top-level admin)
     """
-    return {
-        "message": "Admin created successfully (authentication bypassed)",
-        "admin": {
-            "id": str(uuid4()), # Dummy ID
-            "username": username,
-            "role": Role.admin.value,
-            "created_at": datetime.now().isoformat()
+    try:
+        # Check if username already exists
+        result = await db.execute(select(User).where(User.username == username))
+        if result.scalar_one_or_none():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Username is already taken. Please choose a different one."
+            )
+
+        # Hash the password
+        hashed_password = get_password_hash(password)
+
+        # Create new admin user
+        new_admin = User(
+            username=username.strip(),
+            hashed_password=hashed_password,
+            role=Role.admin,
+            parent_admin_id=None,  # Top-level admin (no parent)
+            is_active=True
+        )
+
+        db.add(new_admin)
+        await db.flush()  # Flush to get new_admin.id for audit log
+
+        # Get client IP safely
+        ip_address = request.client.host if request else "unknown"
+
+        # Audit log entry
+        audit = AuditLog(
+            user_id=current_user.id,
+            action="create_admin",
+            details={
+                "target_username": username,
+                "target_role": Role.admin.value,
+                "created_by": current_user.username,
+                "ip": ip_address,
+            }
+        )
+        db.add(audit)
+
+        await db.commit()
+        await db.refresh(new_admin)
+
+        return {
+            "message": "Admin created successfully",
+            "admin": {
+                "id": new_admin.id,
+                "username": new_admin.username,
+                "role": new_admin.role.value,
+                "created_at": new_admin.created_at.isoformat()
+                if new_admin.created_at else None,
+            }
         }
-    }
+
+    except HTTPException as http_exc:
+        await db.rollback()
+        raise http_exc
+
+    except Exception as e:
+        await db.rollback()
+        logger.error(f"Error creating admin: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An unexpected error occurred while creating the admin."
+        )
 
 @router.post("/role-user")
 async def create_role_user(
     username: str,
     password: str,
-    current_user: User = Depends(require_role(Role.admin)),  # Authentication bypassed, always returns dummy user
+    current_user: User = Depends(require_role(Role.admin)),  # Only regular admin
     db: AsyncSession = Depends(get_db),
 ):
-    """
-    Bypassed create role user endpoint: always returns success.
-    """
-    return {"message": "Role user created successfully (authentication bypassed)"}
+    """Create a new role user - only regular admins allowed"""
+    result = await db.execute(select(User).where(User.username == username))
+    if result.scalar_one_or_none():
+        raise HTTPException(status_code=400, detail="Username already taken")
+
+    hashed_password = get_password_hash(password)
+    new_user = User(
+        username=username,
+        hashed_password=hashed_password,
+        role=Role.role_user,
+        parent_admin_id=current_user.id,
+    )
+    db.add(new_user)
+    await db.commit()
+
+    db.add(
+        AuditLog(
+            user_id=current_user.id,
+            action="create_role_user",
+            details={"target_username": username},
+        )
+    )
+    await db.commit()
+
+    return {"message": "Role user created successfully"}
 
 
 @router.get("/users/search")
@@ -335,7 +449,7 @@ async def get_role_users_activities(
 
 @router.get("/allUsers")
 async def get_all_users(
-    current_user: User = Depends(require_role(Role.super_admin)),  # Super admin only
+    current_user: User = Depends(require_role(Role.super_admin)),
     page: int = Query(1, ge=1),
     limit: int = Query(20, ge=1, le=100),
     search: Optional[str] = Query(None),
@@ -347,31 +461,42 @@ async def get_all_users(
     query = select(User)
 
     if search:
-        query = query.where(
-            or_(
-                User.username.ilike(f"%{search}%"),
-            )
-        )
+        query = query.where(User.username.ilike(f"%{search}%"))
 
-    total_result = await db.execute(select(select(User).subquery().count()))
-    total = total_result.scalar() or 0
+    # Correct count
+    total = await db.scalar(
+        select(func.count()).select_from(query.subquery())
+    )
 
     result = await db.execute(
-        query.offset(offset).limit(limit).order_by(User.created_at.desc())
+        query.offset(offset)
+             .limit(limit)
+             .order_by(User.created_at.desc())
     )
     users = result.scalars().all()
 
+    # Safe serialization: exclude hashed_password
+    safe_users = [
+        {
+            "id": u.id,
+            "username": u.username,
+            "role": u.role.value if hasattr(u.role, "value") else u.role,
+            "is_active": u.is_active,
+            "created_at": u.created_at.isoformat() if u.created_at else None,
+           
+        }
+        for u in users
+    ]
+
     return {
-        "data": [u.__dict__ for u in users],
+        "data": safe_users,
         "pagination": {
-            "total": total,
+            "total": total or 0,
             "page": page,
             "limit": limit,
             "totalPages": (total + limit - 1) // limit if total else 0
         }
     }
-
-
 @router.get("/role_users")
 async def get_my_users(
     current_user: User = Depends(require_role(Role.admin)),
@@ -416,7 +541,7 @@ async def get_my_users(
 async def get_admin_logs(
     admin_id: str,
     current_user: User = Depends(require_role(Role.super_admin)),  # Super admin only
-    log_type: str = Query("activities", pattern="^(login|activities)$"),
+    log_type: str = Query("activities", regex="^(login|activities)$"),
     db: AsyncSession = Depends(get_db),
 ):
     """Super admin only: Get logs/activities of a specific admin + their role users"""
@@ -449,7 +574,7 @@ async def get_admin_logs(
 async def get_user_logs(
     user_id: str,
     current_user: User = Depends(require_role(Role.admin)),
-    log_type: str = Query("activities", pattern="^(login|activities)$"),
+    log_type: str = Query("activities", regex="^(login|activities)$"),
     db: AsyncSession = Depends(get_db),
 ):
     """Admin: Get logs of a specific role user under them; Super admin can see any"""

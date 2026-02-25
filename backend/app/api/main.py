@@ -1,18 +1,17 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException, status, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.openapi.utils import get_openapi
+from fastapi.security import OAuth2PasswordRequestForm
 import logging
 import os
 import asyncio
 from typing import Optional
 from pathlib import Path
+from datetime import timedelta, datetime
 
 from dotenv import load_dotenv
 load_dotenv()
-
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -23,6 +22,9 @@ from app.core.security import (
     verify_password,
     create_token,
     get_current_user,
+    set_secure_auth_cookies,
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    REFRESH_TOKEN_EXPIRE_DAYS,
 )
 
 from app.api.routes.auth import auth
@@ -58,7 +60,7 @@ app.add_middleware(
         "http://127.0.0.1:4000",
         "http://192.168.1.175:4000",
         "http://192.168.1.222:3000",
-        "*",
+        
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -78,28 +80,92 @@ else:
 # ────────────────────────────────────────────────────────────────
 
 
+
 @app.post("/login")
 async def login(
+    response: Response,                             # Required to set cookies
     form: OAuth2PasswordRequestForm = Depends(),
-    db: AsyncSession = Depends(get_db), # Keep db dependency for consistency if needed by other parts, but it's unused here
+    db: AsyncSession = Depends(get_db),
+    request: Request = None,                        # Optional: for IP logging
 ):
     """
-    Bypassed login endpoint: always returns dummy tokens.
+    Authenticate user, set secure HTTP-only cookies, and return tokens in body.
+    PUBLIC endpoint — no authentication required.
     """
-    # Since authentication is disabled, we bypass actual user verification.
-    # Always return a dummy token for any login attempt.
+    # Safely get client info (fallback to "unknown")
+    ip_address = request.client.host if request else "unknown"
+    user_agent = request.headers.get("user-agent", "unknown") if request else "unknown"
+
+    # Find user
+    result = await db.execute(select(User).where(User.username == form.username))
+    user: User | None = result.scalar_one_or_none()
+
+    # Verify credentials
+    success = user is not None and verify_password(form.password, user.hashed_password)
+
+    # Log attempt (success or failure)
+    login_log = LoginLog(
+        user_id=user.id if user else None,
+        ip_address=ip_address,
+        user_agent=user_agent,
+        success=success,
+    )
+    db.add(login_log)
+
+    if not success:
+        await db.commit()
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # ── Authentication successful ────────────────────────────────────────
+
+    # Create tokens
+    access_token = create_token(
+        subject=str(user.id),
+        role=user.role.value,
+        expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
+        token_type="access",
+    )
+
+    refresh_token = create_token(
+        subject=str(user.id),
+        role=user.role.value,
+        expires_delta=timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS),
+        token_type="refresh",
+    )
+
+    # Set secure HTTP-only cookies BEFORE any commit/return
+    set_secure_auth_cookies(
+        response=response,
+        access_token=access_token,
+        refresh_token=refresh_token,
+        request=request,
+    )
+
+    # Log successful login
+    db.add(
+        AuditLog(
+            user_id=user.id,
+            action="login_success",
+            details={"ip": ip_address, "user_agent": user_agent},
+        )
+    )
+
+    # Commit both logs
+    await db.commit()
+
+    # Return tokens in body (useful for Swagger, Postman, mobile apps, etc.)
     return {
-        "access_token": create_token(subject="dummy_user_id", role="super_admin", token_type="access"),
-        "refresh_token": create_token(subject="dummy_user_id", role="super_admin", token_type="refresh"),
-        "token_type": "bearer",
-        "expires_in": 3600, # 1 hour dummy expiry
-        "message": "Login successful (authentication bypassed)",
+        "message": "Login successful",
         "user": {
-            "id": "dummy_user_id",
-            "username": "dummy_user",
-            "role": "super_admin",
-            "status": "ACTIVE",
-            "created_at": datetime.now().isoformat(),
+            "id": user.id,
+            "username": user.username,
+            "role": user.role.value,
+            "status": "ACTIVE" if user.is_active else "INACTIVE",
+            "created_at": user.created_at.isoformat() if user.created_at else None,
         }
     }
 
@@ -130,9 +196,6 @@ async def root():
 # ────────────────────────────────────────────────────────────────
 # Include routers
 # ────────────────────────────────────────────────────────────────
-
-
-
 
 app.include_router(auth)
 app.include_router(search.router)
