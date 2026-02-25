@@ -435,17 +435,6 @@ ${results.summary || "No summary available"}
                             View Screenshot
                           </Button>
                         )}
-                        {result.text_file && (
-                          <Button
-                            onClick={() => handlePreviewText(result.text_file)}
-                            size="sm"
-                            variant="outline"
-                            className="text-xs"
-                          >
-                            <Eye className="w-3 h-3 mr-1" />
-                            View Scraped Text
-                          </Button>
-                        )}
                       </div>
 
                       <div className="flex items-center gap-4 text-xs text-neutral-500">

@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSock
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database.database import get_db
 from app.api.deps import get_current_user
+from app.models.user import User
 from app.services.live_mirror_manager import LiveMirrorManager
 import logging
 import asyncio
@@ -31,10 +32,10 @@ def get_live_mirror_manager() -> LiveMirrorManager:
 async def start_live_mirror(
     url: str = Query(..., description="Full .onion URL to mirror", min_length=10, pattern=r"^http://.*\.onion"),
     javascript_enabled: bool = Query(False, description="Enable JavaScript (security risk)"),
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    user_id = current_user.get("sub")
+    user_id = current_user.id
     if not user_id:
         raise HTTPException(status_code=401, detail="Authentication required")
 
@@ -68,9 +69,9 @@ async def start_live_mirror(
 async def navigate_live_mirror(
     session_id: str,
     url: str = Query(..., description="URL to navigate to"),
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
-    user_id = current_user.get("sub")
+    user_id = current_user.id
     if not user_id:
         raise HTTPException(status_code=401, detail="Authentication required")
 
@@ -98,9 +99,9 @@ async def navigate_live_mirror(
 @router.delete("/monitor/live/{session_id}")
 async def stop_live_mirror(
     session_id: str,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
-    user_id = current_user.get("sub")
+    user_id = current_user.id
     if not user_id:
         raise HTTPException(status_code=401, detail="Authentication required")
 
@@ -267,13 +268,13 @@ async def live_mirror_websocket(websocket: WebSocket, session_id: str):
 @router.get("/monitor/live/{session_id}/snapshots")
 async def list_session_snapshots(
     session_id: str,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """Get list of all saved snapshots for this session (for timeline)"""
     manager = get_live_mirror_manager()
     session = manager.get_session(session_id)
 
-    if not session or session.user_id != current_user.get("sub"):
+    if not session or session.user_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
 
     return {
@@ -293,13 +294,13 @@ async def list_session_snapshots(
 async def get_specific_snapshot(
     session_id: str,
     snapshot_id: int,
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """Retrieve a specific historical snapshot (HTML + screenshot)"""
     manager = get_live_mirror_manager()
     session = manager.get_session(session_id)
 
-    if not session or session.user_id != current_user.get("sub"):
+    if not session or session.user_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
 
     snapshot = session.get_snapshot_by_id(snapshot_id)
@@ -321,13 +322,13 @@ async def get_snapshot_diff(
     session_id: str,
     base_id: int = Query(..., description="Base (older) snapshot ID"),
     compare_id: int = Query(..., description="Compare (newer) snapshot ID"),
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """Get text diff (unified diff) between two snapshots"""
     manager = get_live_mirror_manager()
     session = manager.get_session(session_id)
 
-    if not session or session.user_id != current_user.get("sub"):
+    if not session or session.user_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
 
     base = session.get_snapshot_by_id(base_id)
@@ -369,13 +370,13 @@ async def get_snapshot_diff(
 # async def get_snapshot_analysis(
 #     session_id: str,
 #     snapshot_id: int,
-#     current_user: dict = Depends(get_current_user)
+#     current_user: User = Depends(get_current_user)
 # ):
 #     """Get AI-powered content analysis for a specific historical snapshot"""
 #     manager = get_live_mirror_manager()
 #     session = manager.get_session(session_id)
 # 
-#     if not session or session.user_id != current_user.get("sub"):
+#     if not session or session.user_id != current_user.id:
 #         raise HTTPException(status_code=403, detail="Not authorized")
 # 
 #     snapshot = session.get_snapshot_by_id(snapshot_id)

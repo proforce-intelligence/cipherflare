@@ -6,96 +6,92 @@ from fastapi.responses import FileResponse
 from pathlib import Path
 import logging
 import os
+import glob
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/files", tags=["files"])
 
-# Robust directory detection
-# Try environment variable, then common locations
-env_output = os.getenv("OUTPUT_BASE")
-if env_output:
-    OUTPUT_BASE = Path(env_output).resolve()
-else:
-    # Check if we are running from root or backend
-    cwd = Path.cwd()
-    possible_paths = [
-        cwd / "dark_web_results",
-        cwd / "backend" / "dark_web_results",
-        Path("/home/rootkit/cipherflare/backend/dark_web_results")
+# DEFINITIVE ROOT DETECTION
+# We force detection of the 'dark_web_results' folder wherever it may be
+def get_output_base():
+    # 1. Check ENV
+    env_output = os.getenv("OUTPUT_BASE")
+    if env_output:
+        return Path(env_output).resolve()
+    
+    # 2. Check common absolute locations
+    possible_roots = [
+        Path("/home/rootkit/cipherflare/backend/dark_web_results"),
+        Path("/home/rootkit/cipherflare/dark_web_results"),
+        Path(os.getcwd()) / "backend" / "dark_web_results",
+        Path(os.getcwd()) / "dark_web_results"
     ]
     
-    OUTPUT_BASE = possible_paths[0] # Default
-    for p in possible_paths:
+    for p in possible_roots:
         if p.exists() and p.is_dir():
-            OUTPUT_BASE = p.resolve()
-            break
+            return p.resolve()
+    
+    return possible_roots[0] # Fallback to default
 
-logger.info(f"Serving files from: {OUTPUT_BASE}")
+OUTPUT_BASE = get_output_base()
+logger.info(f"[*] File Server active. Base directory: {OUTPUT_BASE}")
 
 @router.get("/{file_path:path}")
 async def serve_file(file_path: str):
     """
-    Serve screenshot, text, or HTML files from the results directory
+    Serve screenshot files with high-resiliency path resolution
     """
     try:
-        # Normalize the incoming path
-        # The path from frontend usually starts with 'dark_web_results/'
-        clean_path = file_path
+        # Normalize the filename
+        filename = Path(file_path).name
         
-        # Remove common redundant prefixes if they exist
-        prefixes_to_strip = ["./", "backend/", "dark_web_results/"]
+        # 1. TRY DIRECT RESOLUTION
+        # Strip all known prefixes to get the relative part
+        clean_rel_path = file_path
+        for prefix in ["./", "backend/", "dark_web_results/", "/"]:
+            if clean_rel_path.startswith(prefix):
+                clean_rel_path = clean_rel_path[len(prefix):]
         
-        for prefix in prefixes_to_strip:
-            if clean_path.startswith(prefix):
-                clean_path = clean_path[len(prefix):]
+        full_path = (OUTPUT_BASE / clean_rel_path).resolve()
         
-        # Special case: check if it still starts with dark_web_results after stripping other things
-        if clean_path.startswith("dark_web_results/"):
-            clean_path = clean_path[len("dark_web_results/"):]
-
-        full_path = (OUTPUT_BASE / clean_path).resolve()
-        
-        # Log resolution for debugging if it fails
+        # 2. IF DIRECT FAILED, TRY FILENAME SEARCH (The "Bulletproof" method)
         if not full_path.exists():
-            logger.error(f"File not found: {full_path} (Requested: {file_path})")
-            # Try one more fallback: join directly if it was a deep path
-            alt_path = (OUTPUT_BASE.parent / file_path).resolve()
-            if alt_path.exists() and str(alt_path).startswith(str(OUTPUT_BASE.parent.resolve())):
-                full_path = alt_path
+            logger.info(f"[!] Path failed: {full_path}. Searching for: {filename}")
+            # Search recursively for the filename within the results directory
+            search_pattern = str(OUTPUT_BASE / "**" / filename)
+            matches = glob.glob(search_pattern, recursive=True)
+            
+            if matches:
+                full_path = Path(matches[0]).resolve()
+                logger.info(f"[✓] File recovered via search: {full_path}")
             else:
-                raise HTTPException(status_code=404, detail="File not found")
-        
-        # Security: Ensure the path is within a valid results directory
-        # We allow OUTPUT_BASE or its parent (to be safe during transitions)
-        safe_root = OUTPUT_BASE.parent.resolve()
-        if not str(full_path).startswith(str(safe_root)):
-            logger.warning(f"Access denied attempt: {full_path} outside of {safe_root}")
+                # One last try: Search one level up in case 'backend' is the parent
+                search_pattern_alt = str(OUTPUT_BASE.parent / "**" / filename)
+                matches_alt = glob.glob(search_pattern_alt, recursive=True)
+                if matches_alt:
+                    full_path = Path(matches_alt[0]).resolve()
+                    logger.info(f"[✓] File recovered via parent search: {full_path}")
+                else:
+                    logger.error(f"[×] 404 - File not found anywhere: {filename}")
+                    raise HTTPException(status_code=404, detail="Screenshot not found on disk")
+
+        # 3. SECURITY CHECK
+        # Ensure we are only serving from the cipherflare project directory
+        if "cipherflare" not in str(full_path):
             raise HTTPException(status_code=403, detail="Access denied")
         
-        if not full_path.exists():
-            raise HTTPException(status_code=404, detail="File not found")
-        
         if not full_path.is_file():
-            raise HTTPException(status_code=400, detail="Not a file")
+            raise HTTPException(status_code=400, detail="Path is a directory, not a file")
         
-        # Determine media type
-        suffix = full_path.suffix.lower()
-        media_type = {
-            '.png': 'image/png',
-            '.jpg': 'image/jpeg',
-            '.jpeg': 'image/jpeg',
-            '.txt': 'text/plain',
-            '.html': 'text/html',
-        }.get(suffix, 'application/octet-stream')
-        
+        # 4. SERVE
         return FileResponse(
             path=str(full_path),
-            media_type=media_type,
+            media_type="image/png" if full_path.suffix.lower() == ".png" else "application/octet-stream",
             filename=full_path.name
         )
         
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"File serving error: {e}")
-        raise HTTPException(status_code=500, detail="Failed to serve file")
+        logger.error(f"Critical error serving file: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

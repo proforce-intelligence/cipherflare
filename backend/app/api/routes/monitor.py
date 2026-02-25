@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete, func, text
 from app.database.database import get_db
+from app.models.user import User
 from app.services.kafka_producer import KafkaProducer
 from app.api.deps import get_current_user
 from app.models.alert import Alert
@@ -53,7 +54,7 @@ async def setup_target_monitoring(
     username_selector: Optional[str] = Query(None, description="CSS selector for username field"),
     password_selector: Optional[str] = Query(None, description="CSS selector for password field"),
     submit_selector: Optional[str] = Query(None, description="CSS selector for submit button"),
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
     kafka: KafkaProducer = Depends(get_kafka)
 ):
@@ -62,7 +63,7 @@ async def setup_target_monitoring(
     Supports optional authentication for sites requiring login
     """
     # Fix: current_user is a User object, not a dict
-    user_id = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
+    user_id = current_user.id
     
     if not user_id:
         raise HTTPException(status_code=401, detail="Authentication required")
@@ -167,14 +168,14 @@ async def setup_alert(
         None,
         description="Email address or webhook URL (required for email/webhook)"
     ),
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """
     Create a real-time alert for high-risk findings
     """
     # Fix: User object access
-    user_id_str = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
+    user_id_str = current_user.id
     if not user_id_str:
         raise HTTPException(status_code=401, detail="Authentication required")
     
@@ -221,12 +222,12 @@ async def setup_alert(
 
 @router.get("/alerts")
 async def get_user_alerts(
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """Get all active alerts for current user"""
     # Fix: User object access
-    user_id_str = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
+    user_id_str = current_user.id
     if not user_id_str:
         raise HTTPException(status_code=401, detail="Authentication required")
 
@@ -261,13 +262,13 @@ async def get_user_alerts(
 @router.delete("/alert/{alert_id}")
 async def delete_alert(
     alert_id: str,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """Delete (deactivate) an alert"""
     try:
         # Fix: User object access
-        user_id_str = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
+        user_id_str = current_user.id
         if not user_id_str:
             raise HTTPException(status_code=401, detail="Authentication required")
 
@@ -303,11 +304,11 @@ async def delete_alert(
 async def get_monitoring_results(
     limit: int = Query(50, ge=1, le=500),
     offset: int = Query(0, ge=0),
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     # Fix: User object access
-    user_id_str = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
+    user_id_str = current_user.id
     if not user_id_str:
         raise HTTPException(status_code=401, detail="Authentication required")
 
@@ -384,11 +385,11 @@ async def get_monitoring_results(
 @router.get("/monitoring/results/{result_id}")
 async def get_monitoring_result_detail(
     result_id: str,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     # Fix: User object access
-    user_id_str = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
+    user_id_str = current_user.id
     if not user_id_str:
         raise HTTPException(status_code=401, detail="Authentication required")
 
@@ -459,12 +460,12 @@ async def get_monitoring_result_detail(
 
 @router.get("/monitoring/stats")
 async def get_monitoring_stats(
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """Get monitoring statistics for current user"""
     # Fix: User object access
-    user_id_str = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
+    user_id_str = current_user.id
     if not user_id_str:
         raise HTTPException(status_code=401, detail="Authentication required")
 
@@ -516,12 +517,12 @@ async def get_job_specific_results(
     job_id: str,
     limit: int = Query(50, ge=1, le=500),
     offset: int = Query(0, ge=0),
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """Get results for a specific monitoring job"""
     # Fix: User object access
-    user_id_str = str(current_user.id) if hasattr(current_user, "id") else current_user.get("sub")
+    user_id_str = current_user.id
     if not user_id_str:
         raise HTTPException(status_code=401, detail="Authentication required")
 

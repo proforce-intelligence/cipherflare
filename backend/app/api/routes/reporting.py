@@ -12,6 +12,7 @@ import uuid
 
 from app.database.database import get_db
 from app.api.deps import get_current_user
+from app.models.user import User
 from app.models.report import Report, ReportType, ReportStatus
 from app.services.es_client import ESClient
 from app.services.report_generator import generate_pdf_report
@@ -34,13 +35,13 @@ async def generate_report(
     date_from: str = Query(None, description="Start date (YYYY-MM-DD)"),
     date_to: str = Query(None, description="End date (YYYY-MM-DD)"),
     model_choice: str = Query("gemini-2.5-flash", description="LLM model for content generation"),
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """
     Start generation of a threat intelligence report (executive, technical, or comprehensive)
     """
-    user_id = current_user.get("sub")
+    user_id = current_user.id
     if not user_id:
         raise HTTPException(status_code=401, detail="Authentication required")
 
@@ -202,7 +203,7 @@ async def create_report_task(report_id: str, db: AsyncSession):
 @router.get("/reports/{report_id}/status")
 async def get_report_status(
     report_id: str,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -217,7 +218,7 @@ async def get_report_status(
     result = await db.execute(
         select(Report).where(
             Report.id == report_uuid,
-            Report.user_id == current_user.get("sub")
+            Report.user_id == current_user.id
         )
     )
     report = result.scalar_one_or_none()
@@ -256,12 +257,12 @@ async def list_reports(
     status: Optional[str] = Query(None, description="Filter by status (pending/generating/completed/failed)"),
     
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     """
     List user's generated reports with pagination
     """
-    user_id = current_user.get("sub")
+    user_id = current_user.id
     if not user_id:
         raise HTTPException(status_code=401, detail="Authentication required")
 
@@ -342,7 +343,7 @@ async def list_reports(
 async def download_report(
     report_id: str,
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     try:
         report_uuid = uuid.UUID(report_id)
@@ -377,7 +378,7 @@ async def download_report(
 @router.get("/reports/{report_id}/preview")
 async def preview_report(
     report_id: str,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -392,7 +393,7 @@ async def preview_report(
     result = await db.execute(
         select(Report).where(
             Report.id == report_uuid,
-            Report.user_id == current_user.get("sub")
+            Report.user_id == current_user.id
         )
     )
     report = result.scalar_one_or_none()
@@ -448,7 +449,7 @@ async def preview_report(
 async def share_report(
     report_id: str,
     expires_in_hours: int = Query(24, ge=1, le=168, description="Link expiration in hours (1–168)"),
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -462,7 +463,7 @@ async def share_report(
     result = await db.execute(
         select(Report).where(
             Report.id == report_uuid,
-            Report.user_id == current_user.get("sub")
+            Report.user_id == current_user.id
         )
     )
     report = result.scalar_one_or_none()
@@ -556,7 +557,7 @@ async def view_shared_report(
 @router.get("/reports/{report_id}")
 async def get_report_details(
     report_id: str,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -572,7 +573,7 @@ async def get_report_details(
     result = await db.execute(
         select(Report).where(
             Report.id == report_uuid,
-            Report.user_id == current_user.get("sub")
+            Report.user_id == current_user.id
         )
     )
     report = result.scalar_one_or_none()
@@ -697,7 +698,7 @@ async def get_report_details(
 @router.delete("/reports/{report_id}")
 async def delete_report(
     report_id: str,
-    current_user: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -720,7 +721,7 @@ async def delete_report(
     result = await db.execute(
         select(Report).where(
             Report.id == report_uuid,
-            Report.user_id == current_user.get("sub")
+            Report.user_id == current_user.id
         )
     )
     report = result.scalar_one_or_none()
@@ -754,7 +755,7 @@ async def delete_report(
         )
         await db.commit()
 
-        logger.info(f"Report {report_id} ({report.title}) deleted by user {current_user.get('sub')}")
+        logger.info(f"Report {report_id} ({report.title}) deleted by user {current_user.id}")
 
         return {
             "success": True,

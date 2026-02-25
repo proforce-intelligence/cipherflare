@@ -49,7 +49,21 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 TOR_SOCKS = os.getenv("TOR_SOCKS", "127.0.0.1:9050")
-OUTPUT_BASE = Path(os.getenv("OUTPUT_BASE", "./dark_web_results"))
+
+# Robust absolute path detection for the worker
+def detect_output_base():
+    env_val = os.getenv("OUTPUT_BASE")
+    if env_val:
+        return Path(env_val).resolve()
+    
+    # Force absolute path to the backend results folder
+    base = Path("/home/rootkit/cipherflare/backend/dark_web_results")
+    if not base.parent.exists():
+        # Fallback for different environments
+        base = Path("./dark_web_results").resolve()
+    return base
+
+OUTPUT_BASE = detect_output_base()
 ES_URL = os.getenv("ES_URL", "http://localhost:9200")
 KAFKA_BOOTSTRAP = os.getenv("KAFKA_BOOTSTRAP", "localhost:9092")
 RISK_LEVEL_ORDER = {"low": 1, "medium": 2, "high": 3, "critical": 4}

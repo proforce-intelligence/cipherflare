@@ -17,9 +17,11 @@ async def get_current_user(
 ) -> User:
     """
     Bypasses authentication and returns a dummy super_admin user.
+    Uses a stable ID for development persistence.
     """
+    stable_id = "00000000-0000-0000-0000-000000000000"
     dummy_user = User(
-        id=str(uuid4()),
+        id=stable_id,
         username="dummy_user",
         hashed_password="not_a_real_password", # Placeholder
         role=Role.super_admin,
